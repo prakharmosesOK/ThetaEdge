@@ -62,6 +62,9 @@ export const networks = {
   }
 };
 
+export const contracts_directory = './contracts';
+export const contracts_build_directory = './truffle_abis';
+
 export const compilers = {
   solc: {
     version: '^0.8.19',
