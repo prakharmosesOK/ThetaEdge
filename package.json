@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "truffle:compile": "truffle compile",
+    "truffle:migrate": "truffle migrate",
+    "truffle:test": "truffle test"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.1.15",
+    "solc": "^0.8.26",
+    "truffle": "^5.11.5",
+    "web3": "^4.10.0"
+  }
+}
