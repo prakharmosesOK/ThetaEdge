@@ -1,25 +1,25 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Importing components
+import Navbar from './components/Navbar.jsx';
+import Home from './components/Home.jsx';
+import Market from './components/Market.jsx';
+import AboutUs from './components/AboutUs.jsx';
+import NFTticket from './components/NFTticket.jsx';
+
+// Importing styles
 import './App.css';
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/market' element={<Market />} />
+        <Route path='/aboutUs' element={<AboutUs />} />
+        <Route path='/market/:ticketId' element={<NFTticket />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
