@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+
+// Importing context
+import { ThemeContext } from '../context/ThemeContext';
 
 export default function Navbar() {
+    const { darkMode, toggleDarkMode } = useContext(ThemeContext);
+
     return (
         <header className="flex flex-wrap place-items-center">
             <section className="relative mx-auto">
@@ -16,6 +22,13 @@ export default function Navbar() {
                             <li><Link className="hover:text-gray-200" href="#">Collections</Link ></li>
                             <li><Link className="hover:text-gray-200" href="#">Contact Us</Link ></li>
                         </ul>
+
+                        <button
+                            onClick={toggleDarkMode}
+                            className="flex items-center px-3 py-2 border rounded text-gray-200 border-gray-400 hover:text-gray-400 hover:border-gray-500 mr-4"
+                        >
+                            {darkMode ? 'Light Mode' : 'Dark Mode'}
+                        </button>
 
                         <div className="hidden xl:flex items-center space-x-5 items-center">
                             <Link className="hover:text-gray-200" href="#">
