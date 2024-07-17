@@ -78,8 +78,11 @@ export default function UserReports() {
   const [gameLink, setGameLink] = useState("");
   const [gameDescription, setGameDescription] = useState("");
   const [gameVideoLink, setGameVideoLink] = useState("");
-  const [ticketPrice, setTicketPrice] = useState("");
+  const [playTicketPrice, setPlayTicketPrice] = useState("");
+  const [streamTicketPrice, setStreamTicketPrice] = useState("");
   const [isMultiplayer, setIsMultiplayer] = useState("");
+  const [type, setType] = useState("");
+  const [couponCode, setCouponCode] = useState("");
 
   const handleGameNameChange = (event) => {
     setGameName(event.target.value);
@@ -97,13 +100,26 @@ export default function UserReports() {
     setGameVideoLink(event.target.value);
   };
 
-  const handleTicketPriceChange = (event) => {
-    setTicketPrice(event.target.value);
+  const handlePlayTicketPriceChange = (event) => {
+    setPlayTicketPrice(event.target.value);
+  };
+
+  const handleStreamTicketPriceChange = (event) => {
+    setPlayTicketPrice(event.target.value);
   };
 
   const handleIsMultiplayerChange = (event) => {
     setIsMultiplayer(event.target.value);
   };
+
+  const handleTypeChange = (event) => {
+    setType(event.target.value);
+  }
+
+  const handleCouponCodeChange = (event) => {
+    setCouponCode(event.target.value);
+  }
+  
   return (
     <main>
       <FormControl>
@@ -143,11 +159,20 @@ export default function UserReports() {
       </FormControl>
 
       <FormControl>
-        <FormLabel>Ticket Price</FormLabel>
+        <FormLabel>Play Ticket Price</FormLabel>
         <Input
           type="text"
-          value={ticketPrice}
-          onChange={handleTicketPriceChange}
+          value={playTicketPrice}
+          onChange={handlePlayTicketPriceChange}
+        />
+      </FormControl>
+
+      <FormControl>
+        <FormLabel>Stream Ticket Price</FormLabel>
+        <Input
+          type="text"
+          value={streamTicketPrice}
+          onChange={handleStreamTicketPriceChange}
         />
       </FormControl>
 
@@ -159,6 +184,25 @@ export default function UserReports() {
             <Radio value="no">No</Radio>
           </Stack>
         </RadioGroup>
+      </FormControl>
+
+      <FormControl>
+        <FormLabel>Type</FormLabel>
+        <RadioGroup value={type} onChange={handleTypeChange}>
+          <Stack direction="row">
+            <Radio value="yes">Open to all</Radio>
+            <Radio value="no">Invites only</Radio>
+          </Stack>
+        </RadioGroup>
+      </FormControl>
+
+      <FormControl>
+        <FormLabel>Coupon Code</FormLabel>
+        <Input
+          type="text"
+          value={couponCode}
+          onChange={handleCouponCodeChange}
+        />
       </FormControl>
     </main>
   );

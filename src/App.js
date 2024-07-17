@@ -1,18 +1,14 @@
-const { create } = require('ipfs-http-client');
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-async function ipfsClient() {
-    const ipfs = await create({
-        host: 'ipfs.infura.io',
-        port: 5001,
-        protocol: 'https'
-    });
-    return ipfs;
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* <Route path='/' element={<Home />} /> */}
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-async function saveText() {
-    let ipfs = await ipfsClient();
-    let result = await ipfs.add("Hello");
-    console.log(result);
-}
-
-saveText();
+export default App;
