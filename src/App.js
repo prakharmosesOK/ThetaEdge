@@ -30,7 +30,10 @@ export default function App() {
                 path={`/admin`} 
                 render={(props) => <AdminLayout {...props} account={account} setAccount={setAccount} />}
               />
-              <Route path={`/rtl`} component={RtlLayout} />
+              <Route
+                path={`/rtl`}
+                render={(props) => <RtlLayout {...props} account={account} setAccount={setAccount} />}
+              />
               <Route path={`/contact`} component={Contact} />
               <Route path={`/license`} component={License} />
               <Route path={`/terms-of-use`} component={TermsOfUse} />

@@ -9,8 +9,7 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 export function SearchBar(props) {
   // Pass the computed styles into the `__css` prop
-  const { variant, background, children, placeholder, borderRadius, ...rest } =
-    props;
+  const { variant, background, children, placeholder, borderRadius, searchText, handleSearchChange, handleSearchSubmit, ...rest } = props;
   // Chakra Color Mode
   const searchIconColor = useColorModeValue("gray.700", "white");
   const inputBg = useColorModeValue("secondaryGray.300", "navy.900");
@@ -31,9 +30,9 @@ export function SearchBar(props) {
             _focus={{
               boxShadow: "none",
             }}
-            icon={
-              <SearchIcon color={searchIconColor} w='15px' h='15px' />
-            }></IconButton>
+            icon={ <SearchIcon color={searchIconColor} w='15px' h='15px' />}
+            onClick={handleSearchSubmit}
+          ></IconButton>
         }
       />
       <Input
@@ -45,6 +44,8 @@ export function SearchBar(props) {
         _placeholder={{ color: "gray.400", fontSize: "14px" }}
         borderRadius={borderRadius ? borderRadius : "30px"}
         placeholder={placeholder ? placeholder : "Search..."}
+        value={searchText}
+        onChange={handleSearchChange}
       />
     </InputGroup>
   );
