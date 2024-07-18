@@ -17,7 +17,7 @@ import PrivacyPolicy from 'components/footer/comp/PrivacyPolicy';
 import 'assets/css/App.css';
 
 export default function App() {
-  const [account, setAccount] = useState('0x0');
+  const [account, setAccount] = useState(localStorage.getItem('account') || '0x0');
   
   return (
     <ChakraProvider theme={theme}>

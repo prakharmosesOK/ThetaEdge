@@ -84,7 +84,6 @@ export default function HeaderLinks(props) {
 			setAccount('0x0');
 		} else if (accounts[0] !== account) {
 			setAccount(account[0]);
-
 		}
 	}
 
@@ -101,30 +100,13 @@ export default function HeaderLinks(props) {
 		}
 	}, [account, setAccount]);
 
-	useEffect(() => {
-		const connectWallet = async () => {
-			const provider = await detectEthereumProvider();
-			if (provider) {
-				const accounts = await provider.request({ method: 'eth_requestAccounts' });
-				setAccount(accounts[0]);
-				switchNetwork(provider);
-				window.ethereum.on('accountsChanged', handleAccountsChanged);
-				window.ethereum.on('chainChanged', handleChainChanged);
-			} else {
-				console.log('Please install MetaMask!');
-			}
-		}
-
-		connectWallet();
-	}, []);
-
-
 	const handleWalletConnection = async () => {
 		const provider = await detectEthereumProvider();
 		if (provider) {
 			const accounts = await provider.request({ method: 'eth_requestAccounts' });
 			setAccount(accounts[0]);
 			switchNetwork(provider);
+			localStorage.setItem('account', accounts[0]);
 		} else {
 			console.log('Please install MetaMask!')
 		}
@@ -133,6 +115,7 @@ export default function HeaderLinks(props) {
 	const handleWalletDisconnection = () => {
 		// window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
 		setAccount('0x0');
+		localStorage.removeItem('account');
 		history.push('/');
 	}
 
