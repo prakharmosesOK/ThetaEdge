@@ -36,15 +36,15 @@ export default function Footer() {
         {" "}
         &copy; {1900 + new Date().getYear()}
         <Text as='span' fontWeight='500' ms='4px'>
-          Horizon UI. All Rights Reserved. Made with love by
           <Link
             mx='3px'
             color={textColor}
-            href='https://www.simmmple.com?ref=horizon-chakra-free'
+            href='https://www.prakharmosesOK.github.io/ChainSphere'
             target='_blank'
             fontWeight='700'>
-            Simmmple!
+            GamETHa
           </Link>
+          All Rights Reserved
         </Text>
       </Text>
       <List display='flex'>
@@ -56,7 +56,7 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={linkColor}
-            href='mailto:hello@simmmple.com?ref=horizon-chakra-free'>
+            href='mailto:mosesprakhar@gmail.com'>
             Support
           </Link>
         </ListItem>
@@ -65,32 +65,38 @@ export default function Footer() {
             base: "20px",
             md: "44px",
           }}>
-          <Link
+          <button
             fontWeight='500'
             color={linkColor}
-            href='https://www.simmmple.com/licenses?ref=horizon-chakra-free'>
+            // href='https://www.simmmple.com/licenses?ref=horizon-chakra-free'
+            onClick={() => console.log("Hello!")}
+          >
             License
-          </Link>
+          </button>
         </ListItem>
         <ListItem
           me={{
             base: "20px",
             md: "44px",
           }}>
-          <Link
+          <button
             fontWeight='500'
             color={linkColor}
-            href='https://simmmple.com/terms-of-service?ref=horizon-chakra-free'>
+            // href='https://simmmple.com/terms-of-service?ref=horizon-chakra-free'
+            onClick={() => console.log("Hello!")}
+          >
             Terms of Use
-          </Link>
+          </button>
         </ListItem>
         <ListItem>
-          <Link
+          <button
             fontWeight='500'
             color={linkColor}
-            href='https://www.blog.simmmple.com/?ref=horizon-chakra-free'>
+            // href='https://www.blog.simmmple.com/?ref=horizon-chakra-free'
+            onClick={() => console.log("Hello!")}
+          >
             Blog
-          </Link>
+          </button>
         </ListItem>
       </List>
     </Flex>
