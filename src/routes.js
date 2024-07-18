@@ -21,14 +21,14 @@ import SignInCentered from "views/auth/signIn";
 
 const routes = [
   {
-    name: "Main Dashboard",
+    name: "User Dashboard",
     layout: "/admin",
     path: "/default",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
     component: MainDashboard,
   },
   {
-    name: "NFT Marketplace",
+    name: "Explore Events",
     layout: "/admin",
     path: "/nft-marketplace",
     icon: (
@@ -50,7 +50,7 @@ const routes = [
     component: DataTables,
   },
   {
-    name: "Profile",
+    name: "Home",
     layout: "/admin",
     path: "/profile",
     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
@@ -64,7 +64,7 @@ const routes = [
     component: SignInCentered,
   },
   {
-    name: "RTL Admin",
+    name: "Upload",
     layout: "/rtl",
     path: "/rtl-default",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
