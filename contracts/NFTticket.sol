@@ -18,7 +18,7 @@ contract StreamAccess {
     // Contract owner address
     address public owner;
 
-    constructor(address _verifierAPI) public {
+    constructor(address _verifierAPI) {
         owner = msg.sender;
         verifierAPI = _verifierAPI;
     }
