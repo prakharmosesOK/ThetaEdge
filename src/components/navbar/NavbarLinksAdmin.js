@@ -18,7 +18,9 @@ import { ItemContent } from 'components/menu/ItemContent';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
+import detectEthereumProvider from '@metamask/detect-provider';
+import { useHistory } from 'react-router-dom';
 // Assets
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
@@ -26,7 +28,7 @@ import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 export default function HeaderLinks(props) {
-	const { secondary } = props;
+	const { secondary, account, setAccount } = props;
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
@@ -41,6 +43,99 @@ export default function HeaderLinks(props) {
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
 	);
 	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
+	const history = useHistory();
+
+	const chainData = {
+		chainName: 'Theta Testnet',
+		chainId: '0x100',
+		rpcUrls: ['https://rpc-testnet.thetatoken.org'],
+		blockExplorerUrls: ['https://explorer-testnet.thetatoken.org/'],
+		nativeCurrency: {
+		  symbol: 'tTHETA',
+		  decimals: 18,
+		}
+	  };
+
+	const switchNetwork = async (provider) => {
+		try {
+			await provider.request({
+				method: 'wallet_switchEthereumChain',
+				params: [{ chainId: chainData.chainId }]
+			});
+		} catch (switchError) {
+			if (switchError.code === 4902) {
+				try {
+					await provider.request({
+						method: 'wallet_addEthereumChain',
+						params: [chainData]
+					});
+				} catch (addError) {
+					console.error('Failed to add the network', addError);
+				}
+			} else {
+				console.error('Failed to switch network', switchError);
+			}
+		}
+	};
+
+	const handleAccountsChanged = async (accounts) => {
+		if (accounts.length === 0) {
+			console.log('Please connect to MetaMask!');
+			setAccount('0x0');
+		} else if (accounts[0] !== account) {
+			setAccount(account[0]);
+
+		}
+	}
+
+	const handleChainChanged = () => {
+		window.location.reload();
+	}
+
+	useEffect(() => {
+		return () => {
+			if (window.ethereum) {
+				window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+				window.ethereum.removeListener('chainChanged', handleChainChanged);
+			}
+		}
+	}, [account, setAccount]);
+
+	useEffect(() => {
+		const connectWallet = async () => {
+			const provider = await detectEthereumProvider();
+			if (provider) {
+				const accounts = await provider.request({ method: 'eth_requestAccounts' });
+				setAccount(accounts[0]);
+				switchNetwork(provider);
+				window.ethereum.on('accountsChanged', handleAccountsChanged);
+				window.ethereum.on('chainChanged', handleChainChanged);
+			} else {
+				console.log('Please install MetaMask!');
+			}
+		}
+
+		connectWallet();
+	}, []);
+
+
+	const handleWalletConnection = async () => {
+		const provider = await detectEthereumProvider();
+		if (provider) {
+			const accounts = await provider.request({ method: 'eth_requestAccounts' });
+			setAccount(accounts[0]);
+			switchNetwork(provider);
+		} else {
+			console.log('Please install MetaMask!')
+		}
+	}
+
+	const handleWalletDisconnection = () => {
+		// window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+		setAccount('0x0');
+		history.push('/');
+	}
+
 	return (
 		<Flex
 			w={{ sm: '100%', md: 'auto' }}
@@ -105,112 +200,116 @@ export default function HeaderLinks(props) {
 				</MenuList>
 			</Menu>
 
-      <Menu>
-        <MenuButton p='0px'>
-          <Icon
-            mt='6px'
-            as={MdInfoOutline}
-            color={navbarIcon}
-            w='18px'
-            h='18px'
-            me='10px'
-          />
-        </MenuButton>
-        <MenuList
-          boxShadow={shadow}
-          p='20px'
-          me={{ base: "30px", md: "unset" }}
-          borderRadius='20px'
-          bg={menuBg}
-          border='none'
-          mt='22px'
-          minW={{ base: "unset" }}
-          maxW={{ base: "360px", md: "unset" }}>
-          <Image src={navImage} borderRadius='16px' mb='28px' />
-          <Flex flexDirection='column'>
-            <Link
-              w='100%'
-              href='https://horizon-ui.com/pro?ref=horizon-chakra-free'>
-              <Button w='100%' h='44px' mb='10px' variant='brand'>
-                Buy Horizon UI PRO
-              </Button>
-            </Link>
-            <Link
-              w='100%'
-              href='https://horizon-ui.com/documentation/docs/introduction?ref=horizon-chakra-free'>
-              <Button
-                w='100%'
-                h='44px'
-                mb='10px'
-                border='1px solid'
-                bg='transparent'
-                borderColor={borderButton}>
-                See Documentation
-              </Button>
-            </Link>
-            <Link
-              w='100%'
-              href='https://github.com/horizon-ui/horizon-ui-chakra'>
-              <Button
-                w='100%'
-                h='44px'
-                variant='no-hover'
-                color={textColor}
-                bg='transparent'>
-                Try Horizon Free
-              </Button>
-            </Link>
-          </Flex>
-        </MenuList>
-      </Menu>
-
-			<ThemeEditor navbarIcon={navbarIcon} />
-
 			<Menu>
-				<MenuButton p="0px">
-					<Avatar
-						_hover={{ cursor: 'pointer' }}
-						color="white"
-						name="Adela Parkson"
-						bg="#11047A"
-						size="sm"
-						w="40px"
-						h="40px"
+				<MenuButton p='0px'>
+					<Icon
+						mt='6px'
+						as={MdInfoOutline}
+						color={navbarIcon}
+						w='18px'
+						h='18px'
+						me='10px'
 					/>
 				</MenuButton>
-				<MenuList boxShadow={shadow} p="0px" mt="10px" borderRadius="20px" bg={menuBg} border="none">
-					<Flex w="100%" mb="0px">
-						<Text
-							ps="20px"
-							pt="16px"
-							pb="10px"
-							w="100%"
-							borderBottom="1px solid"
-							borderColor={borderColor}
-							fontSize="sm"
-							fontWeight="700"
-							color={textColor}>
-							👋&nbsp; Hey, Adela
-						</Text>
-					</Flex>
-					<Flex flexDirection="column" p="10px">
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
-							<Text fontSize="sm">Profile Settings</Text>
-						</MenuItem>
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
-							<Text fontSize="sm">Newsletter Settings</Text>
-						</MenuItem>
-						<MenuItem
-							_hover={{ bg: 'none' }}
-							_focus={{ bg: 'none' }}
-							color="red.400"
-							borderRadius="8px"
-							px="14px">
-							<Text fontSize="sm">Log out</Text>
-						</MenuItem>
+				<MenuList
+					boxShadow={shadow}
+					p='20px'
+					me={{ base: "30px", md: "unset" }}
+					borderRadius='20px'
+					bg={menuBg}
+					border='none'
+					mt='22px'
+					minW={{ base: "unset" }}
+					maxW={{ base: "360px", md: "unset" }}>
+					<Image src={navImage} borderRadius='16px' mb='28px' />
+					<Flex flexDirection='column'>
+						<Link
+							w='100%'
+							href='https://horizon-ui.com/pro?ref=horizon-chakra-free'>
+							<Button w='100%' h='44px' mb='10px' variant='brand'>
+								Buy Horizon UI PRO
+							</Button>
+						</Link>
+						<Link
+							w='100%'
+							href='https://horizon-ui.com/documentation/docs/introduction?ref=horizon-chakra-free'>
+							<Button
+								w='100%'
+								h='44px'
+								mb='10px'
+								border='1px solid'
+								bg='transparent'
+								borderColor={borderButton}>
+								See Documentation
+							</Button>
+						</Link>
+						<Link
+							w='100%'
+							href='https://github.com/horizon-ui/horizon-ui-chakra'>
+							<Button
+								w='100%'
+								h='44px'
+								variant='no-hover'
+								color={textColor}
+								bg='transparent'>
+								Try Horizon Free
+							</Button>
+						</Link>
 					</Flex>
 				</MenuList>
 			</Menu>
+
+			<ThemeEditor navbarIcon={navbarIcon} />
+
+			{account === '0x0' ? (
+				<Button onClick={handleWalletConnection}>Connect To Metamask</Button>
+			) : (
+				<Menu>
+					<MenuButton p="0px">
+						<Avatar
+							_hover={{ cursor: 'pointer' }}
+							color="white"
+							name="Adela Parkson"
+							bg="#11047A"
+							size="sm"
+							w="40px"
+							h="40px"
+						/>
+					</MenuButton>
+					<MenuList boxShadow={shadow} p="0px" mt="10px" borderRadius="20px" bg={menuBg} border="none">
+						<Flex w="100%" mb="0px">
+							<Text
+								ps="20px"
+								pt="16px"
+								pb="10px"
+								w="100%"
+								borderBottom="1px solid"
+								borderColor={borderColor}
+								fontSize="sm"
+								fontWeight="700"
+								color={textColor}>
+								👋&nbsp; Hey, Adela
+							</Text>
+						</Flex>
+						<Flex flexDirection="column" p="10px">
+							<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
+								<Text fontSize="sm">Profile Settings</Text>
+							</MenuItem>
+							<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
+								<Text fontSize="sm">Newsletter Settings</Text>
+							</MenuItem>
+							<MenuItem
+								_hover={{ bg: 'none' }}
+								_focus={{ bg: 'none' }}
+								color="red.400"
+								borderRadius="8px"
+								px="14px">
+								<Button fontSize="sm" onClick={handleWalletDisconnection}>Log out</Button>
+							</MenuItem>
+						</Flex>
+					</MenuList>
+				</Menu>
+			)}
 		</Flex>
 	);
 }
