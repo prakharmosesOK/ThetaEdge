@@ -28,7 +28,7 @@ import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 export default function HeaderLinks(props) {
-	const { secondary, account, setAccount } = props;
+	const { secondary, account, setAccount, searchText, handleSearchChange, handleSearchSubmit } = props;
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
@@ -129,7 +129,13 @@ export default function HeaderLinks(props) {
 			p="10px"
 			borderRadius="30px"
 			boxShadow={shadow}>
-			<SearchBar mb={secondary ? { base: '10px', md: 'unset' } : 'unset'} me="10px" borderRadius="30px" />
+			<SearchBar
+				mb={secondary ? { base: '10px', md: 'unset' } : 'unset'}
+				me="10px" borderRadius="30px"
+				searchText={searchText}
+				handleSearchChange={handleSearchChange}
+				handleSearchSubmit={handleSearchSubmit}
+			/>
 			<Flex
 				bg={ethBg}
 				display={secondary ? 'flex' : 'none'}
