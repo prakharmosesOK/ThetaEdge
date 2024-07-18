@@ -30,7 +30,7 @@ import {
   columnsDataDevelopment,
   columnsDataCheck,
   columnsDataColumns,
-  columnsDataComplex,
+  columnsDataComplex
 } from "views/admin/dataTables/variables/columnsData";
 import tableDataDevelopment from "views/admin/dataTables/variables/tableDataDevelopment.json";
 import tableDataCheck from "views/admin/dataTables/variables/tableDataCheck.json";
