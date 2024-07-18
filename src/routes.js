@@ -21,11 +21,11 @@ import SignInCentered from "views/auth/signIn";
 
 const routes = [
   {
-    name: "User Dashboard",
+    name: "Home",
     layout: "/admin",
-    path: "/default",
+    path: "/profile",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
-    component: MainDashboard,
+    component: Profile,
   },
   {
     name: "Explore Events",
@@ -50,11 +50,11 @@ const routes = [
     component: DataTables,
   },
   {
-    name: "Home",
+    name: "User Dashboard",
     layout: "/admin",
-    path: "/profile",
+    path: "/default",
     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
-    component: Profile,
+    component: MainDashboard,
   },
   {
     name: "Sign In",
@@ -64,7 +64,7 @@ const routes = [
     component: SignInCentered,
   },
   {
-    name: "Upload",
+    name: "Organise",
     layout: "/rtl",
     path: "/rtl-default",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
