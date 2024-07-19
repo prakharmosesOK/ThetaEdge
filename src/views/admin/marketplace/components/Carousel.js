@@ -4,29 +4,8 @@ import Banner from './Banner'; // Adjust the import path according to your proje
 import { Button, Flex } from '@chakra-ui/react';
 
 export default function Carousel(props) {
-    // const { gameDetailsList } = props;
+    const { gameDetailsList } = props;
     const [activeIndex, setActiveIndex] = useState(0);
-
-    const gameDetailsList = [
-        {
-            gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPFywmGneP9D422OaSyFnXa9Bm9FptPUJeUA&s",
-            gameName: "ddd",
-            gameId: 1,
-            gameDescription: "Some representative placeholder content for the first slide."
-        },
-        {
-            gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5XZfwZ6dYskqAjlbnq-oa2mAOdMza6RjGpw&s",
-            gameName: "ddd",
-            gameId: 2,
-            gameDescription: "Some representative placeholder content for the second slide."
-        },
-        {
-            gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXqulQV6RRzTaSIJXJUAmGnN0kLwXRlrMfww&s",
-            gameName: "ddd",
-            gameId: 3,
-            gameDescription: "Some representative placeholder content for the third slide."
-        }
-    ]
 
     useEffect(() => {
         const interval = setInterval(() => {
