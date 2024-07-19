@@ -140,6 +140,26 @@ export default function Marketplace(props) {
   const {
     totalGamesList, setTotalGamesList, filteredGamesList, setFilteredGamesList, searchedGamesList, setSearchedGamesList
   } = useContext(GameListContext);
+  const [topGamesList, setTopGamesList] = useState([
+    {
+      gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPFywmGneP9D422OaSyFnXa9Bm9FptPUJeUA&s",
+      gameName: "ddd",
+      gameId: 1,
+      gameDescription: "Some representative placeholder content for the first slide."
+    },
+    {
+      gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5XZfwZ6dYskqAjlbnq-oa2mAOdMza6RjGpw&s",
+      gameName: "ddd",
+      gameId: 2,
+      gameDescription: "Some representative placeholder content for the second slide."
+    },
+    {
+      gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXqulQV6RRzTaSIJXJUAmGnN0kLwXRlrMfww&s",
+      gameName: "ddd",
+      gameId: 3,
+      gameDescription: "Some representative placeholder content for the third slide."
+    }
+  ]);
   // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
@@ -215,6 +235,15 @@ export default function Marketplace(props) {
   }, [searchText]);
 
   useEffect(() => {
+    const defineTopGames = () => {
+      // Desfine top games
+      // setTopGamesList(totalGamesList.slice(0, 3));
+    }
+
+    // defineTopGames();
+  }, [])
+
+  useEffect(() => {
     applyFilters();
   }, [filterState, totalGamesList]);
 
@@ -249,7 +278,7 @@ export default function Marketplace(props) {
         <Flex
           flexDirection='column'
           gridArea={{ xl: "1 / 1 / 2 / 3", "2xl": "1 / 1 / 2 / 2" }}>
-          <Carousel />
+          <Carousel gameDetailsList={topGamesList} />
           <Flex direction='column'>
             <Flex
               mt='45px'

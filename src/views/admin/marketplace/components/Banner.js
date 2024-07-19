@@ -82,10 +82,10 @@ export default function Banner(props) {
           Discover now
         </Link>
         <Button
-          bg='transparent'
+          bg='black'
           onClick={() => handleStreamPurchase(gameDetails.gameId)}
         >
-          <Text color='white' fontSize='sm' fontWeight='500'>
+          <Text color='white' fontSize='sm' fontWeight='500' bg="transparent">
             Watch stream
           </Text>
         </Button>
