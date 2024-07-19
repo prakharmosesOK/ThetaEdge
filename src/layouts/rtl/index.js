@@ -2,7 +2,7 @@
 import { Portal, Box, useDisclosure } from "@chakra-ui/react";
 import Footer from "components/footer/FooterAdmin.js";
 // Layout components
-import Navbar from "components/navbar/NavbarRTL.js";
+import Navbar from "components/navbar/NavbarAdmin.js";
 import Sidebar from "components/sidebar/Sidebar.js";
 import { RtlProvider } from "components/rtlProvider/RtlProvider.js";
 import { SidebarContext } from "contexts/SidebarContext";
@@ -110,7 +110,7 @@ export default function Dashboard(props) {
       }
     });
   };
-  document.documentElement.dir = "rtl";
+  document.documentElement.dir = "ltr";
   const { onOpen } = useDisclosure();
   return (
     <RtlProvider>
@@ -121,7 +121,7 @@ export default function Dashboard(props) {
         }}>
         <Sidebar routes={routes} display='none' {...rest} />
         <Box
-          float='left'
+          float='right'
           minHeight='100vh'
           height='100%'
           overflow='auto'

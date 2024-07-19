@@ -18,17 +18,29 @@ import { ItemContent } from 'components/menu/ItemContent';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { useHistory } from 'react-router-dom';
 // Assets
 import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { FaEthereum } from 'react-icons/fa';
+import { TbCurrencyCent } from "react-icons/tb";
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
+
+const availableChains = [
+	{ chainName: 'Ethereum', chainIcon: FaEthereum, chainSymbol: "ETH" },
+	{ chainName: 'Theta', chainIcon: TbCurrencyCent, chainSymbol: "THETA" }
+]
 export default function HeaderLinks(props) {
-	const { secondary, account, setAccount, searchText, handleSearchChange, handleSearchSubmit } = props;
+	const { secondary, account, setAccount, searchText, setSearchText } = props;
+	const [currentChain, setCurrentChain] = useState({
+		chainName: "Ethereum",
+		chainIcon: FaEthereum,
+		chainSymbol: "ETH",
+	})
+
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
 	let menuBg = useColorModeValue('white', 'navy.800');
@@ -51,10 +63,10 @@ export default function HeaderLinks(props) {
 		rpcUrls: ['https://rpc-testnet.thetatoken.org'],
 		blockExplorerUrls: ['https://explorer-testnet.thetatoken.org/'],
 		nativeCurrency: {
-		  symbol: 'tTHETA',
-		  decimals: 18,
+			symbol: 'tTHETA',
+			decimals: 18,
 		}
-	  };
+	};
 
 	const switchNetwork = async (provider) => {
 		try {
@@ -87,7 +99,7 @@ export default function HeaderLinks(props) {
 		}
 	}
 
-	const handleChainChanged = () => {
+	const handleChainChanged = (newChain) => {
 		window.location.reload();
 	}
 
@@ -133,28 +145,73 @@ export default function HeaderLinks(props) {
 				mb={secondary ? { base: '10px', md: 'unset' } : 'unset'}
 				me="10px" borderRadius="30px"
 				searchText={searchText}
-				handleSearchChange={handleSearchChange}
-				handleSearchSubmit={handleSearchSubmit}
+				setSearchText={setSearchText}
 			/>
-			<Flex
-				bg={ethBg}
-				display={secondary ? 'flex' : 'none'}
-				borderRadius="30px"
-				ms="auto"
-				p="6px"
-				align="center"
-				me="6px">
-				<Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
-					<Icon color={ethColor} w="9px" h="14px" as={FaEthereum} />
-				</Flex>
-				<Text w="max-content" color={ethColor} fontSize="sm" fontWeight="700" me="6px">
-					1,924
-					<Text as="span" display={{ base: 'none', md: 'unset' }}>
-						{' '}
-						ETH
-					</Text>
-				</Text>
-			</Flex>
+			<Menu>
+				<MenuButton p="0px">
+					<Flex
+						bg={ethBg}
+						display={secondary ? 'flex' : 'none'}
+						borderRadius="30px"
+						ms="auto"
+						p="6px"
+						align="center"
+						me="6px">
+						<Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
+							<Icon color={ethColor} w="9px" h="14px" as={currentChain.chainIcon} />
+						</Flex>
+						<Text w="max-content" color={ethColor} fontSize="sm" fontWeight="700" me="6px">
+							1,924
+							<Text as="span" display={{ base: 'none', md: 'unset' }}>
+								{' '}
+								{currentChain.chainSymbol}
+							</Text>
+						</Text>
+					</Flex>
+				</MenuButton>
+				<MenuList
+					boxShadow={shadow}
+					p="20px"
+					borderRadius="20px"
+					bg='black'
+					border="none"
+					mt="22px"
+					me={{ base: '30px', md: 'unset' }}
+					minW={{ base: 'unset', md: '150px', xl: '200px' }}
+					maxW={{ base: '360px', md: 'unset' }}
+				>
+					<Flex flexDirection='column'>
+						{availableChains.map((chain, index) => (
+						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} px="0" borderRadius="8px" mb="-10px">
+							<Button
+								w='100%'
+								h='44px'
+								mb='10px'
+								border='1px solid'
+								bg='transparent'
+								borderColor={borderButton}
+								onClick={() => setCurrentChain(chain)}
+							>
+								<Flex
+									flexDirection='row'
+									p="6px"
+									align="center"
+									justify={ {base: 'center', md: 'center'} }
+								>
+									<Flex align="center" justify="center" bg={ethBox} h="29px" w="29px" borderRadius="30px" me="7px">
+										<Icon color={ethColor} w="9px" h="14px" as={chain.chainIcon} />
+									</Flex>
+									<Text w="max-content" color={ethColor} fontSize="sm" fontWeight="700" me="6px">
+										{chain.chainName}
+									</Text>
+								</Flex>
+							</Button>
+						</MenuItem>
+						))}
+					</Flex>
+				</MenuList>
+			</Menu>
+
 			<SidebarResponsive routes={routes} />
 			<Menu>
 				<MenuButton p="0px">

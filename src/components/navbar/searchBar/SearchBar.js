@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GameListContext } from "contexts/GameListContext";
 import {
   IconButton,
   Input,
@@ -9,7 +10,7 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 export function SearchBar(props) {
   // Pass the computed styles into the `__css` prop
-  const { variant, background, children, placeholder, borderRadius, searchText, handleSearchChange, handleSearchSubmit, ...rest } = props;
+  const { variant, background, children, placeholder, borderRadius, searchText, setSearchText, ...rest } = props;
   // Chakra Color Mode
   const searchIconColor = useColorModeValue("gray.700", "white");
   const inputBg = useColorModeValue("secondaryGray.300", "navy.900");
@@ -31,7 +32,6 @@ export function SearchBar(props) {
               boxShadow: "none",
             }}
             icon={ <SearchIcon color={searchIconColor} w='15px' h='15px' />}
-            onClick={handleSearchSubmit}
           ></IconButton>
         }
       />
@@ -45,7 +45,7 @@ export function SearchBar(props) {
         borderRadius={borderRadius ? borderRadius : "30px"}
         placeholder={placeholder ? placeholder : "Search..."}
         value={searchText}
-        onChange={handleSearchChange}
+        onChange={(e) => setSearchText(e.target.value)}
       />
     </InputGroup>
   );
