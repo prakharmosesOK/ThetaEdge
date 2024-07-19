@@ -10,11 +10,11 @@ import {
 } from "react-icons/md";
 
 // Admin Imports
-import MainDashboard from "views/admin/default";
-import NFTMarketplace from "views/admin/marketplace";
+import UserDashboard from "views/admin/default";
+import Explore from "views/admin/marketplace";
 import Profile from "views/admin/profile";
-import DataTables from "views/admin/dataTables";
-import RTL from "views/admin/rtl";
+import EventPage from "views/admin/dataTables";
+import Organise from "views/admin/rtl";
 
 // Auth Imports
 import SignInCentered from "views/auth/signIn";
@@ -39,25 +39,25 @@ const routes = [
         color='inherit'
       />
     ),
-    component: NFTMarketplace,
+    component: Explore,
     secondary: true,
   },
   {
-    name: "Data Tables",
+    name: "Event Page",
     layout: "/admin",
     icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
     path: "/data-tables",
-    component: DataTables,
+    component: EventPage,
   },
   {
     name: "User Dashboard",
     layout: "/admin",
     path: "/default",
     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
-    component: MainDashboard,
+    component: UserDashboard,
   },
   {
-    name: "Sign In",
+    name: "About Us",
     layout: "/auth",
     path: "/sign-in",
     icon: <Icon as={MdLock} width='20px' height='20px' color='inherit' />,
@@ -68,7 +68,7 @@ const routes = [
     layout: "/rtl",
     path: "/rtl-default",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
-    component: RTL,
+    component: Organise,
   },
 ];
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 // Chakra imports
 import { Button, Flex, Link, Text } from "@chakra-ui/react";
@@ -6,12 +7,22 @@ import { Button, Flex, Link, Text } from "@chakra-ui/react";
 // Assets
 import banner from "assets/img/nfts/NftBanner1.png";
 
-export default function Banner() {
+export default function Banner(props) {
+  const { gameDetails } = props;
+  const history = useHistory();
+
+  const handleStreamPurchase = async (perticularGameId) => {
+    // Implement Stream Purchase here
+    history.push(`/${perticularGameId}`)
+  }
+
   // Chakra Color Mode
   return (
     <Flex
       direction='column'
-      bgImage={banner}
+      bgImage={
+        gameDetails.gameImage ? gameDetails.gameImage :
+        banner}
       bgSize='cover'
       py={{ base: "30px", md: "56px" }}
       px={{ base: "30px", md: "64px" }}
@@ -19,6 +30,7 @@ export default function Banner() {
       <Text
         fontSize={{ base: "24px", md: "34px" }}
         color='white'
+        textShadow="0px 0px 30px rgb(0, 0, 0)"
         mb='14px'
         maxW={{
           base: "100%",
@@ -30,11 +42,14 @@ export default function Banner() {
         }}
         fontWeight='700'
         lineHeight={{ base: "32px", md: "42px" }}>
-        Discover, collect, and sell extraordinary NFTs
+        {
+          gameDetails.gameName || 
+          'Discover, collect, and sell extraordinary NFTs'}
       </Text>
       <Text
-        fontSize='md'
-        color='#E3DAFF'
+        fontSize={{ base: "14px", md: "19px" }}
+        color={'white' || '#E3DAFF'}
+        textShadow="0px 0px 20px black"
         maxW={{
           base: "100%",
           md: "64%",
@@ -46,28 +61,34 @@ export default function Banner() {
         fontWeight='500'
         mb='40px'
         lineHeight='28px'>
-        Enter in this creative world. Discover now the latest NFTs or start
-        creating your own!
+        {
+        gameDetails.gameDescription.split(' ').slice(0, 15).join(' ') || 
+        'Enter in this creative world. Discover now the latest NFTs or start creating your own!'}
       </Text>
       <Flex align='center'>
-        <Button
+        <Link
+          href={`/${gameDetails.gameId}`}
           bg='white'
           color='black'
+          borderRadius='30px'
           _hover={{ bg: "whiteAlpha.900" }}
           _active={{ bg: "white" }}
           _focus={{ bg: "white" }}
           fontWeight='500'
           fontSize='14px'
-          py='20px'
+          py='10px'
           px='27'
           me='38px'>
           Discover now
-        </Button>
-        <Link>
-          <Text color='white' fontSize='sm' fontWeight='500'>
-            Watch video
-          </Text>
         </Link>
+        <Button
+          bg='transparent'
+          onClick={() => handleStreamPurchase(gameDetails.gameId)}
+        >
+          <Text color='white' fontSize='sm' fontWeight='500'>
+            Watch stream
+          </Text>
+        </Button>
       </Flex>
     </Flex>
   );

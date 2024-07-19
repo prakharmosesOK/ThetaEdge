@@ -11,10 +11,10 @@ import routes from 'routes.js';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
-	const { ...rest } = props;
+	const { account, setAccount, ...rest } = props;
 	// states and functions
-	const [ fixed ] = useState(false);
-	const [ toggleSidebar, setToggleSidebar ] = useState(false);
+	const [fixed] = useState(false);
+	const [toggleSidebar, setToggleSidebar] = useState(false);
 	// functions for changing the states from components
 	const getRoute = () => {
 		return window.location.pathname !== '/admin/full-screen-maps';
@@ -85,7 +85,15 @@ export default function Dashboard(props) {
 	const getRoutes = (routes) => {
 		return routes.map((prop, key) => {
 			if (prop.layout === '/admin') {
-				return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
+				return (
+					<Route
+						path={prop.layout + prop.path}
+						key={key}
+						render={(props) => (
+							<prop.component {...props} account={account} setAccount={setAccount} />
+						)}
+					/>
+				);
 			}
 			if (prop.collapse) {
 				return getRoutes(prop.items);
@@ -126,11 +134,13 @@ export default function Dashboard(props) {
 							<Box>
 								<Navbar
 									onOpen={onOpen}
-									logoText={'Horizon UI Dashboard PRO'}
+									logoText={'GamETHa'}
 									brandText={getActiveRoute(routes)}
 									secondary={getActiveNavbar(routes)}
 									message={getActiveNavbarText(routes)}
 									fixed={fixed}
+									account={account}
+									setAccount={setAccount}
 									{...rest}
 								/>
 							</Box>

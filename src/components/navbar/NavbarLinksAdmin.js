@@ -26,14 +26,12 @@ import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { FaEthereum } from 'react-icons/fa';
 import { TbCurrencyCent } from "react-icons/tb";
-import { SiPolygon } from "react-icons/si";
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 
 const availableChains = [
 	{ chainName: 'Ethereum', chainIcon: FaEthereum, chainSymbol: "ETH" },
-	{ chainName: 'Theta', chainIcon: TbCurrencyCent, chainSymbol: "THETA" },
-	// { chainName: 'Polygon', chainIcon: SiPolygon, chainSymbol: "MATIC" }
+	{ chainName: 'Theta', chainIcon: TbCurrencyCent, chainSymbol: "THETA" }
 ]
 export default function HeaderLinks(props) {
 	const { secondary, account, setAccount, searchText, handleSearchChange, handleSearchSubmit } = props;

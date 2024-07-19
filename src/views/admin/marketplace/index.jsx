@@ -1,15 +1,9 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
+/*!                                                                                                                                                                                                                                                                                                                                       
 =========================================================
 * Horizon UI - v1.1.0
 =========================================================
 
-* Product Page: https://www.horizon-ui.com/
+* Product Page: https://www.prakharmosesOK.github.io/ThetaEdge/
 * Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
 
 * Designed and Coded by Simmmple
@@ -36,6 +30,7 @@ import {
 
 // Custom components
 import Banner from "views/admin/marketplace/components/Banner";
+import Carousel from "views/admin/marketplace/components/Carousel";
 import TableTopCreators from "views/admin/marketplace/components/TableTopCreators";
 import HistoryItem from "views/admin/marketplace/components/HistoryItem";
 import NFT from "components/card/NFT";
@@ -70,7 +65,7 @@ export default function Marketplace() {
         <Flex
           flexDirection='column'
           gridArea={{ xl: "1 / 1 / 2 / 3", "2xl": "1 / 1 / 2 / 2" }}>
-          <Banner />
+          <Carousel />
           <Flex direction='column'>
             <Flex
               mt='45px'
