@@ -130,6 +130,8 @@ export default function AdminNavbar(props) {
 						scrolled={scrolled}
 						account={account}
 						setAccount={setAccount}
+						searchText={props.searchText}
+						setSearchText={props.setSearchText}
 					/>
 				</Box>
 			</Flex>

@@ -48,8 +48,7 @@ export default function NFT(props) {
               }}
               fontWeight='400'
               me='14px'>
-              {date}
-              &nbsp; {category}
+              {date} <br/> {category}
             </Text>
           </Flex>
           <Flex

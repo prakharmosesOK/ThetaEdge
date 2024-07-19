@@ -34,7 +34,7 @@ const availableChains = [
 	{ chainName: 'Theta', chainIcon: TbCurrencyCent, chainSymbol: "THETA" }
 ]
 export default function HeaderLinks(props) {
-	const { secondary, account, setAccount, searchText, handleSearchChange, handleSearchSubmit } = props;
+	const { secondary, account, setAccount, searchText, setSearchText } = props;
 	const [currentChain, setCurrentChain] = useState({
 		chainName: "Ethereum",
 		chainIcon: FaEthereum,
@@ -145,8 +145,7 @@ export default function HeaderLinks(props) {
 				mb={secondary ? { base: '10px', md: 'unset' } : 'unset'}
 				me="10px" borderRadius="30px"
 				searchText={searchText}
-				handleSearchChange={handleSearchChange}
-				handleSearchSubmit={handleSearchSubmit}
+				setSearchText={setSearchText}
 			/>
 			<Menu>
 				<MenuButton p="0px">

@@ -15,6 +15,8 @@ export default function Dashboard(props) {
 	// states and functions
 	const [fixed] = useState(false);
 	const [toggleSidebar, setToggleSidebar] = useState(false);
+	const [searchText, setSearchText] = useState('');
+
 	// functions for changing the states from components
 	const getRoute = () => {
 		return window.location.pathname !== '/admin/full-screen-maps';
@@ -90,7 +92,13 @@ export default function Dashboard(props) {
 						path={prop.layout + prop.path}
 						key={key}
 						render={(props) => (
-							<prop.component {...props} account={account} setAccount={setAccount} />
+							<prop.component
+								{...props}
+								account={account}
+								setAccount={setAccount}
+								searchText={searchText}
+								setSearchText={setSearchText}
+							/>
 						)}
 					/>
 				);
@@ -141,6 +149,8 @@ export default function Dashboard(props) {
 									fixed={fixed}
 									account={account}
 									setAccount={setAccount}
+									searchText={searchText}
+									setSearchText={setSearchText}
 									{...rest}
 								/>
 							</Box>

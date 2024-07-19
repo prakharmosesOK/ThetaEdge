@@ -1,6 +1,6 @@
 // Chakra imports
 import {
-  AvatarGroup,
+  // AvatarGroup,
   Avatar,
   Box,
   Button,
@@ -15,48 +15,30 @@ import {
 import Card from "components/card/Card.js";
 // Assets
 import React, { useState } from "react";
-import { IoHeart, IoHeartOutline } from "react-icons/io5";
 
 export default function NFT(props) {
-  const { image, name, author, bidders, download, currentbid } = props;
-  const [like, setLike] = useState(false);
+  const { gameEvent } = props;
   const textColor = useColorModeValue("navy.700", "white");
   const textColorBid = useColorModeValue("brand.500", "white");
   return (
-    <Card p='20px'>
-      <Flex direction={{ base: "column" }} justify='center'>
-        <Box mb={{ base: "20px", "2xl": "20px" }} position='relative'>
+    <Card p='20px' h="10em">
+      <Flex direction="row" justify='center'>
+        <Box mb="20px" position='absolute' left={{ base: "20px", md: "30px" }}>
           <Image
-            src={image}
-            w={{ base: "100%", "3xl": "100%" }}
-            h={{ base: "100%", "3xl": "100%" }}
+            src={gameEvent.gameImage}
+            w="12em"
+            h="8em"
             borderRadius='20px'
           />
-          <Button
-            position='absolute'
-            bg='white'
-            _hover={{ bg: "whiteAlpha.900" }}
-            _active={{ bg: "white" }}
-            _focus={{ bg: "white" }}
-            p='0px !important'
-            top='14px'
-            right='14px'
-            borderRadius='50%'
-            minW='36px'
-            h='36px'
-            onClick={() => {
-              setLike(!like);
-            }}>
-            <Icon
-              transition='0.2s linear'
-              w='20px'
-              h='20px'
-              as={like ? IoHeart : IoHeartOutline}
-              color='brand.500'
-            />
-          </Button>
         </Box>
-        <Flex flexDirection='column' justify='space-between' h='100%'>
+        <Flex
+          flexDirection='row'
+          justify='space-between'
+          h='100%'
+          w={{ base: "100%", md: "60%" }}
+          position="relative"
+          right="-6em"
+        >
           <Flex
             justify='space-between'
             direction={{
@@ -81,7 +63,7 @@ export default function NFT(props) {
                 mb='5px'
                 fontWeight='bold'
                 me='14px'>
-                {name}
+                {gameEvent.gameName}
               </Text>
               <Text
                 color='secondaryGray.600'
@@ -89,11 +71,12 @@ export default function NFT(props) {
                   base: "sm",
                 }}
                 fontWeight='400'
+                mb="10px"
                 me='14px'>
-                {author}
+                {gameEvent.nickName}
               </Text>
             </Flex>
-            <AvatarGroup
+            {/* <AvatarGroup
               max={3}
               color={textColorBid}
               size='sm'
@@ -105,10 +88,30 @@ export default function NFT(props) {
                 "2xl": "0px",
               }}
               fontSize='12px'>
-              {bidders.map((avt, key) => (
+              {players.map((avt, key) => (
                 <Avatar key={key} src={avt} />
               ))}
-            </AvatarGroup>
+            </AvatarGroup> */}
+            <Text
+              color='secondaryGray.600'
+              fontSize={{
+                base: "sm",
+              }}
+              fontWeight='400'
+              mb="10px"
+              me='14px'>
+              Total Participants: {gameEvent.maxParticipants} / {gameEvent.totalParticipants} joined
+            </Text>
+            <Text
+              color='secondaryGray.600'
+              fontSize={{
+                base: "sm",
+              }}
+              fontWeight='400'
+              mb="10px"
+              me='14px'>
+              Prize Pool: ${gameEvent.totalPrizeMoney}
+            </Text>
           </Flex>
           <Flex
             align='start'
@@ -122,10 +125,10 @@ export default function NFT(props) {
             }}
             mt='25px'>
             <Text fontWeight='700' fontSize='sm' color={textColorBid}>
-              Current Bid: {currentbid}
+              NFT Game Price: {gameEvent.gameTicketPrice} <br /> NFT Stream Price: {gameEvent.streamTicketPrice}
             </Text>
             <Link
-              href={download}
+              href={`/admin/data-tables/${gameEvent.gameId}`}
               mt={{
                 base: "0px",
                 md: "10px",
@@ -141,7 +144,7 @@ export default function NFT(props) {
                 borderRadius='70px'
                 px='24px'
                 py='5px'>
-                Place Bid
+                Discover
               </Button>
             </Link>
           </Flex>
