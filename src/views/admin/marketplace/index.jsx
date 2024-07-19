@@ -14,7 +14,8 @@
 
 */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 // Chakra imports
 import {
@@ -29,9 +30,8 @@ import {
 } from "@chakra-ui/react";
 
 // Custom components
-import Banner from "views/admin/marketplace/components/Banner";
 import Carousel from "views/admin/marketplace/components/Carousel";
-import TableTopCreators from "views/admin/marketplace/components/TableTopCreators";
+// import TableTopCreators from "views/admin/marketplace/components/TableTopCreators";
 import HistoryItem from "views/admin/marketplace/components/HistoryItem";
 import NFT from "components/card/NFT";
 import Card from "components/card/Card.js";
@@ -50,10 +50,72 @@ import Avatar4 from "assets/img/avatars/avatar4.png";
 import tableDataTopCreators from "views/admin/marketplace/variables/tableDataTopCreators.json";
 import { tableColumnsTopCreators } from "views/admin/marketplace/variables/tableColumnsTopCreators";
 
-export default function Marketplace() {
+export default function Marketplace(props) {
+  const [purchaseHistory, setPurchaseHistory] = useState([
+    {
+      gameName: "Colourfull Heaven",
+      datePurchased: "30s ago",
+      price: "0.911 ETH",
+      gameImage: Nft5,
+      purchaseCategory: "Stream Play"
+    },
+    {
+      gameName: "Abstract Colors",
+      datePurchased: "58s ago",
+      price: "0.911 ETH",
+      gameImage: Nft1,
+      purchaseCategory: "Stream Play"
+    },
+    {
+      gameName: "ETH AI Brain",
+      datePurchased: "1m ago",
+      price: "0.911 ETH",
+      gameImage: Nft2,
+      purchaseCategory: "Stream Play"
+    },
+    {
+      gameName: "Swipe Circles",
+      datePurchased: "1m ago",
+      price: "0.911 ETH",
+      gameImage: Nft4,
+      purchaseCategory: "Stream Play"
+    },
+    {
+      gameName: "Mesh Gradients",
+      datePurchased: "2m ago",
+      price: "0.911 ETH",
+      gameImage: Nft3,
+      purchaseCategory: "Stream Play"
+    },
+    {
+      gameName: "3D Cubes Art",
+      datePurchased: "3m ago",
+      price: "0.911 ETH",
+      gameImage: Nft6,
+      purchaseCategory: "Stream Play"
+    }
+  ]);
+  const { address } = props;
+  const history = useHistory();
   // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
+
+  useEffect(() => {
+    const fetchPurchaseHistory = async () => {
+      try {
+        // const response = await fetch("https://api.example.com/purchase-history");
+        // const data = await response.json();
+        // setPurchaseHistory(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    // Call this function to fetch purchase history
+    // fetchPurchaseHistory();
+  }, []);
+
   return (
     <Box pt={{ base: "180px", md: "80px", xl: "80px" }}>
       {/* Main Fields */}
@@ -74,7 +136,7 @@ export default function Marketplace() {
               direction={{ base: "column", md: "row" }}
               align={{ base: "start", md: "center" }}>
               <Text color={textColor} fontSize='2xl' ms='24px' fontWeight='700'>
-                Trending NFTs
+                Trending NFT tickets
               </Text>
               <Flex
                 align='center'
@@ -230,13 +292,13 @@ export default function Marketplace() {
         <Flex
           flexDirection='column'
           gridArea={{ xl: "1 / 3 / 2 / 4", "2xl": "1 / 2 / 2 / 3" }}>
-          <Card px='0px' mb='20px'>
+          {/* <Card px='0px' mb='20px'>
             <TableTopCreators
               tableData={tableDataTopCreators}
               columnsData={tableColumnsTopCreators}
             />
-          </Card>
-          <Card p='0px'>
+          </Card> */}
+          <Card p='0px' w="23em">
             <Flex
               align={{ sm: "flex-start", lg: "center" }}
               justify='space-between'
@@ -246,51 +308,18 @@ export default function Marketplace() {
               <Text color={textColor} fontSize='xl' fontWeight='600'>
                 History
               </Text>
-              <Button variant='action'>See all</Button>
+              <Button variant='action' onClick={() => history.push(`/admin/${address}`)}>See all</Button>
             </Flex>
 
-            <HistoryItem
-              name='Colorful Heaven'
-              author='By Mark Benjamin'
-              date='30s ago'
-              image={Nft5}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Abstract Colors'
-              author='By Esthera Jackson'
-              date='58s ago'
-              image={Nft1}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='ETH AI Brain'
-              author='By Nick Wilson'
-              date='1m ago'
-              image={Nft2}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Swipe Circles'
-              author='By Peter Will'
-              date='1m ago'
-              image={Nft4}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='Mesh Gradients '
-              author='By Will Smith'
-              date='2m ago'
-              image={Nft3}
-              price='0.91 ETH'
-            />
-            <HistoryItem
-              name='3D Cubes Art'
-              author='By Manny Gates'
-              date='3m ago'
-              image={Nft6}
-              price='0.91 ETH'
-            />
+            {purchaseHistory.map((purchase, index) => (
+              <HistoryItem key={index}
+                name={purchase.gameName}
+                category={purchase.purchaseCategory}
+                date={purchase.datePurchased}
+                image={purchase.gameImage}
+                price={purchase.price}
+              />
+            ))}
           </Card>
         </Flex>
       </Grid>
