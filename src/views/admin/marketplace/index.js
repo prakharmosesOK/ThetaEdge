@@ -135,10 +135,10 @@ export default function Marketplace(props) {
     'prizePool': [],
     'type': []
   })
-  const { account, searchText, setSearchText } = props;
+  const { searchText, setSearchText } = props;
   const history = useHistory();
   const {
-    totalGamesList, setTotalGamesList, filteredGamesList, setFilteredGamesList, searchedGamesList, setSearchedGamesList
+    totalGamesList, setTotalGamesList, filteredGamesList, setFilteredGamesList, searchedGamesList, setSearchedGamesList, account
   } = useContext(GameListContext);
   const [topGamesList, setTopGamesList] = useState([
     {
