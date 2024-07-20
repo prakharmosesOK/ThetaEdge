@@ -65,11 +65,16 @@ export default function UserReports() {
       { gameId: 1, isCollected: false },
       { gameId: 2, isCollected: true }
     ],
-    gamesUpload: [3, 4, 5],
+    gamesUpload: [{ gameId: 3, isCollected: true },
+      { gameId: 4, isCollected: false },
+      {gameId: 5, isCollected: true}
+    ],
     moneyGained: 65896,
     moneySpent: 7897,
     currentBalance: 85369
   });
+  const [gameEventsOrganised, setGameEventsOrganised] = useState([]);
+  const [gameParticipated, setGameParticipated] = useState([]);
   const [currentCurrency, setCurrentCurrency] = useState('usa');
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
@@ -80,6 +85,12 @@ export default function UserReports() {
   //     // Do the needfull
   //     setProfileData();
   //   }
+
+      // const fetchGameEventsOrganised = () => {
+      // }
+
+      // const fetchGameParticipated = () => {
+      // }
 
   //   // Call the function
   //   fetchProfileInfo();
