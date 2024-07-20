@@ -2,6 +2,10 @@
 import {
   Box,
   Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Flex,
   Icon,
   Text,
@@ -10,21 +14,103 @@ import {
 // Custom components
 import Card from "components/card/Card.js";
 import LineChart from "components/charts/LineChart";
-import React from "react";
+import React, { useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
+import { MdOutlineCalendarToday } from "react-icons/md";
+import { FaChartLine } from "react-icons/fa";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
-import {
-  lineChartDataTotalSpent,
-  lineChartOptionsTotalSpent,
-} from "variables/charts";
+// import {
+//   lineChartDataTotalSpent,
+//   lineChartOptionsTotalSpent,
+// } from "variables/charts";
 
 export default function TotalSpent(props) {
-  const { ...rest } = props;
-
+  const { gameParticipated, ...rest } = props;
+  const [timeFrame, setTimeFrame] = useState("This Month");
+  const [lineChartDataTotalSpent, setLineChartDataTotalSpent] = useState([
+    {
+      name: "Revenue",
+      data: [50, 64, 48, 66, 49, 68],
+    },
+    {
+      name: "Profit",
+      data: [30, 40, 24, 46, 20, 46],
+    },
+  ]);
+  const [lineChartOptionsTotalSpent, setLineChartOptionsTotalSpent] = useState({
+    chart: {
+      toolbar: {
+        show: false,
+      },
+      dropShadow: {
+        enabled: true,
+        top: 13,
+        left: 0,
+        blur: 10,
+        opacity: 0.1,
+        color: "#4318FF",
+      },
+    },
+    colors: ["#4318FF", "#39B8FF"],
+    markers: {
+      size: 0,
+      colors: "white",
+      strokeColors: "#7551FF",
+      strokeWidth: 3,
+      strokeOpacity: 0.9,
+      strokeDashArray: 0,
+      fillOpacity: 1,
+      discrete: [],
+      shape: "circle",
+      radius: 2,
+      offsetX: 0,
+      offsetY: 0,
+      showNullDataPoints: true,
+    },
+    tooltip: {
+      theme: "dark",
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "smooth",
+      type: "line",
+    },
+    xaxis: {
+      type: "numeric",
+      categories: ["SEP", "OCT", "NOV", "DEC", "JAN", "FEB"],
+      labels: {
+        style: {
+          colors: "#A3AED0",
+          fontSize: "12px",
+          fontWeight: "500",
+        },
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: {
+      show: false,
+    },
+    legend: {
+      show: false,
+    },
+    grid: {
+      show: false,
+      column: {
+        color: ["#7551FF", "#39B8FF"],
+        opacity: 0.5,
+      },
+    },
+    color: ["#7551FF", "#39B8FF"],
+  });
   // Chakra Color Mode
-
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -48,19 +134,28 @@ export default function TotalSpent(props) {
       {...rest}>
       <Flex justify='space-between' ps='0px' pe='20px' pt='5px'>
         <Flex align='center' w='100%'>
-          <Button
-            bg={boxBg}
-            fontSize='sm'
-            fontWeight='500'
-            color={textColorSecondary}
-            borderRadius='7px'>
-            <Icon
-              as={MdOutlineCalendarToday}
-              color={textColorSecondary}
-              me='4px'
-            />
-            This month
-          </Button>
+          <Menu>
+            <MenuButton>
+              <Button
+                bg={boxBg}
+                fontSize='sm'
+                fontWeight='500'
+                color={textColorSecondary}
+                borderRadius='7px'>
+                <Icon
+                  as={MdOutlineCalendarToday}
+                  color={textColorSecondary}
+                  me='4px'
+                />
+                {timeFrame}
+              </Button>
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => setTimeFrame("This Week")}>This Week</MenuItem>
+              <MenuItem onClick={() => setTimeFrame("This Month")}>This Month</MenuItem>
+              <MenuItem onClick={() => setTimeFrame("This Year")}>This Year</MenuItem>
+            </MenuList>
+          </Menu>
           <Button
             ms='auto'
             align='center'
@@ -74,7 +169,7 @@ export default function TotalSpent(props) {
             lineHeight='100%'
             borderRadius='10px'
             {...rest}>
-            <Icon as={MdBarChart} color={iconColor} w='24px' h='24px' />
+            <Icon as={FaChartLine} color={iconColor} w='24px' h='24px' />
           </Button>
         </Flex>
       </Flex>
@@ -95,12 +190,12 @@ export default function TotalSpent(props) {
               fontWeight='500'
               mt='4px'
               me='12px'>
-              Total Spent
+              Total Revenue
             </Text>
             <Flex align='center'>
               <Icon as={RiArrowUpSFill} color='green.500' me='2px' mt='2px' />
               <Text color='green.500' fontSize='sm' fontWeight='700'>
-                +2.45%
+                +2.5%
               </Text>
             </Flex>
           </Flex>
