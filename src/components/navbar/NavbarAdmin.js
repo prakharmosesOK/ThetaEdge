@@ -40,6 +40,7 @@ export default function AdminNavbar(props) {
 	return (
 		<Box
 			position={navbarPosition}
+			zIndex={100}
 			boxShadow={navbarShadow}
 			bg={navbarBg}
 			borderColor={navbarBorder}

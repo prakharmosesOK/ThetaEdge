@@ -66,8 +66,8 @@ export default function UserReports() {
       { gameId: 2, isCollected: true }
     ],
     gamesUpload: [{ gameId: 3, isCollected: true },
-      { gameId: 4, isCollected: false },
-      {gameId: 5, isCollected: true}
+    { gameId: 4, isCollected: false },
+    { gameId: 5, isCollected: true }
     ],
     moneyGained: 65896,
     moneySpent: 7897,
@@ -76,6 +76,103 @@ export default function UserReports() {
   const [gameEventsOrganised, setGameEventsOrganised] = useState([]);
   const [gameParticipated, setGameParticipated] = useState([]);
   const [currentCurrency, setCurrentCurrency] = useState('usa');
+  const [barChartGameRevenue, setBarChartGameRevenue] = useState([
+    {
+      name: "Game Play",
+      data: [400, 370, 330],
+    },
+    {
+      name: "Stream",
+      data: [400, 370, 330],
+    },
+  ])
+  const [barChartGameOptions, setBarChartGameOptions] = useState({
+    chart: {
+      stacked: true,
+      toolbar: {
+        show: false,
+      },
+    },
+    tooltip: {
+      style: {
+        fontSize: "12px",
+        fontFamily: undefined,
+      },
+      onDatasetHover: {
+        style: {
+          fontSize: "12px",
+          fontFamily: undefined,
+        },
+      },
+      theme: "dark",
+    },
+    xaxis: {
+      categories: [17, 18, 19],
+      show: false,
+      labels: {
+        show: true,
+        style: {
+          colors: "#A3AED0",
+          fontSize: "14px",
+          fontWeight: "500",
+        },
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: {
+      show: false,
+      color: "black",
+      labels: {
+        show: false,
+        style: {
+          colors: "#A3AED0",
+          fontSize: "14px",
+          fontWeight: "500",
+        },
+      },
+    },
+
+    grid: {
+      borderColor: "rgba(163, 174, 208, 0.3)",
+      show: true,
+      yaxis: {
+        lines: {
+          show: false,
+          opacity: 0.5,
+        },
+      },
+      row: {
+        opacity: 0.5,
+      },
+      xaxis: {
+        lines: {
+          show: false,
+        },
+      },
+    },
+    fill: {
+      type: "solid",
+      colors: ["#ff6237", "#6AD2FF"],
+    },
+    legend: {
+      show: false,
+    },
+    colors: ["#ff6237", "#6AD2FF"],
+    dataLabels: {
+      enabled: false,
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        columnWidth: "20px",
+      },
+    }
+  });
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -86,15 +183,39 @@ export default function UserReports() {
   //     setProfileData();
   //   }
 
-      // const fetchGameEventsOrganised = () => {
-      // }
+  // const fetchGameEventsOrganised = () => {
+  // }
 
-      // const fetchGameParticipated = () => {
-      // }
+  // const fetchGameParticipated = () => {
+  // }
 
   //   // Call the function
   //   fetchProfileInfo();
   // }, []);
+
+  useEffect(() => {
+    const fetchBarChartGameRevenue = async () => {
+      let lastGamesOrganised = profileData.gamesUpload.toReversed().slice(0, 7).map(game => game.gameId);
+      console.log("Thw last games are: ", lastGamesOrganised);
+      setBarChartGameOptions({
+        ...barChartGameOptions,
+        xaxis: {
+          ...barChartGameOptions.xaxis,
+          categories: lastGamesOrganised
+        }
+      })
+
+      // Fetch the revenue collected from last 7 games from fetchBarChartGameRevenue
+      // setBarChartGameRevenue([])
+    }
+
+    // Call the function here
+    fetchBarChartGameRevenue();
+  }, [profileData])
+
+  useEffect(() => {
+    console.log("The last bar chart one is: ", barChartGameOptions.xaxis.categories);
+  }, [barChartGameOptions]);
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -160,7 +281,7 @@ export default function UserReports() {
               </Flex>
             }
             name='Current Balance'
-            value={currentCurrency === 'theta' ? (profileData.currentBalance/3).toFixed(3) : (currentCurrency === 'eth' ? (profileData.currentBalance/56677).toFixed(3) : `$${profileData.currentBalance.toFixed(2)}`)}
+            value={currentCurrency === 'theta' ? (profileData.currentBalance / 3).toFixed(3) : (currentCurrency === 'eth' ? (profileData.currentBalance / 56677).toFixed(3) : `$${profileData.currentBalance.toFixed(2)}`)}
           />
           <MiniStatistics
             startContent={
@@ -192,17 +313,24 @@ export default function UserReports() {
       </Flex>
 
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-        <TotalSpent />
-        <WeeklyRevenue />
+        <TotalSpent gameParticipated={gameParticipated} />
+        <WeeklyRevenue
+          barChartDataConsumption={barChartGameRevenue}
+          barChartOptionsConsumption={barChartGameOptions}
+        />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
         <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
+        <ComplexTable
+          columnsData={columnsDataComplex}
+          tableData={tableDataComplex}
+        />
+        {/* <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
           <DailyTraffic />
           <PieCard />
-        </SimpleGrid>
+        </SimpleGrid> */}
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
+      {/* <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
         <ComplexTable
           columnsData={columnsDataComplex}
           tableData={tableDataComplex}
@@ -211,7 +339,7 @@ export default function UserReports() {
           <Tasks />
           <MiniCalendar h='100%' minW='100%' selectRange={false} />
         </SimpleGrid>
-      </SimpleGrid>
+      </SimpleGrid> */}
     </Box>
   );
 }
