@@ -199,32 +199,32 @@ export default function UserReports() {
   // }, []);
 
   useEffect(() => {
-    const fetchBarChartGameRevenue = async () => {
-      let lastGamesOrganised = profileData.gamesUpload.toReversed().slice(0, 7).map(game => game.gameId);
+    const fetchBarChartGameRevenue = () => {
+      let lastGamesOrganised = gameEventsOrganised.toReversed().slice(0, 7);
       console.log("Thw last games are: ", lastGamesOrganised);
       setBarChartGameOptions({
         ...barChartGameOptions,
         xaxis: {
           ...barChartGameOptions.xaxis,
-          categories: lastGamesOrganised
+          categories: lastGamesOrganised.map(game => game.gameId)
         }
       })
 
       // Fetch the revenue collected from last 7 games from fetchBarChartGameRevenue
-      // setBarChartGameRevenue([])
+      setBarChartGameRevenue([
+        {
+          name: "Game Play",
+          data: lastGamesOrganised.map(game => game.gamePlayRevenue)
+        }, {
+          name: "Stream",
+          data: lastGamesOrganised.map(game => game.streamRevenue)
+        }
+      ])
     }
 
     // Call the function here
-    fetchBarChartGameRevenue();
-  }, [profileData])
-
-  useEffect(() => {
-    console.log("The last bar chart one is: ", barChartGameOptions.xaxis.categories);
-  }, [barChartGameOptions]);
-
-  useEffect(() => {
-      console.log("The account us: ", account);
-  }, [account]);
+    // fetchBarChartGameRevenue();
+  }, [profileData]);
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
