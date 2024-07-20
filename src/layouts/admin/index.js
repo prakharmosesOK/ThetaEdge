@@ -11,7 +11,7 @@ import routes from 'routes.js';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
-	const { account, setAccount, ...rest } = props;
+	const { ...rest } = props;
 	// states and functions
 	const [fixed] = useState(false);
 	const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -94,8 +94,6 @@ export default function Dashboard(props) {
 						render={(props) => (
 							<prop.component
 								{...props}
-								account={account}
-								setAccount={setAccount}
 								searchText={searchText}
 								setSearchText={setSearchText}
 							/>
@@ -147,8 +145,6 @@ export default function Dashboard(props) {
 									secondary={getActiveNavbar(routes)}
 									message={getActiveNavbarText(routes)}
 									fixed={fixed}
-									account={account}
-									setAccount={setAccount}
 									searchText={searchText}
 									setSearchText={setSearchText}
 									{...rest}

@@ -1,11 +1,11 @@
 // Chakra imports
 import {
   // AvatarGroup,
-  Avatar,
+  // Avatar,
   Box,
   Button,
   Flex,
-  Icon,
+  // Icon,
   Image,
   Link,
   Text,

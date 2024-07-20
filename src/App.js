@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
 import AuthLayout from 'layouts/auth';
 import AdminLayout from 'layouts/admin';
@@ -20,8 +20,6 @@ import PrivacyPolicy from 'components/footer/comp/PrivacyPolicy';
 import 'assets/css/App.css';
 
 export default function App() {
-  const [account, setAccount] = useState(localStorage.getItem('account') || '0x0');
-
   return (
     <ChakraProvider theme={theme}>
       <React.StrictMode>
@@ -32,11 +30,11 @@ export default function App() {
                 <Route path={`/auth`} component={AuthLayout} />
                 <Route
                   path={`/admin`}
-                  render={(props) => <AdminLayout {...props} account={account} setAccount={setAccount} />}
+                  render={(props) => <AdminLayout {...props} />}
                 />
                 <Route
                   path={`/rtl`}
-                  render={(props) => <RtlLayout {...props} account={account} setAccount={setAccount} />}
+                  render={(props) => <RtlLayout {...props} />}
                 />
                 <Route path={`/contact`} component={Contact} />
                 <Route path={`/license`} component={License} />

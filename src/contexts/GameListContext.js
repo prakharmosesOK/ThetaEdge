@@ -61,10 +61,11 @@ export const GameListProvider = ({ children }) => {
     ]);
     const [filteredGamesList, setFilteredGamesList] = useState(totalGamesList);
     const [searchedGamesList, setSearchedGamesList] = useState(totalGamesList);
+    const [account, setAccount] = useState(localStorage.getItem('account') || '0x0');
 
     return (
         <GameListContext.Provider
-            value={{totalGamesList, setTotalGamesList, filteredGamesList, setFilteredGamesList, searchedGamesList, setSearchedGamesList}}
+            value={{totalGamesList, setTotalGamesList, filteredGamesList, setFilteredGamesList, searchedGamesList, setSearchedGamesList, account, setAccount}}
         >
             {children}
         </GameListContext.Provider>

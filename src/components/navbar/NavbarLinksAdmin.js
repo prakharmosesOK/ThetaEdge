@@ -18,7 +18,7 @@ import { ItemContent } from 'components/menu/ItemContent';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { useHistory } from 'react-router-dom';
 // Assets
@@ -29,17 +29,21 @@ import { TbCurrencyCent } from "react-icons/tb";
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
 
+// Importing Context
+import { GameListContext } from 'contexts/GameListContext';
+
 const availableChains = [
 	{ chainName: 'Ethereum', chainIcon: FaEthereum, chainSymbol: "ETH" },
 	{ chainName: 'Theta', chainIcon: TbCurrencyCent, chainSymbol: "THETA" }
 ]
 export default function HeaderLinks(props) {
-	const { secondary, account, setAccount, searchText, setSearchText } = props;
+	const { secondary, searchText, setSearchText } = props;
 	const [currentChain, setCurrentChain] = useState({
 		chainName: "Ethereum",
 		chainIcon: FaEthereum,
 		chainSymbol: "ETH",
 	})
+	const { account, setAccount } = useContext(GameListContext);
 
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
@@ -237,10 +241,10 @@ export default function HeaderLinks(props) {
 					</Flex>
 					<Flex flexDirection="column">
 						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} px="0" borderRadius="8px" mb="10px">
-							<ItemContent info="Horizon UI Dashboard PRO" aName="Alicia" />
+							<ItemContent info="ETH chain is available now" aName="Alicia" />
 						</MenuItem>
 						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} px="0" borderRadius="8px" mb="10px">
-							<ItemContent info="Horizon Design System Free" aName="Josh Henry" />
+							<ItemContent info="TRBTC with more advanced features" aName="Josh Henry" />
 						</MenuItem>
 					</Flex>
 				</MenuList>
@@ -271,14 +275,14 @@ export default function HeaderLinks(props) {
 					<Flex flexDirection='column'>
 						<Link
 							w='100%'
-							href='https://horizon-ui.com/pro?ref=horizon-chakra-free'>
+							href='https://prakharmosesOK.github.io/ThetaEdge'>
 							<Button w='100%' h='44px' mb='10px' variant='brand'>
 								Buy Horizon UI PRO
 							</Button>
 						</Link>
 						<Link
 							w='100%'
-							href='https://horizon-ui.com/documentation/docs/introduction?ref=horizon-chakra-free'>
+							href='https://prakharmosesOK.github.io/ThetaEdge/documentation'>
 							<Button
 								w='100%'
 								h='44px'
@@ -291,7 +295,7 @@ export default function HeaderLinks(props) {
 						</Link>
 						<Link
 							w='100%'
-							href='https://github.com/horizon-ui/horizon-ui-chakra'>
+							href='https://prakharmosesOK.github.io/ThetaEdge'>
 							<Button
 								w='100%'
 								h='44px'

@@ -15,7 +15,7 @@ export default function AdminNavbar(props) {
 		};
 	});
 
-	const { secondary, message, brandText, account, setAccount } = props;
+	const { secondary, message, brandText } = props;
 
 	// Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
 	let mainText = useColorModeValue('navy.700', 'white');
@@ -128,8 +128,6 @@ export default function AdminNavbar(props) {
 						secondary={props.secondary}
 						fixed={props.fixed}
 						scrolled={scrolled}
-						account={account}
-						setAccount={setAccount}
 						searchText={props.searchText}
 						setSearchText={props.setSearchText}
 					/>
