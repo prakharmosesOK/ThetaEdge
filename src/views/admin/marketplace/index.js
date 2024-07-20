@@ -1,19 +1,3 @@
-/*!                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.prakharmosesOK.github.io/ThetaEdge/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -56,6 +40,12 @@ import Avatar3 from "assets/img/avatars/avatar3.png";
 import Avatar4 from "assets/img/avatars/avatar4.png";
 // import tableDataTopCreators from "views/admin/marketplace/variables/tableDataTopCreators.json";
 // import { tableColumnsTopCreators } from "views/admin/marketplace/variables/tableColumnsTopCreators";
+import Organiser from "../../../contracts/Organiser.json";
+
+const { ethers } = require("ethers");
+const contractABI = Organiser.abi;
+const contractAddress = '0x46de3be1db71391685cc7c649d8c3a04325115d4';
+
 
 const filters = [
   {
@@ -164,11 +154,58 @@ export default function Marketplace(props) {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
 
+  async function getDataFromIpfs(requestId) {
+    var myHeaders = new Headers();
+    myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    try {
+      const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
+      const result = await response.json();
+      return result; // Return the result
+    } catch (error) {
+      console.log(error);
+      return null; // Return null in case of an error
+    }
+  }
+
   const fetchGamesList = async () => {
     try {
-      // const response = await fetch("https://api.example.com/games-list");
-      // const data = await response.json();
-      // setTotalGamesList(data);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const _contract = new ethers.Contract(contractAddress, contractABI, provider);
+      const gamesList = await _contract.getGamesList();
+      console.log(gamesList);
+
+      const totalGamesList = [];
+      for (const [index, game] of gamesList.entries()) {
+        const res = await getDataFromIpfs(game.Ipfs);
+        const gameData = {
+          gameId: game.gameId.toNumber(),
+          gameName: res.gameName, // Assuming the IPFS data has these fields
+          gameImage: res.gameImage,
+          gamePrice: game.gameTicketPrice.toNumber(),
+          gameAuthor: res.gameAuthor, // or any other field from IPFS
+          nickName: res.nickName,
+          totalParticipants: game.playersJoined.length,
+          maxParticipants: res.maxParticipants,
+          totalPrizeMoney: game.totalRevenue.toNumber(),
+          bIsInvite: res.bIsInvite,
+          privateCode: res.privateCode,
+          bIsMultiplayer: res.bIsMultiplayer,
+          lobbyCode: res.lobbyCode,
+          couponCode: res.couponCode,
+          organiserAddress: game.organiserAddress,
+          date: new Date(res.date)
+        };
+
+        totalGamesList.push(gameData);
+      }
+      setTotalGamesList(totalGamesList);
     } catch (error) {
       console.error(error);
     }
@@ -264,7 +301,8 @@ export default function Marketplace(props) {
 
   useEffect(() => {
     // Call this function to fetch games List
-    // fetchGamesList();
+    console.log("called");
+    fetchGamesList();
   }, []);
 
   return (
