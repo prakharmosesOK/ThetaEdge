@@ -3,11 +3,11 @@ import { FormControl, FormLabel, Input, Select, Checkbox, Button } from '@chakra
 // import DateTimePicker from 'react-datetime-picker';
 import DateTimePicker from './components/DateTimePicker';
 
-// import Organiser from "../../../contracts/Organiser.json";
+import Organiser from "../../../contracts/Organiser.json";
 
-// const { ethers } = require("ethers");
-// const contractABI = Organiser.abi;
-// const contractAddress = '0xb27A31f1b0AF2946B7F582768f03239b1eC07c2c';
+const { ethers } = require("ethers");
+const contractABI = Organiser.abi;
+const contractAddress = '0xfdEE63eB6431E502809E6c5eC31A4994686Cfa63';
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -26,10 +26,8 @@ export default function UserReports() {
   const [isMultiplayer, setIsMultiplayer] = useState(false);
   const [isInvite, setIsInvite] = useState("OpenToAll");
   const [privateCode, setPrivateCode] = useState("");
-  const [couponCode, setCouponCode] = useState("");
   const [maxParticipants, setMaxParticipants] = useState("");
   const [PrizeFromOwner, setPrizeFromOwner] = useState("");
-  const [startingTime, setStartingTime] = useState(new Date());
   const [noOfHour, setNoOfHour] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState('12:00 AM');
@@ -45,14 +43,84 @@ export default function UserReports() {
   const handleIsMultiplayerChange = (e) => setIsMultiplayer(e.target.checked);
   const handleIsInviteChange = (e) => setIsInvite(e.target.value);
   const handlePrivateCodeChange = (e) => setPrivateCode(e.target.value);
-  const handleCouponCodeChange = (e) => setCouponCode(e.target.value);
   const handleMaxParticipantsChange = (e) => setMaxParticipants(e.target.value);
   const handlePrizeFromOwnerChange = (e) => setPrizeFromOwner(e.target.value);
-  const handleStartingTimeChange = (date) => setStartingTime(date);
   const handleNoOfHourChange = (e) => setNoOfHour(e.target.value);
 
+  async function uploadToIPFS(jsonObject) {
+    var myHeaders = new Headers();
+    myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+
+    const blob = new Blob([JSON.stringify(jsonObject)], { type: "application/json" });
+
+    var formdata = new FormData();
+    const fileName = `${gameName}.json`;
+    formdata.append("Body", blob, fileName); // Set your desired file name here
+    formdata.append("Key", fileName); // The name under which the file will be stored
+    formdata.append("ContentType", "application/json"); // Set content type to application/json
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    try {
+      const response = await fetch("https://api.quicknode.com/ipfs/rest/v1/s3/put-object", requestOptions);
+      const result = await response.json(); // Parse the response as JSON
+      console.log(result.requestid);
+      return result.requestid; // Return the IPFS CID
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async function uploadGameTOContract(_ipfs) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+    try {
+      const txResponse = await _contract.UploadGames(_ipfs, playTicketPrice, streamTicketPrice, PrizeFromOwner, { value: PrizeFromOwner });
+      await txResponse.wait();
+      console.log('Transaction successful:');
+    } catch (error) {
+      console.error('Transaction error:', error);
+    }
+  }
+
+  const handleSubmit = async () => {
+    
+    const jsonObject = {
+      "gameName": gameName,
+      "gameLink": gameLink,
+      "gameImage": gameImage,
+      "description": gameDescription,
+      "videoLink": gameVideoLink,
+      "bIsMultiplayer" : isMultiplayer,
+      "bIsInvite" : isInvite === "InviteOnly",
+      "privateCode" : privateCode,
+      "maxParticipants": maxParticipants,
+      "date" : selectedDate,
+      "time" : selectedTime,
+      "noOfHour" : noOfHour,
+    };
+    console.log(jsonObject);
+    //return;
+
+    uploadToIPFS(jsonObject).then(ipfs => {
+      if (ipfs) {
+        console.log(`IPFS CID: ${ipfs}`);
+        uploadGameTOContract(ipfs);
+      } else {
+        console.log("Failed to upload to IPFS");
+      }
+    });
+  };
+
   return (
-    <main>
+    <main className='mt-[6em]'>
       <FormControl>
         <FormLabel>Game Name</FormLabel>
         <Input type="text" value={gameName} onChange={handleGameNameChange} />
@@ -109,11 +177,6 @@ export default function UserReports() {
       )}
 
       <FormControl>
-        <FormLabel>Coupon Code</FormLabel>
-        <Input type="text" value={couponCode} onChange={handleCouponCodeChange} />
-      </FormControl>
-
-      <FormControl>
         <FormLabel>Max Participants</FormLabel>
         <Input type="text" value={maxParticipants} onChange={handleMaxParticipantsChange} />
       </FormControl>
@@ -149,7 +212,7 @@ export default function UserReports() {
         />
       </FormControl>
 
-      <Button mt={4} colorScheme="teal" type="submit">
+      <Button mt={4} colorScheme="teal" type="submit" onClick={handleSubmit}> 
         Submit
       </Button>
     </main>

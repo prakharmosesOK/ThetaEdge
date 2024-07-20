@@ -35,6 +35,10 @@ contract Organiser {
         ProfileData[msg.sender].ipfsdata = _ipfsData;
     }
 
+    function GetProfileIpfs() public view returns (string memory){
+        return ProfileData[msg.sender].ipfsdata;
+    }
+
     function UploadGames(
         string memory _ipfs,
         uint256 _gameTicketPrice,
