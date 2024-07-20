@@ -34,7 +34,11 @@ import MiniCalendar from "components/calendar/MiniCalendar";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import ProfileIcon from "components/card/ProfileIcon";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+
+// Importing Context
+import { GameListContext } from "contexts/GameListContext";
+
 import {
   MdAddTask,
   MdAttachMoney,
@@ -56,6 +60,7 @@ import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 
 export default function UserReports() {
+  const { account } = useContext(GameListContext);
   const [profileData, setProfileData] = useState({
     address: "0x0fturtydtuftyur0tseeydrtydr",
     nickName: "John Doe",
@@ -217,13 +222,18 @@ export default function UserReports() {
     console.log("The last bar chart one is: ", barChartGameOptions.xaxis.categories);
   }, [barChartGameOptions]);
 
+  useEffect(() => {
+      console.log("The account us: ", account);
+  }, [account]);
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Flex flexDirection="row">
         <ProfileIcon
           name={profileData.nickName}
           address={profileData.address}
-          image={profileData.progileImage}
+          profileImage={profileData.progileImage}
+          frameImage={profileData.frameImage}
         />
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 2, "2xl": 6 }}

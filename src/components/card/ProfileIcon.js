@@ -1,7 +1,30 @@
-import React from 'react';
-import { Box, Flex, Image, Text, Link, Stack, Heading, IconButton } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Box, Flex, Image, Text, Stack, Heading, IconButton, Input, Button } from '@chakra-ui/react';
+import { EditIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
 
-export default function ProfileIcon({ name, address, image }) {
+export default function ProfileIcon({ name, address, profileImage, frameImage }) {
+    const [isEditing, setIsEditing] = useState(false);
+    const [actualName, setActualName] = useState(name);
+    const [actualProfileImage, setActualProfileImage] = useState(profileImage);
+    const [actualFrameImage, setActualFrameImage] = useState(frameImage);
+    const [newName, setNewName] = useState(name);
+    const [newProfileImage, setNewProfileImage] = useState(profileImage);
+    const [newFrameImage, setNewFrameImage] = useState(frameImage);
+
+    const handleEdit = () => setIsEditing(true);
+    const handleSave = () => {
+        setActualName(newName);
+        setActualProfileImage(newProfileImage);
+        setActualFrameImage(newFrameImage);
+        setIsEditing(false);
+    };
+    const handleCancel = () => {
+        setNewName(actualName);
+        setNewProfileImage(actualProfileImage);
+        setNewFrameImage(actualFrameImage);
+        setIsEditing(false);
+    };
+
     return (
         <Box
             w="full"
@@ -29,8 +52,8 @@ export default function ProfileIcon({ name, address, image }) {
                         roundedTop="lg"
                     />
                     <Image
-                        src={image}
-                        alt={name}
+                        src={actualProfileImage}
+                        alt={actualName}
                         w="full"
                         h="20em"
                         mt="1.8em"
@@ -48,7 +71,16 @@ export default function ProfileIcon({ name, address, image }) {
                         left="48%"
                         top="19.8em"
                     >
-                        <Heading size="md" color="black">{name}</Heading>
+                        {isEditing ? (
+                            <Input
+                                value={newName}
+                                onChange={(e) => setNewName(e.target.value)}
+                                size="sm"
+                                placeholder="Enter name"
+                            />
+                        ) : (
+                            <Heading size="md" color="black">{actualName}</Heading>
+                        )}
                         <Box
                             position="absolute"
                             top={-2}
@@ -77,6 +109,58 @@ export default function ProfileIcon({ name, address, image }) {
                         transform="skewY(-6deg)"
                         transformOrigin="bottom left"
                     />
+                    <Box position="absolute" top="20em" right="1em" border="3px solid red" zIndex={10}>
+                        {isEditing ? (
+                            <>
+                                <IconButton
+                                    aria-label="Save"
+                                    icon={<CheckIcon />}
+                                    onClick={handleSave}
+                                    size="sm"
+                                    mr="2"
+                                />
+                                <IconButton
+                                    aria-label="Cancel"
+                                    icon={<CloseIcon />}
+                                    onClick={handleCancel}
+                                    size="sm"
+                                />
+                            </>
+                        ) : (
+                            <IconButton
+                                aria-label="Edit"
+                                icon={<EditIcon />}
+                                onClick={handleEdit}
+                                size="sm"
+                            />
+                        )}
+                    </Box>
+                    {isEditing && (
+                        <>
+                            <Input
+                                value={newProfileImage}
+                                onChange={(e) => setNewProfileImage(e.target.value)}
+                                size="sm"
+                                placeholder="Enter profile image URL"
+                                position="absolute"
+                                bottom="1em"
+                                left="1em"
+                                right="1em"
+                                zIndex={6}
+                            />
+                            <Input
+                                value={newFrameImage}
+                                onChange={(e) => setNewFrameImage(e.target.value)}
+                                size="sm"
+                                placeholder="Enter frame image URL"
+                                position="absolute"
+                                bottom="1em"
+                                left="1em"
+                                right="1em"
+                                zIndex={6}
+                            />
+                        </>
+                    )}
                 </Box>
             </Box>
         </Box>

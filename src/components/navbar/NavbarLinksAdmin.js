@@ -63,11 +63,11 @@ export default function HeaderLinks(props) {
 
 	const chainData = {
 		chainName: 'Theta Testnet',
-		chainId: '0x100',
-		rpcUrls: ['https://rpc-testnet.thetatoken.org'],
-		blockExplorerUrls: ['https://explorer-testnet.thetatoken.org/'],
+		chainId: '0x16D', // This is the hexadecimal representation of 365
+		rpcUrls: ['https://eth-rpc-api-testnet.thetatoken.org/rpc'],
+		blockExplorerUrls: ['https://testnet-explorer.thetatoken.org/'],
 		nativeCurrency: {
-			symbol: 'tTHETA',
+			symbol: 'TFUEL',
 			decimals: 18,
 		}
 	};
