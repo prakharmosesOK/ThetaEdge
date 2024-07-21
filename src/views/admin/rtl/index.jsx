@@ -24,6 +24,7 @@ export default function UserReports() {
   const [playTicketPrice, setPlayTicketPrice] = useState("");
   const [streamTicketPrice, setStreamTicketPrice] = useState("");
   const [isMultiplayer, setIsMultiplayer] = useState(false);
+  const [lobbyTimeInMin, setlobbyTimeInMin] = useState("");
   const [isInvite, setIsInvite] = useState("OpenToAll");
   const [privateCode, setPrivateCode] = useState("");
   const [maxParticipants, setMaxParticipants] = useState("");
@@ -91,7 +92,7 @@ export default function UserReports() {
   }
 
   const handleSubmit = async () => {
-    
+
     const jsonObject = {
       "gameName": gameName,
       "gameLink": gameLink,
@@ -99,6 +100,7 @@ export default function UserReports() {
       "description": gameDescription,
       "videoLink": gameVideoLink,
       "bIsMultiplayer" : isMultiplayer,
+      "lobbyTimeInMin" : lobbyTimeInMin,
       "bIsInvite" : isInvite === "InviteOnly",
       "privateCode" : privateCode,
       "maxParticipants": maxParticipants,

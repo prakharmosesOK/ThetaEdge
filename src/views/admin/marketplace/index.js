@@ -201,8 +201,10 @@ export default function Marketplace(props) {
           date: res.date,
           time: res.time,
           noOfHour : res.noOfHour,
-        };
+          lobbyTimeInMin : res.lobbyTimeInMin,
 
+        };
+        console.log(gameData);
         totalGamesList.push(gameData);
       }
       setTotalGamesList(totalGamesList);
