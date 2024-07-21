@@ -130,9 +130,9 @@ export default function ColumnsTable(props) {
                             cell.value === "Live"
                               ? "green.500"
                               : cell.value === "Upcoming"
-                              ? "red.500"
+                              ? "#fafa02"
                               : cell.value === "Ended"
-                              ? "gray.500"
+                              ? "red.500"
                               : null
                           }
                           as={

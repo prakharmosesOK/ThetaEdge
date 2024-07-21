@@ -186,10 +186,11 @@ export default function Marketplace(props) {
         const res = await getDataFromIpfs(game.Ipfs);
         const gameData = {
           gameId: game.gameId.toNumber(),
-          gameName: res.gameName, // Assuming the IPFS data has these fields
+          gameName: res.gameName,
           gameImage: res.gameImage,
           gamePrice: game.gameTicketPrice.toNumber(),
-          //gameAuthor: game.organiserAddress, // or any other field from IPFS
+          videoLink: res.videoLink,
+          streamTicketPrice : game.streamTicketPrice.toNumber(),
           nickName: res.nickName ? res.nickName : "--",
           totalParticipants: game.playersJoined.length,
           maxParticipants: res.maxParticipants,
@@ -202,7 +203,6 @@ export default function Marketplace(props) {
           time: res.time,
           noOfHour : res.noOfHour,
           lobbyTimeInMin : res.lobbyTimeInMin,
-
         };
         console.log(gameData);
         totalGamesList.push(gameData);
