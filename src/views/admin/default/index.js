@@ -53,10 +53,10 @@ import Tasks from "views/admin/default/components/Tasks";
 import TotalSpent from "views/admin/default/components/TotalSpent";
 import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
 import {
-  columnsDataCheck,
+  // columnsDataCheck,
   columnsDataComplex,
 } from "views/admin/default/variables/columnsData";
-import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
+// import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 
 export default function UserReports() {
@@ -178,6 +178,172 @@ export default function UserReports() {
       },
     }
   });
+  const [checkGameParticipated, setCheckGameParticipated] = useState([
+    {
+      "gameName": ["New International Game", false],
+      "gamePlay": 2458,
+      "prizeWon": "12 Jan 2021",
+      "stream": 17.5
+    },
+    {
+      "gameName": ["Among Us", true],
+      "gamePlay": 1485,
+      "prizeWon": "21 Feb 2021",
+      "stream": 10.8
+    },
+    {
+      "gameName": ["Weekly Update", true],
+      "gamePlay": 1024,
+      "prizeWon": "13 Mar 2021",
+      "stream": 21.3
+    },
+    {
+      "gameName": ["Venus 3D Asset", true],
+      "gamePlay": 858,
+      "prizeWon": "24 Jan 2021",
+      "stream": 31.5
+    },
+    {
+      "gameName": ["Marketplace", false],
+      "gamePlay": 258,
+      "prizeWon": "24 Oct 2022",
+      "stream": 12.2
+    },
+    {
+      "gameName": ["New International Game", false],
+      "gamePlay": 2458,
+      "prizeWon": "12 Jan 2021",
+      "stream": 17.5
+    },
+    {
+      "gameName": ["Among Us", true],
+      "gamePlay": 1485,
+      "prizeWon": "21 Feb 2021",
+      "stream": 10.8
+    },
+    {
+      "gameName": ["Weekly Update", true],
+      "gamePlay": 1024,
+      "prizeWon": "13 Mar 2021",
+      "stream": 21.3
+    },
+    {
+      "gameName": ["Venus 3D Asset", true],
+      "gamePlay": 858,
+      "prizeWon": "24 Jan 2021",
+      "stream": 31.5
+    },
+    {
+      "gameName": ["Marketplace", false],
+      "gamePlay": 258,
+      "prizeWon": "24 Oct 2022",
+      "stream": 12.2
+    },
+    {
+      "gameName": ["New International Game", false],
+      "gamePlay": 2458,
+      "prizeWon": "12 Jan 2021",
+      "stream": 17.5
+    },
+    {
+      "gameName": ["Among Us", true],
+      "gamePlay": 1485,
+      "prizeWon": "21 Feb 2021",
+      "stream": 10.8
+    },
+    {
+      "gameName": ["Weekly Update", true],
+      "gamePlay": 1024,
+      "prizeWon": "13 Mar 2021",
+      "stream": 21.3
+    },
+    {
+      "gameName": ["Venus 3D Asset", true],
+      "gamePlay": 858,
+      "prizeWon": "24 Jan 2021",
+      "stream": 31.5
+    },
+    {
+      "gameName": ["Marketplace", false],
+      "gamePlay": 258,
+      "prizeWon": "24 Oct 2022",
+      "stream": 12.2
+    }
+  ]);
+  const [complexGameOrganised, setComplexGameOrganised] = useState([
+    {
+      "gameName":"Clash of Clans",
+      "status": "Upcoming",
+      "prizePool": '$65',
+      "participants": 75.5  
+    },
+    {
+      "gameName":"Ninja Fighter",
+      "status": "Ended",
+      "prizePool": "$85",
+      "participants": 25.5  
+    },
+    {
+      "gameName":"Free Fire",
+      "status": "Live",
+      "prizePool": "$94",
+      "participants": 90  
+    },
+    {
+      "gameName":"Weekly Updates",
+      "status": "Live",
+      "prizePool": "$35",
+      "participants": 50.5  
+    },
+    {
+      "gameName":"Clash of Clans",
+      "status": "Upcoming",
+      "prizePool": '$65',
+      "participants": 75.5  
+    },
+    {
+      "gameName":"Ninja Fighter",
+      "status": "Ended",
+      "prizePool": "$85",
+      "participants": 25.5  
+    },
+    {
+      "gameName":"Free Fire",
+      "status": "Live",
+      "prizePool": "$94",
+      "participants": 90  
+    },
+    {
+      "gameName":"Weekly Updates",
+      "status": "Live",
+      "prizePool": "$35",
+      "participants": 50.5  
+    },
+    {
+      "gameName":"Clash of Clans",
+      "status": "Upcoming",
+      "prizePool": '$65',
+      "participants": 75.5  
+    },
+    {
+      "gameName":"Ninja Fighter",
+      "status": "Ended",
+      "prizePool": "$85",
+      "participants": 25.5  
+    },
+    {
+      "gameName":"Free Fire",
+      "status": "Live",
+      "prizePool": "$94",
+      "participants": 90  
+    },
+    {
+      "gameName":"Weekly Updates",
+      "status": "Live",
+      "prizePool": "$35",
+      "participants": 50.5  
+    },
+  ]);
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -199,32 +365,64 @@ export default function UserReports() {
   // }, []);
 
   useEffect(() => {
-    const fetchBarChartGameRevenue = async () => {
-      let lastGamesOrganised = profileData.gamesUpload.toReversed().slice(0, 7).map(game => game.gameId);
+    const fetchBarChartGameRevenue = () => {
+      let lastGamesOrganised = gameEventsOrganised.toReversed().slice(0, 7);
       console.log("Thw last games are: ", lastGamesOrganised);
       setBarChartGameOptions({
         ...barChartGameOptions,
         xaxis: {
           ...barChartGameOptions.xaxis,
-          categories: lastGamesOrganised
+          categories: lastGamesOrganised.map(game => game.gameId)
         }
       })
 
       // Fetch the revenue collected from last 7 games from fetchBarChartGameRevenue
-      // setBarChartGameRevenue([])
+      setBarChartGameRevenue([
+        {
+          name: "Game Play",
+          data: lastGamesOrganised.map(game => game.gamePlayRevenue)
+        }, {
+          name: "Stream",
+          data: lastGamesOrganised.map(game => game.streamRevenue)
+        }
+      ])
     }
 
     // Call the function here
-    fetchBarChartGameRevenue();
-  }, [profileData])
+    // fetchBarChartGameRevenue();
+  }, [profileData]);
 
-  useEffect(() => {
-    console.log("The last bar chart one is: ", barChartGameOptions.xaxis.categories);
-  }, [barChartGameOptions]);
+  // useEffect(() => {
+  //   const applyCheckGameParticipated = () => {
+  //     let gamesPart = gameParticipated.map(game => {
+  //       return {
+  //         gameName: [game.gameName, game.isCollected],
+  //         gamePlay: `$${game.prizeWon}`,
+  //         prizeWon: game.prizeWon,
+  //         stream: game.startDate
+  //       }
+  //     });
+  //     setCheckGameParticipated(gamesPart);
+  //   }
 
-  useEffect(() => {
-      console.log("The account us: ", account);
-  }, [account]);
+  //   applyCheckGameParticipated();
+  // }, [gameParticipated])
+
+  // useEffect(() => {
+  //   const applyComplexGameOrganised = () => {
+  //     let gamesOrg = gameEventsOrganised.map(game => {
+  //       return {
+  //         gameName: game.gameName,
+  //         status: game.startDate > new Date() ? "Upcoming" : (new Date(game.startDate - game.hours*3600*1000) > new Date() ? "Live" : "Ended"),
+  //         prizePool: game.totalPrizeMoney,
+  //         participants: game.participants
+  //       }
+  //     });
+  //     setComplexGameOrganised(gamesOrg);
+  //   }
+
+  //   applyComplexGameOrganised();
+  // }, [gameEventsOrganised]);
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
@@ -330,10 +528,13 @@ export default function UserReports() {
         />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
+        <CheckTable
+          // columnsData={columnsDataCheck}
+          tableData={checkGameParticipated}
+        />
         <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
+          // columnsData={columnsDataComplex}
+          tableData={complexGameOrganised}
         />
         {/* <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
           <DailyTraffic />
