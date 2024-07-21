@@ -44,7 +44,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x46de3be1db71391685cc7c649d8c3a04325115d4';
+const contractAddress = '0xfdEE63eB6431E502809E6c5eC31A4994686Cfa63';
 
 
 const filters = [
@@ -189,20 +189,22 @@ export default function Marketplace(props) {
           gameName: res.gameName, // Assuming the IPFS data has these fields
           gameImage: res.gameImage,
           gamePrice: game.gameTicketPrice.toNumber(),
-          gameAuthor: res.gameAuthor, // or any other field from IPFS
-          nickName: res.nickName,
+          //gameAuthor: game.organiserAddress, // or any other field from IPFS
+          nickName: res.nickName ? res.nickName : "--",
           totalParticipants: game.playersJoined.length,
           maxParticipants: res.maxParticipants,
           totalPrizeMoney: game.totalRevenue.toNumber(),
           bIsInvite: res.bIsInvite,
           privateCode: res.privateCode,
           bIsMultiplayer: res.bIsMultiplayer,
-          lobbyCode: res.lobbyCode,
-          couponCode: res.couponCode,
           organiserAddress: game.organiserAddress,
-          date: new Date(res.date)
-        };
+          date: res.date,
+          time: res.time,
+          noOfHour : res.noOfHour,
+          lobbyTimeInMin : res.lobbyTimeInMin,
 
+        };
+        console.log(gameData);
         totalGamesList.push(gameData);
       }
       setTotalGamesList(totalGamesList);
