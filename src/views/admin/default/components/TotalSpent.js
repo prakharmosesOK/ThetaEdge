@@ -368,7 +368,8 @@ export default function TotalSpent(props) {
               Total Revenue
             </Text>
             <Flex align='center'>
-              <Icon as={growth.value >= 0 ? RiArrowUpSFill : RiArrowDownSFill} color='green.500' me='2px' mt='2px' />
+              {growth.value >= 0 ? <Icon as={RiArrowUpSFill} color='green.500' me='2px' mt='2px' /> :
+              <Icon as={RiArrowDownSFill} color='red.500' me='2px' mt='2px' />}
               <Text color='green.500' fontSize='sm' fontWeight='700'>
                 {growth.percent}%
               </Text>
