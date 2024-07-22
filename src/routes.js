@@ -23,7 +23,7 @@ const routes = [
   {
     name: "Home",
     layout: "/admin",
-    path: "/profile",
+    path: "/home",
     icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
     component: Profile,
   },
@@ -52,7 +52,7 @@ const routes = [
   {
     name: "User Dashboard",
     layout: "/admin",
-    path: "/default",
+    path: "/profile/:userId",
     icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
     component: UserDashboard,
   },

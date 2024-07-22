@@ -23,7 +23,7 @@ export default function Banner(props) {
       bgImage={
         gameDetails.gameImage ? gameDetails.gameImage :
         banner}
-      bgSize='cover'
+      bgSize='fit'
       py={{ base: "30px", md: "56px" }}
       px={{ base: "30px", md: "64px" }}
       borderRadius='30px'>

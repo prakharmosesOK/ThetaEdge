@@ -162,7 +162,7 @@ export default function NFT(props) {
             top="-1em"
             right="-4em"
           >
-            Event Date: {gameEvent.date.toDateString()} {gameEvent.time.toString()}
+            Event Date: {gameEvent.date.toString().slice(0, 15)}
           </Text>
         </Flex>
       </Flex>

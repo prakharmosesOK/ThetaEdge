@@ -188,6 +188,7 @@ export default function Marketplace(props) {
           gameId: game.gameId.toNumber(),
           gameName: res.gameName,
           gameImage: res.gameImage,
+          gameDescription: res.description,
           gamePrice: game.gameTicketPrice.toNumber(),
           videoLink: res.videoLink,
           streamTicketPrice : game.streamTicketPrice.toNumber(),
@@ -199,8 +200,7 @@ export default function Marketplace(props) {
           privateCode: res.privateCode,
           bIsMultiplayer: res.bIsMultiplayer,
           organiserAddress: game.organiserAddress,
-          date: res.date,
-          time: res.time,
+          date: new Date(res.date),
           noOfHour : res.noOfHour,
           lobbyTimeInMin : res.lobbyTimeInMin,
         };
