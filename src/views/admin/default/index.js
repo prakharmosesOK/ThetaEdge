@@ -58,7 +58,21 @@ import {
 } from "views/admin/default/variables/columnsData";
 // import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 // import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
-import frameImage from 'assets/img/dashboards/frameImage.png';
+
+// Importing frames
+import frame1 from 'assets/img/dashboards/frame1.png'
+import frame2 from 'assets/img/dashboards/frame2.png'
+import frame3 from 'assets/img/dashboards/frame3.png'
+import frame4 from 'assets/img/dashboards/frame4.png'
+import frame5 from 'assets/img/dashboards/frame5.png'
+import frame6 from 'assets/img/dashboards/frame6.png'
+import frame7 from 'assets/img/dashboards/frame7.png'
+import frame8 from 'assets/img/dashboards/frame8.png'
+import frame9 from 'assets/img/dashboards/frame9.png'
+import frame10 from 'assets/img/dashboards/frame10.png'
+import defaultFrame from 'assets/img/dashboards/defaultFrame.png'
+
+const framesArray = [defaultFrame, frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10];
 
 export default function UserReports() {
   const { account } = useContext(GameListContext);
@@ -66,7 +80,7 @@ export default function UserReports() {
     address: "0x0fturtydtuftyur0tseeydrtydr",
     nickName: "John Doe",
     profileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
-    frameImage: frameImage,
+    frameImage: framesArray[5],
     gamesParticipating: [
       { gameId: 1, isCollected: false },
       { gameId: 2, isCollected: true }
@@ -77,7 +91,8 @@ export default function UserReports() {
     ],
     moneyGained: 65896,
     moneySpent: 7897,
-    currentBalance: 85369
+    currentBalance: 85369,
+    frameImageArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
   });
   const [gameEventsOrganised, setGameEventsOrganised] = useState([]);
   const [gameParticipated, setGameParticipated] = useState([]);
@@ -433,6 +448,8 @@ export default function UserReports() {
           address={profileData.address}
           profileImage={profileData.profileImage}
           frameImage={profileData.frameImage}
+          framesArray={framesArray}
+          frameAllowed={profileData.frameImageArray}
         />
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 2, "3xl": 6 }}

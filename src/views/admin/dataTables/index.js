@@ -35,8 +35,20 @@ export default function GamePage() {
   return (
     <Box p={5} mt="4em">
       <HStack spacing={4} mb={5}>
-        <Button onClick={() => setSelectedTab("details")} colorScheme={selectedTab === "details" ? "blue" : "gray"}>Game Details</Button>
-        <Button onClick={() => setSelectedTab("stream")} colorScheme={selectedTab === "stream" ? "blue" : "gray"}>Game Stream</Button>
+        <Button
+          onClick={() => setSelectedTab("details")}
+          // colorScheme={selectedTab === "details" ? "blue" : "gray"}
+          type="button"
+          bg="hover:yellow.500"
+          className="text-yellow-400 hover:text-white border hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-yellow-300"
+        >Game Details</Button>
+        <Button
+          onClick={() => setSelectedTab("stream")}
+          // colorScheme={selectedTab === "stream" ? "blue" : "gray"}
+          type="button"
+          bg="hover:purple.800"
+          className="text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        >Game Streaming</Button>
       </HStack>
       {selectedTab === "details" ? <GameDetails game={game} /> : <GameStream game={game} />}
     </Box>

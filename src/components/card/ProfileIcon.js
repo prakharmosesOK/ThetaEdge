@@ -5,7 +5,7 @@ import { BiSolidMessageSquareEdit } from 'react-icons/bi';
 
 import ImageSelector from 'views/admin/default/components/ImageSelector';
 
-export default function ProfileIcon({ name, address, profileImage, frameImage }) {
+export default function ProfileIcon({ name, address, profileImage, frameImage, framesArray, frameAllowed }) {
     const [isEditing, setIsEditing] = useState(false);
     const [actualName, setActualName] = useState(name);
     const [actualProfileImage, setActualProfileImage] = useState(profileImage);
@@ -95,7 +95,7 @@ export default function ProfileIcon({ name, address, profileImage, frameImage })
                     {isEditing === false &&
                         <IconButton
                             aria-label="Edit"
-                            icon={<Icon w='32px' h='32px' as={BiSolidMessageSquareEdit} color="red" />}
+                            icon={<Icon w='32px' h='32px' as={BiSolidMessageSquareEdit} color="red" bg="transparent" />}
                             onClick={handleEdit}
                             size="sm"
                         />
@@ -106,14 +106,14 @@ export default function ProfileIcon({ name, address, profileImage, frameImage })
                         <>
                             <IconButton
                                 aria-label="Save"
-                                icon={<Icon w='32px' h='32px' as={MdSave} color="#02c456" />}
+                                icon={<Icon w='32px' h='32px' as={MdSave} color="#02c456" bg="black" />}
                                 onClick={handleSave}
                                 size="sm"
                                 mr="2"
                             />
                             <IconButton
                                 aria-label="Cancel"
-                                icon={<Icon w='32px' h='32px' as={MdCancel} color="red.600" />}
+                                icon={<Icon w='32px' h='32px' as={MdCancel} color="red.600" bg="black" />}
                                 onClick={handleCancel}
                                 size="sm"
                             />
@@ -122,10 +122,14 @@ export default function ProfileIcon({ name, address, profileImage, frameImage })
                 </Box>
                 {isEditing &&
                     <ImageSelector
-                        images={[newProfileImage, newFrameImage]}
-                        setImages={[setNewProfileImage, setNewFrameImage]}
+                        profileImage={newProfileImage}
+                        setProfileImage={setNewProfileImage}
+                        frameImage={newFrameImage}
+                        setFrameImage={setNewFrameImage}
                         name={newName}
                         setName={setNewName}
+                        framesArray={framesArray}
+                        frameAllowed={frameAllowed}
                     />
                 }
             </Box>
