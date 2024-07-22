@@ -181,7 +181,7 @@ export default function Marketplace(props) {
       const gamesList = await _contract.getGamesList();
       console.log(gamesList);
 
-      const totalGamesList = [];
+      const allGamesList = [];
       for (const [index, game] of gamesList.entries()) {
         const res = await getDataFromIpfs(game.Ipfs);
         const gameData = {
@@ -205,9 +205,10 @@ export default function Marketplace(props) {
           lobbyTimeInMin : res.lobbyTimeInMin,
         };
         console.log(gameData);
-        totalGamesList.push(gameData);
+        allGamesList.push(gameData);
       }
-      setTotalGamesList(totalGamesList);
+      setTotalGamesList(allGamesList);
+      setTopGamesList(allGamesList.slice(0, 3));
     } catch (error) {
       console.error(error);
     }
@@ -272,15 +273,6 @@ export default function Marketplace(props) {
       setSearchedGamesList(filteredGamesList);
     }
   }, [searchText]);
-
-  useEffect(() => {
-    const defineTopGames = () => {
-      // Desfine top games
-      // setTopGamesList(totalGamesList.slice(0, 3));
-    }
-
-    // defineTopGames();
-  }, [])
 
   useEffect(() => {
     applyFilters();

@@ -3,14 +3,16 @@ import { Box, Flex, Image, Text, Stack, Heading, IconButton, Input, Button, Icon
 import { MdCancel, MdSave } from 'react-icons/md';
 import { BiSolidMessageSquareEdit } from 'react-icons/bi';
 
+import ImageSelector from 'views/admin/default/components/ImageSelector';
+
 export default function ProfileIcon({ name, address, profileImage, frameImage }) {
     const [isEditing, setIsEditing] = useState(false);
     const [actualName, setActualName] = useState(name);
     const [actualProfileImage, setActualProfileImage] = useState(profileImage);
     const [actualFrameImage, setActualFrameImage] = useState(frameImage);
-    const [newName, setNewName] = useState(name);
-    const [newProfileImage, setNewProfileImage] = useState(profileImage);
-    const [newFrameImage, setNewFrameImage] = useState(frameImage);
+    const [newName, setNewName] = useState(actualName);
+    const [newProfileImage, setNewProfileImage] = useState(actualProfileImage);
+    const [newFrameImage, setNewFrameImage] = useState(actualFrameImage);
 
     const handleEdit = () => setIsEditing(true);
     const handleSave = () => {
@@ -28,140 +30,104 @@ export default function ProfileIcon({ name, address, profileImage, frameImage })
 
     return (
         <Box
-            w="full"
-            maxW="19em"
-            h="24em"
+            w="25em"
+            h="26em"
             bg="transparent"
             mr="2em"
             ml="0.2em"
             mb="1em"
+            mt="1em"
         >
             <Box
-                bg="white"
+                bg="transparent"
                 shadow="md"
                 rounded="lg"
-                overflow="hidden"
-                position="relative"
+                position="absolute"
                 h="full"
+                w="full"
                 _hover={{ shadow: 'xl' }}
             >
-                <Box position="relative">
+                <Image
+                    src={actualProfileImage}
+                    alt={actualName}
+                    w="18em"
+                    h="18em"
+                    position="absolute"
+                    top="1.8em"
+                    left="1.8em"
+                    zIndex="2"
+                />
+                <Image
+                    src={actualFrameImage}
+                    alt={actualName}
+                    w='28.3em'
+                    h='28.3em'
+                    position='absolute'
+                    top="-3.9em"
+                    left="-3.35em"
+                    zIndex='3'
+                />
+            </Box>
+            <Box p={4} textAlign="center" position="relative" bg="transparent">
+                <Flex
+                    flexDirection="column"
+                    zIndex={5}
+                    position="absolute"
+                    w="18em"
+                    h="4em"
+                    left="1.8em"
+                    top="22em"
+                    bg="#f2f218"
+                    alignItems="center"
+                    justifyContent="space-evenly"
+                    p="0.3em"
+                    rounded="full"
+                >
                     <Box
-                        position="absolute"
-                        inset="0"
-                        border="4px solid white"
-                        roundedTop="lg"
+                        w="3em"
+                        h="0.1em"
+                        bg="blue.600"
                     />
-                    <Image
-                        src={actualProfileImage}
-                        alt={actualName}
-                        w="full"
-                        h="20em"
-                        mt="1.8em"
-                        ml="1.8em"
-                        position="absolute"
-                        zIndex="2"
-                    />
-                </Box>
-                <Box p={4} textAlign="center" position="relative" bg="white">
-                    <Flex
-                        spacing="0.1em"
-                        zIndex={5}
-                        position="absolute"
-                        w="10em"
-                        right="1.8em"
-                        top="19.8em"
-                        alignItems="flex-end"
-                    >
-                        <Heading size="md" color="black">{actualName}</Heading>
-                        <Box
-                            position="absolute"
-                            top={-2}
-                            right="-0.5em"
-                            transform="translateX(-50%)"
-                            w={8}
-                            h={1}
-                            bg="blue.600"
+                    <Heading size="md" color="black">{actualName}</Heading>
+                    <Text color="black">{address}</Text>
+                </Flex>
+                <Box position="absolute" top="0.5em" right="1em" zIndex={10}>
+                    {isEditing === false &&
+                        <IconButton
+                            aria-label="Edit"
+                            icon={<Icon w='32px' h='32px' as={BiSolidMessageSquareEdit} color="red" />}
+                            onClick={handleEdit}
+                            size="sm"
                         />
-                    </Flex>
-                    <Text
-                        color="black"
-                        position="absolute"
-                        left="17%"
-                        top="21.5em"
-                        zIndex={5}
-                    >{address}</Text>
-                    <Box
-                        position="absolute"
-                        top="20em"
-                        right="0em"
-                        width="full"
-                        h="4em"
-                        bg="white"
-                        zIndex="3"
-                        transform="skewY(-6deg)"
-                        transformOrigin="bottom left"
-                    />
-                    <Box position="absolute" top="0.5em" right="1em" zIndex={10}>
-                        {isEditing ? (
-                            <>
-                                <IconButton
-                                    aria-label="Save"
-                                    icon={<Icon w='32px' h='32px' as={MdSave} color="#02c456" />}
-                                    onClick={handleSave}
-                                    size="sm"
-                                    mr="2"
-                                />
-                                <IconButton
-                                    aria-label="Cancel"
-                                    icon={<Icon w='32px' h='32px' as={MdCancel} color="red.600" />}
-                                    onClick={handleCancel}
-                                    size="sm"
-                                />
-                            </>
-                        ) : (
+                    }
+                </Box>
+                <Box position="relative" top="-3.5em" left="49em" zIndex={130}>
+                    {isEditing &&
+                        <>
                             <IconButton
-                                aria-label="Edit"
-                                icon={<Icon w='32px' h='32px' as={BiSolidMessageSquareEdit} color="black" />}
-                                onClick={handleEdit}
+                                aria-label="Save"
+                                icon={<Icon w='32px' h='32px' as={MdSave} color="#02c456" />}
+                                onClick={handleSave}
+                                size="sm"
+                                mr="2"
+                            />
+                            <IconButton
+                                aria-label="Cancel"
+                                icon={<Icon w='32px' h='32px' as={MdCancel} color="red.600" />}
+                                onClick={handleCancel}
                                 size="sm"
                             />
-                        )}
-                    </Box>
-                    {isEditing && (
-                        <section className="bg-navy-blue text-white flex flex-col justify-between items-center absolute top-[2.5em] right-[3%] z-10 w-[94%] h-[21em] p-3 rounded-lg shadow-md bg-black">
-                            <div className="mb-4">
-                                <label className="text-lg font-semibold">Enter your new nickname:</label>
-                                <input
-                                    value={newName}
-                                    onChange={(e) => setNewName(e.target.value)}
-                                    className="w-full p-2 mt-1 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500"
-                                    placeholder="Enter name"
-                                />
-                            </div>
-
-                            <div className="mb-4">
-                                <label className="text-lg font-semibold">Enter your new profile image link:</label>
-                                <input
-                                    value={newProfileImage}
-                                    onChange={(e) => setNewProfileImage(e.target.value)}
-                                    className="w-full p-2 mt-1 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500"
-                                    placeholder="Enter profile image URL"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="text-lg font-semibold">Enter your new frame image link:</label>
-                                <input
-                                    value={newFrameImage}
-                                    onChange={(e) => setNewFrameImage(e.target.value)}
-                                    className="w-full p-2 mt-1 rounded border border-gray-300 focus:outline-none focus:ring focus:border-blue-500"
-                                    placeholder="Enter frame image URL"
-                                />
-                            </div>
-                        </section>
-                    )}
+                        </>
+                    }
                 </Box>
+                {isEditing &&
+                    <ImageSelector
+                        images={[newProfileImage, newFrameImage]}
+                        setImages={[setNewProfileImage, setNewFrameImage]}
+                        name={newName}
+                        setName={setNewName}
+                    />
+                }
             </Box>
         </Box >
     );

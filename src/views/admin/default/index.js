@@ -57,15 +57,16 @@ import {
   columnsDataComplex,
 } from "views/admin/default/variables/columnsData";
 // import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
+// import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
+import frameImage from 'assets/img/dashboards/frameImage.png';
 
 export default function UserReports() {
   const { account } = useContext(GameListContext);
   const [profileData, setProfileData] = useState({
     address: "0x0fturtydtuftyur0tseeydrtydr",
     nickName: "John Doe",
-    progileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
-    frameImage: "fghgdbgymtyftydtsrtdrts",
+    profileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
+    frameImage: frameImage,
     gamesParticipating: [
       { gameId: 1, isCollected: false },
       { gameId: 2, isCollected: true }
@@ -430,12 +431,12 @@ export default function UserReports() {
         <ProfileIcon
           name={profileData.nickName}
           address={profileData.address}
-          profileImage={profileData.progileImage}
+          profileImage={profileData.profileImage}
           frameImage={profileData.frameImage}
         />
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 2, "3xl": 6 }}
-          w="80%"
+          w="72%"
           gap='20px'
           mb='20px'
         >
