@@ -80,7 +80,7 @@ export default function UserReports() {
     address: "0x0fturtydtuftyur0tseeydrtydr",
     nickName: "John Doe",
     profileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
-    frameImage: framesArray[5],
+    frameImage: 0,
     gamesParticipating: [
       { gameId: 1, isCollected: false },
       { gameId: 2, isCollected: true }

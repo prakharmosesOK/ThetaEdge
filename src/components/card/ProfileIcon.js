@@ -55,7 +55,7 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
                     zIndex="2"
                 />
                 <Image
-                    src={profileData.frameImage}
+                    src={framesArray[profileData.frameImage]}
                     alt={profileData.nickName}
                     w='28.3em'
                     h='28.3em'
