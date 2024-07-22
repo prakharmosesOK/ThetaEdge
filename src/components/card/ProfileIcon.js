@@ -4,12 +4,61 @@ import { MdCancel, MdSave } from 'react-icons/md';
 import { BiSolidMessageSquareEdit } from 'react-icons/bi';
 
 import ImageSelector from 'views/admin/default/components/ImageSelector';
+import Organiser from "../../contracts/Organiser.json";
+
+const { ethers } = require("ethers");
+const contractABI = Organiser.abi;
+const contractAddress = '0xAc4868F06f8e797e65c0ea3328B31A7238695869';
 
 export default function ProfileIcon({ profileData, setProfileData, framesArray }) {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(profileData.nickName);
     const [newProfileImage, setNewProfileImage] = useState(profileData.profileImage);
     const [newFrameImage, setNewFrameImage] = useState(profileData.frameImage);
+
+    async function uploadToIPFS(jsonObject, address) {
+        var myHeaders = new Headers();
+        myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+
+        const blob = new Blob([JSON.stringify(jsonObject)], { type: "application/json" });
+
+        var formdata = new FormData();
+        const fileName = `${address}.json`;
+        formdata.append("Body", blob, fileName); // Set your desired file name here
+        formdata.append("Key", fileName); // The name under which the file will be stored
+        formdata.append("ContentType", "application/json"); // Set content type to application/json
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+        };
+
+        try {
+            const response = await fetch("https://api.quicknode.com/ipfs/rest/v1/s3/put-object", requestOptions);
+            const result = await response.json(); // Parse the response as JSON
+            console.log(result.requestid);
+            return result.requestid; // Return the IPFS CID
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+
+    async function uploadProfileTOContract(_ipfs) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+        try {
+            const txResponse = await _contract.UploadProfile(_ipfs);
+            await txResponse.wait();
+            console.log("upload successful")
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleEdit = () => setIsEditing(true);
     const handleSave = () => {
@@ -19,6 +68,24 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
             profileImage: newProfileImage,
             frameImage: newFrameImage,
         })
+        console.log(profileData);
+        const jsonObject = {
+            nickName: newName ? newName : profileData.nickName,
+            profileImage: newProfileImage ? newProfileImage : profileData.profileImage,
+            frameImage: newFrameImage ? newFrameImage : profileData.frameImage,
+        };
+        console.log(jsonObject);
+
+        const addr = profileData.address ? profileData.address : "address";
+        
+        uploadToIPFS(jsonObject, addr).then(ipfs => {
+            if (ipfs) {
+                console.log(`IPFS CID: ${ipfs}`);
+                uploadProfileTOContract(ipfs);
+            } else {
+                console.log("Failed to upload to IPFS");
+            }
+        });
         setIsEditing(false);
     };
     const handleCancel = () => {
@@ -55,7 +122,7 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
                     zIndex="2"
                 />
                 <Image
-                    src={profileData.frameImage}
+                    src={framesArray[profileData.frameImage]}
                     alt={profileData.nickName}
                     w='28.3em'
                     h='28.3em'

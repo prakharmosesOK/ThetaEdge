@@ -58,7 +58,7 @@ import {
 } from "views/admin/default/variables/columnsData";
 // import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 // import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
-
+import Organiser from "../../../contracts/Organiser.json";
 // Importing frames
 import frame1 from 'assets/img/dashboards/frame1.png'
 import frame2 from 'assets/img/dashboards/frame2.png'
@@ -73,14 +73,17 @@ import frame10 from 'assets/img/dashboards/frame10.png'
 import defaultFrame from 'assets/img/dashboards/defaultFrame.png'
 
 const framesArray = [defaultFrame, frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10];
+const { ethers } = require("ethers");
+const contractABI = Organiser.abi;
+const contractAddress = '0xAc4868F06f8e797e65c0ea3328B31A7238695869';
 
 export default function UserReports() {
   const { account } = useContext(GameListContext);
   const [profileData, setProfileData] = useState({
-    address: "0x0fturtydtuftyur0tseeydrtydr",
+    address: account,
     nickName: "John Doe",
     profileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
-    frameImage: framesArray[5],
+    frameImage: 0,
     gamesParticipating: [
       { gameId: 1, isCollected: false },
       { gameId: 2, isCollected: true }
@@ -92,7 +95,7 @@ export default function UserReports() {
     moneyGained: 65896,
     moneySpent: 7897,
     currentBalance: 85369,
-    frameImageArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    frameImageArray: [0],
   });
   const [gameEventsOrganised, setGameEventsOrganised] = useState([]);
   const [gameParticipated, setGameParticipated] = useState([]);
@@ -288,97 +291,144 @@ export default function UserReports() {
   ]);
   const [complexGameOrganised, setComplexGameOrganised] = useState([
     {
-      "gameName":"Clash of Clans",
+      "gameName": "Clash of Clans",
       "status": "Upcoming",
       "prizePool": '$65',
-      "participants": 75.5  
+      "participants": 75.5
     },
     {
-      "gameName":"Ninja Fighter",
+      "gameName": "Ninja Fighter",
       "status": "Ended",
       "prizePool": "$85",
-      "participants": 25.5  
+      "participants": 25.5
     },
     {
-      "gameName":"Free Fire",
+      "gameName": "Free Fire",
       "status": "Live",
       "prizePool": "$94",
-      "participants": 90  
+      "participants": 90
     },
     {
-      "gameName":"Weekly Updates",
+      "gameName": "Weekly Updates",
       "status": "Live",
       "prizePool": "$35",
-      "participants": 50.5  
+      "participants": 50.5
     },
     {
-      "gameName":"Clash of Clans",
+      "gameName": "Clash of Clans",
       "status": "Upcoming",
       "prizePool": '$65',
-      "participants": 75.5  
+      "participants": 75.5
     },
     {
-      "gameName":"Ninja Fighter",
+      "gameName": "Ninja Fighter",
       "status": "Ended",
       "prizePool": "$85",
-      "participants": 25.5  
+      "participants": 25.5
     },
     {
-      "gameName":"Free Fire",
+      "gameName": "Free Fire",
       "status": "Live",
       "prizePool": "$94",
-      "participants": 90  
+      "participants": 90
     },
     {
-      "gameName":"Weekly Updates",
+      "gameName": "Weekly Updates",
       "status": "Live",
       "prizePool": "$35",
-      "participants": 50.5  
+      "participants": 50.5
     },
     {
-      "gameName":"Clash of Clans",
+      "gameName": "Clash of Clans",
       "status": "Upcoming",
       "prizePool": '$65',
-      "participants": 75.5  
+      "participants": 75.5
     },
     {
-      "gameName":"Ninja Fighter",
+      "gameName": "Ninja Fighter",
       "status": "Ended",
       "prizePool": "$85",
-      "participants": 25.5  
+      "participants": 25.5
     },
     {
-      "gameName":"Free Fire",
+      "gameName": "Free Fire",
       "status": "Live",
       "prizePool": "$94",
-      "participants": 90  
+      "participants": 90
     },
     {
-      "gameName":"Weekly Updates",
+      "gameName": "Weekly Updates",
       "status": "Live",
       "prizePool": "$35",
-      "participants": 50.5  
+      "participants": 50.5
     },
   ]);
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
 
-  // useEffect(() => {
-  //   const fetchProfileInfo = () => {
-  //     // Do the needfull
-  //     setProfileData();
-  //   }
+  async function getDataFromIpfs(requestId) {
+    var myHeaders = new Headers();
+    myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
 
-  // const fetchGameEventsOrganised = () => {
-  // }
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
 
-  // const fetchGameParticipated = () => {
-  // }
+    try {
+      const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
+      const result = await response.json();
+      return result; // Return the result
+    } catch (error) {
+      console.log(error);
+      return null; // Return null in case of an error
+    }
+  }
 
-  //   // Call the function
-  //   fetchProfileInfo();
-  // }, []);
+  useEffect(() => {
+    const fetchProfileInfo = async () => {
+      console.log(account);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      //const signer = provider.getSigner();
+      const _contract = new ethers.Contract(contractAddress, contractABI, provider);
+      try {
+        const result1 = await _contract.GetProfileIpfs(account);
+        console.log(result1);
+          const result = await getDataFromIpfs(result1);
+          console.log(result);
+            setProfileData(prevProfileData => ({
+              ...prevProfileData, // Keep the existing properties
+              nickName: result.nickName ? result.nickName : '', // Hardcoded new nickname
+              profileImage: result.profileImage ? result.profileImage : '', // Hardcoded new moneyGained value
+              frameImage: result.frameImage ? result.frameImage : 0
+            }));
+          
+      }
+      catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const result2 = await _contract.getGamesStatus(account);
+        console.log(result2);
+      }
+      catch (error) {
+        console.log(error);
+      }
+
+    }
+
+    const fetchGameEventsOrganised = () => {
+    }
+
+    const fetchGameParticipated = () => {
+    }
+
+    // Call the function
+    fetchProfileInfo();
+  }, []);
 
   useEffect(() => {
     const fetchBarChartGameRevenue = () => {
