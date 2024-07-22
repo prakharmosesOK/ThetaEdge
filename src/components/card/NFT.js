@@ -21,7 +21,7 @@ export default function NFT(props) {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorBid = useColorModeValue("brand.500", "white");
   return (
-    <Card p='20px' h="10em">
+    <Card p='20px' h="10em" shadow={`0 0 10px 0.4px ${gameEvent.date > new Date() ? "#fafa02" : (new Date(gameEvent.date - gameEvent.noOfHour*3600*1000) > new Date() ? "#56fc35" : "red")}`}>
       <Flex direction="row" justify='center'>
         <Box mb="20px" position='absolute' left={{ base: "20px", md: "30px" }}>
           <Image
@@ -66,14 +66,14 @@ export default function NFT(props) {
                 {gameEvent.gameName}
               </Text>
               <Text
-                color='secondaryGray.600'
+                color='#00bbf9'
                 fontSize={{
                   base: "sm",
                 }}
                 fontWeight='400'
                 mb="10px"
                 me='14px'>
-                {gameEvent.nickName}
+                Organiser: <strong>{gameEvent.nickName}</strong>
               </Text>
             </Flex>
             {/* <AvatarGroup
@@ -93,24 +93,24 @@ export default function NFT(props) {
               ))}
             </AvatarGroup> */}
             <Text
-              color='secondaryGray.600'
+              color='#ffd166'
               fontSize={{
                 base: "sm",
               }}
               fontWeight='400'
               mb="10px"
               me='14px'>
-              Total Participants: {gameEvent.maxParticipants} / {gameEvent.totalParticipants} joined
+              Total Participants: <strong>{gameEvent.totalParticipants} / {gameEvent.maxParticipants} joined</strong>
             </Text>
             <Text
-              color='secondaryGray.600'
+              color='#03fca5'
               fontSize={{
                 base: "sm",
               }}
               fontWeight='400'
               mb="10px"
               me='14px'>
-              Prize Pool: ${gameEvent.totalPrizeMoney}
+              Prize Pool: <strong>${gameEvent.totalPrizeMoney}</strong>
             </Text>
           </Flex>
           <Flex
@@ -123,18 +123,20 @@ export default function NFT(props) {
               xl: "column",
               "2xl": "row",
             }}
-            mt='25px'>
+            mt='17px'>
             <Text fontWeight='700' fontSize='sm' color={textColorBid}>
-              NFT Game Price: {gameEvent.gameTicketPrice} <br /> NFT Stream Price: {gameEvent.streamTicketPrice}
+              NFT Game Price: {gameEvent.gameTicketPrice} <br />
+              NFT Stream Price: {gameEvent.streamTicketPrice} <br />
+              Duration: {gameEvent.noOfHour} hours
             </Text>
             <Link
               href={`/admin/data-tables/${gameEvent.gameId}`}
-              mt={{
+              my={{
                 base: "0px",
                 md: "10px",
                 lg: "0px",
                 xl: "10px",
-                "2xl": "0px",
+                "2xl": "10px",
               }}>
               <Button
                 variant='darkBrand'
@@ -148,6 +150,20 @@ export default function NFT(props) {
               </Button>
             </Link>
           </Flex>
+          <Text
+            color='gray.400'
+            fontSize={{
+              base: "sm",
+            }}
+            fontWeight='400'
+            mb="10px"
+            me='14px'
+            position='absolute'
+            top="-1em"
+            right="-4em"
+          >
+            Event Date: {gameEvent.date.toDateString()} {gameEvent.time.toString()}
+          </Text>
         </Flex>
       </Flex>
     </Card>
