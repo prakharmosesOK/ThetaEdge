@@ -67,7 +67,7 @@ const ImageSelector = (props) => {
                     transition="flex 0.3s"
                 >
                     <Image
-                        src={frameImage}
+                        src={framesArray[frameImage]}
                         alt={`Generated`}
                         objectFit="cover"
                         w="100%"
@@ -109,7 +109,7 @@ const ImageSelector = (props) => {
                                 key={idx}
                                 alt={`Generated`}
                                 objectFit="cover"
-                                onClick={() => setFrameImage(framesArray[idx])}
+                                onClick={() => setFrameImage(idx)}
                                 cursor="pointer"
                                 pointerEvents={frameAllowed.includes(idx) ? 'auto' : 'none'}
                                 bg={frameAllowed.includes(idx) ? 'transsparent' : 'gray-300'}
