@@ -444,12 +444,9 @@ export default function UserReports() {
     <Box mt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Flex flexDirection="row">
         <ProfileIcon
-          name={profileData.nickName}
-          address={profileData.address}
-          profileImage={profileData.profileImage}
-          frameImage={profileData.frameImage}
+          profileData={profileData}
+          setProfileData={setProfileData}
           framesArray={framesArray}
-          frameAllowed={profileData.frameImageArray}
         />
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 2, "3xl": 6 }}

@@ -5,26 +5,23 @@ import { BiSolidMessageSquareEdit } from 'react-icons/bi';
 
 import ImageSelector from 'views/admin/default/components/ImageSelector';
 
-export default function ProfileIcon({ name, address, profileImage, frameImage, framesArray, frameAllowed }) {
+export default function ProfileIcon({ profileData, setProfileData, framesArray }) {
     const [isEditing, setIsEditing] = useState(false);
-    const [actualName, setActualName] = useState(name);
-    const [actualProfileImage, setActualProfileImage] = useState(profileImage);
-    const [actualFrameImage, setActualFrameImage] = useState(frameImage);
-    const [newName, setNewName] = useState(actualName);
-    const [newProfileImage, setNewProfileImage] = useState(actualProfileImage);
-    const [newFrameImage, setNewFrameImage] = useState(actualFrameImage);
+    const [newName, setNewName] = useState(profileData.nickName);
+    const [newProfileImage, setNewProfileImage] = useState(profileData.profileImage);
+    const [newFrameImage, setNewFrameImage] = useState(profileData.frameImage);
 
     const handleEdit = () => setIsEditing(true);
     const handleSave = () => {
-        setActualName(newName);
-        setActualProfileImage(newProfileImage);
-        setActualFrameImage(newFrameImage);
+        setProfileData({
+            ...profileData,
+            nickName: newName,
+            profileImage: newProfileImage,
+            frameImage: newFrameImage,
+        })
         setIsEditing(false);
     };
     const handleCancel = () => {
-        setNewName(actualName);
-        setNewProfileImage(actualProfileImage);
-        setNewFrameImage(actualFrameImage);
         setIsEditing(false);
     };
 
@@ -48,8 +45,8 @@ export default function ProfileIcon({ name, address, profileImage, frameImage, f
                 _hover={{ shadow: 'xl' }}
             >
                 <Image
-                    src={actualProfileImage}
-                    alt={actualName}
+                    src={profileData.profileImage}
+                    alt={profileData.nickName}
                     w="18em"
                     h="18em"
                     position="absolute"
@@ -58,8 +55,8 @@ export default function ProfileIcon({ name, address, profileImage, frameImage, f
                     zIndex="2"
                 />
                 <Image
-                    src={actualFrameImage}
-                    alt={actualName}
+                    src={profileData.frameImage}
+                    alt={profileData.nickName}
                     w='28.3em'
                     h='28.3em'
                     position='absolute'
@@ -88,8 +85,8 @@ export default function ProfileIcon({ name, address, profileImage, frameImage, f
                         h="0.1em"
                         bg="blue.600"
                     />
-                    <Heading size="md" color="black">{actualName}</Heading>
-                    <Text color="black">{address}</Text>
+                    <Heading size="md" color="black">{profileData.nickName}</Heading>
+                    <Text color="black">{profileData.address}</Text>
                 </Flex>
                 <Box position="absolute" top="0.5em" right="1em" zIndex={10}>
                     {isEditing === false &&
@@ -129,7 +126,7 @@ export default function ProfileIcon({ name, address, profileImage, frameImage, f
                         name={newName}
                         setName={setNewName}
                         framesArray={framesArray}
-                        frameAllowed={frameAllowed}
+                        frameAllowed={profileData.frameAllowed}
                     />
                 }
             </Box>
