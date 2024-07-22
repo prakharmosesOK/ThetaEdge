@@ -126,7 +126,7 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
                         name={newName}
                         setName={setNewName}
                         framesArray={framesArray}
-                        frameAllowed={profileData.frameAllowed}
+                        frameAllowed={profileData.frameImageArray}
                     />
                 }
             </Box>
