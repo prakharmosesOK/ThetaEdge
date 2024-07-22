@@ -182,93 +182,93 @@ export default function UserReports() {
   const [checkGameParticipated, setCheckGameParticipated] = useState([
     {
       "gameName": ["New International Game", false],
-      "gamePlay": 2458,
-      "prizeWon": "12 Jan 2021",
-      "stream": 17.5
+      "playPrize": 2458,
+      "gameDate": "12 Jan 2021",
+      "stream": 'Yes'
     },
     {
       "gameName": ["Among Us", true],
-      "gamePlay": 1485,
-      "prizeWon": "21 Feb 2021",
-      "stream": 10.8
+      "playPrize": 1485,
+      "gameDate": "21 Feb 2021",
+      "stream": 'No'
     },
     {
       "gameName": ["Weekly Update", true],
-      "gamePlay": 1024,
-      "prizeWon": "13 Mar 2021",
-      "stream": 21.3
+      "playPrize": 1024,
+      "gameDate": "13 Mar 2021",
+      "stream": 'Yes'
     },
     {
       "gameName": ["Venus 3D Asset", true],
-      "gamePlay": 858,
-      "prizeWon": "24 Jan 2021",
-      "stream": 31.5
+      "playPrize": 858,
+      "gameDate": "24 Jan 2021",
+      "stream": 'No'
     },
     {
       "gameName": ["Marketplace", false],
-      "gamePlay": 258,
-      "prizeWon": "24 Oct 2022",
-      "stream": 12.2
+      "playPrize": 258,
+      "gameDate": "24 Oct 2022",
+      "stream": 'Yes'
     },
     {
       "gameName": ["New International Game", false],
-      "gamePlay": 2458,
-      "prizeWon": "12 Jan 2021",
-      "stream": 17.5
+      "playPrize": 2458,
+      "gameDate": "12 Jan 2021",
+      "stream": 'No'
     },
     {
       "gameName": ["Among Us", true],
-      "gamePlay": 1485,
-      "prizeWon": "21 Feb 2021",
-      "stream": 10.8
+      "playPrize": 1485,
+      "gameDate": "21 Feb 2021",
+      "stream": 'Yes'
     },
     {
       "gameName": ["Weekly Update", true],
-      "gamePlay": 1024,
-      "prizeWon": "13 Mar 2021",
-      "stream": 21.3
+      "playPrize": 1024,
+      "gameDate": "13 Mar 2021",
+      "stream": 'No'
     },
     {
       "gameName": ["Venus 3D Asset", true],
-      "gamePlay": 858,
-      "prizeWon": "24 Jan 2021",
-      "stream": 31.5
+      "playPrize": 858,
+      "gameDate": "24 Jan 2021",
+      "stream": 'Yes'
     },
     {
       "gameName": ["Marketplace", false],
-      "gamePlay": 258,
-      "prizeWon": "24 Oct 2022",
-      "stream": 12.2
+      "playPrize": 258,
+      "gameDate": "24 Oct 2022",
+      "stream": 'No'
     },
     {
       "gameName": ["New International Game", false],
-      "gamePlay": 2458,
-      "prizeWon": "12 Jan 2021",
-      "stream": 17.5
+      "playPrize": 2458,
+      "gameDate": "12 Jan 2021",
+      "stream": 'Yes'
     },
     {
       "gameName": ["Among Us", true],
-      "gamePlay": 1485,
-      "prizeWon": "21 Feb 2021",
-      "stream": 10.8
+      "playPrize": 1485,
+      "gameDate": "21 Feb 2021",
+      "stream": 'No'
     },
     {
       "gameName": ["Weekly Update", true],
-      "gamePlay": 1024,
-      "prizeWon": "13 Mar 2021",
-      "stream": 21.3
+      "playPrize": 1024,
+      "gameDate": "13 Mar 2021",
+      "stream": 'Yes'
     },
     {
       "gameName": ["Venus 3D Asset", true],
-      "gamePlay": 858,
-      "prizeWon": "24 Jan 2021",
-      "stream": 31.5
+      "playPrize": 858,
+      "gameDate": "24 Jan 2021",
+      "stream": 'No'
     },
     {
       "gameName": ["Marketplace", false],
-      "gamePlay": 258,
-      "prizeWon": "24 Oct 2022",
-      "stream": 12.2
+      "playPrize": 258,
+      "gameDate": "24 Oct 2022",
+      "stream": 'Yes'
     }
   ]);
   const [complexGameOrganised, setComplexGameOrganised] = useState([
@@ -381,7 +381,7 @@ export default function UserReports() {
       setBarChartGameRevenue([
         {
           name: "Game Play",
-          data: lastGamesOrganised.map(game => game.gamePlayRevenue)
+          data: lastGamesOrganised.map(game => game.playPrizeRevenue)
         }, {
           name: "Stream",
           data: lastGamesOrganised.map(game => game.streamRevenue)
@@ -398,8 +398,8 @@ export default function UserReports() {
   //     let gamesPart = gameParticipated.map(game => {
   //       return {
   //         gameName: [game.gameName, game.isCollected],
-  //         gamePlay: `$${game.prizeWon}`,
-  //         prizeWon: game.prizeWon,
+  //         playPrize: `$${game.gameDate}`,
+  //         gameDate: game.gameDate,
   //         stream: game.startDate
   //       }
   //     });

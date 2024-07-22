@@ -33,12 +33,12 @@ const columnsData = [
     accessor: "stream",
   },
   {
-    Header: "GAME PLAY",
-    accessor: "gamePlay",
+    Header: "PLAY PRIZE",
+    accessor: "playPrize",
   },
   {
-    Header: "PRIZE WON",
-    accessor: "prizeWon",
+    Header: "DATE",
+    accessor: "gameDate",
   },
 ];
 
@@ -118,17 +118,17 @@ export default function CheckTable(props) {
                     data = (
                       <Flex align="center">
                         <Text me="10px" color={textColor} fontSize="sm" fontWeight="700">
-                          {cell.value}%
+                          {cell.value}
                         </Text>
                       </Flex>
                     );
-                  } else if (cell.column.Header === "GAME PLAY") {
+                  } else if (cell.column.Header === "PLAY PRIZE") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
                         {cell.value}
                       </Text>
                     );
-                  } else if (cell.column.Header === "PRIZE WON") {
+                  } else if (cell.column.Header === "DATE") {
                     data = (
                       <Text color={textColor} fontSize="sm" fontWeight="700">
                         {cell.value}
