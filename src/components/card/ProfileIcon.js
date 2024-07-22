@@ -43,8 +43,8 @@ export default function ProfileIcon({ name, address, profileImage, frameImage })
                 shadow="md"
                 rounded="lg"
                 position="absolute"
-                h="full"
-                w="full"
+                h="50em"
+                w="50em"
                 _hover={{ shadow: 'xl' }}
             >
                 <Image

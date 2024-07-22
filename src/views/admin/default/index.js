@@ -426,7 +426,7 @@ export default function UserReports() {
   // }, [gameEventsOrganised]);
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+    <Box mt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Flex flexDirection="row">
         <ProfileIcon
           name={profileData.nickName}
