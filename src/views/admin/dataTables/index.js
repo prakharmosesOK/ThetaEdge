@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -10,29 +11,32 @@ import GameDetails from "./components/GameDetails";
 import GameStream from "./components/GameStream";
 import Leaderboard from './components/Leaderboard';
 
-// Importing frames
+// Importing frames and images
 import frame1 from 'assets/img/dashboards/frame1.png';
 import frame2 from 'assets/img/dashboards/frame2.png';
+import bgImage from 'assets/img/bgImage.jpg';
 
 const game = {
   gameId: 1,
   gameName: "Game 1",
   gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdr2OZSEgsmXE14s9auzTchMIOPCMtVIoymQ&s",
-  gameStreamLink: "https://dfhfjfhdfgdgd",
   gamePrice: 200,
-  gameAuthor: "0x0",
+  videoLink: "https://youtu.be/wjJU3lbiGTU?si=d6NC--IjqY6_xtev",
+  gameDescription: "dfhfbd rtjhdkr kdrhvtir niurrvthd viur kv liuigoi livihrdli lvgrsmh mghls  vigs  mjgr mjgis mjgl",
+  streamTicketPrice: 100,
   nickName: "gjdos",
   totalParticipants: 52,
   maxParticipants: 100,
   totalPrizeMoney: 500,
-  bIsInvite: false,
+  bIsInvite: true,
   privateCode: "lghdyhdfirtvrd",
-  bIsMultiplayer: false,
-  lobbyCode: "0",
-  couponCode: "887195",
+  bIsMultiplayer: true,
   organiserAddress: "0x0",
   date: new Date(),
-};
+  time: new Date().getTime(),
+  noOfHour: 2,
+  lobbyTimeInMin: 10,
+}
 
 export default function GamePage() {
   const [selectedTab, setSelectedTab] = useState("details");
@@ -53,7 +57,14 @@ export default function GamePage() {
   ])
 
   return (
-    <Box p={5} mt="4em">
+    <Box
+      p={5}
+      mt="4em"
+      bgImage={bgImage}
+      bgSize='fit'
+      w="full"
+      h="full"
+    >
       <Flex
         flexDirection="row"
         w="60vw"

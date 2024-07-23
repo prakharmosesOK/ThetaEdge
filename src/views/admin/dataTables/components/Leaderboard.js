@@ -49,7 +49,7 @@ const Leaderboard = ({ gameParticipants }) => {
                                     alt="Frame"
                                     position="absolute"
                                     top={`${5*index + 17}em`}
-                                    left="15.1em"
+                                    left="16.38vw"
                                     w="4.6em"
                                     h="4.6em"
                                     zIndex={30}
