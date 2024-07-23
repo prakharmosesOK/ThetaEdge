@@ -424,8 +424,6 @@ export default function UserReports() {
           gamesUpload,
         }));
         console.log(result2);
-        await fetchGameEventsOrganised();
-        await fetchGameParticipated();
       }
       catch (error) {
         console.log(error);
@@ -435,6 +433,11 @@ export default function UserReports() {
 
     fetchProfileInfo();
   }, []);
+
+  useEffect(async () => {
+    await fetchGameEventsOrganised();
+    await fetchGameParticipated();
+  }, [profileData]);
 
   useEffect(() => {
     const fetchBarChartGameRevenue = () => {
