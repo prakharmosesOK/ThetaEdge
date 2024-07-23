@@ -175,6 +175,7 @@ export default function Marketplace(props) {
   }
 
   async function fetchPurchaseHistory() {
+    console.log("fetch purchase");
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const _contract = new ethers.Contract(contractAddress, contractABI, provider);
@@ -185,7 +186,7 @@ export default function Marketplace(props) {
         return {
           gameName: gameDetails?.gameName || "Unknown Game",
           datePurchased: new Date(history.datePurchased.toNumber() * 1000).toLocaleString(),
-          price: `${ethers.utils.formatEther(history.amount)} ETH`,
+          price: `${ethers.utils.formatEther(history.amount)} TFUEL`,
           gameImage: gameDetails?.gameImage || "defaultImagePath",
           purchaseCategory: history.pos ? "received" : "spend"
         };
@@ -299,8 +300,8 @@ export default function Marketplace(props) {
   }, [searchText]);
 
   useEffect(() => {
-    applyFilters();
     fetchPurchaseHistory();
+    applyFilters();
   }, [filterState, totalGamesList]);
 
   useEffect(() => {

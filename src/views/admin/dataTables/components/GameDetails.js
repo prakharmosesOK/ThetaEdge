@@ -19,8 +19,12 @@ import { FaCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 import GameCard from "./GameCard";
+import Organiser from "../../../../contracts/Organiser.json";
 
 const MotionListItem = motion(ListItem);
+const { ethers } = require("ethers");
+const contractABI = Organiser.abi;
+const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
 
 const GameDetails = ({ game }) => {
   const [inviteCode, setInviteCode] = useState(null);
@@ -33,10 +37,28 @@ const GameDetails = ({ game }) => {
   const [showGameFrame, setShowGameFrame] = useState(false);
 
   const handlePaymentClicked = async () => {
-    console.log("Payment clicked")
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+    try {
+      let Tprice = 0;
+      if (paymentStatus.play) {
+        Tprice += game.gamePrice;
+      }
+      if (paymentStatus.stream) {
+        Tprice += game.streamTicketPrice;
+      }
+      const txResponse = await _contract.JoinGame(game.gameId, paymentStatus.play, paymentStatus.stream, game.maxParticipants, { value: Tprice });
+      await txResponse.wait();
+      alert('Transaction Done');
+      console.log('Transaction successful:');
+    } catch (error) {
+      console.error('Transaction error:', error);
+    }
   }
 
   const handleStartGame = () => {
+    console.log(game);
     if (obsApi === null || obsApi === '') {
       alert('Please enter the OBS API first to proceed! This is essential for anti-hacking proactives.');
       return;
@@ -48,15 +70,35 @@ const GameDetails = ({ game }) => {
     if (!game.hasPlay) {
       alert('First purchase the game.')
     } else {
-      showGameFrame(true);
+      setShowGameFrame(true);
     }
   }
 
   useEffect(() => {
-    const handleMessage = (event) => {
-      console.log(event.data);
+    const handleMessage = async (event) => {
       if (event.data.type === 'UPDATE_POINTS') {
         console.log('Points:', event.data.points);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+        try {
+          const pointd = parseInt(event.data.points);
+          console.log(game.gameId);
+          const estimatedGas = await _contract.estimateGas.UpdateLeaderBoard(game.gameId, pointd);
+
+          // Set a higher gas limit (e.g., 10% more than the estimated amount)
+          const gasLimit = estimatedGas.add(estimatedGas.div(10));
+
+          // Send transaction with specified gas limit
+          const txResponse = await _contract.UpdateLeaderBoard(game.gameId, pointd, {
+            gasLimit: gasLimit
+          });
+
+          await txResponse.wait();
+        }
+        catch (error) {
+          console.log("transaction", error);
+        }
       } else if (event.data.type === 'LOBBY_JOINED') {
         console.log('Lobby Joined:', event.data.points);
       }
@@ -323,7 +365,7 @@ const GameDetails = ({ game }) => {
       />
       {(!showGameFrame && (new Date() >= game.date && new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000)) ? <Button onClick={handleStartGame} m="2em">Go to Game</Button> : <Button onClick={() => setShowGameFrame(false)}>Hide</Button>)}
       {showGameFrame && (
-        <iframe
+        <iframe allow="fullscreen;"
           src={game.gameLink}
           frameborder="0"
           className="w-full h-[40em]"
