@@ -58,6 +58,7 @@ const GameDetails = ({ game }) => {
   }
 
   const handleStartGame = () => {
+    console.log(game);
     if (obsApi === null || obsApi === '') {
       alert('Please enter the OBS API first to proceed! This is essential for anti-hacking proactives.');
       return;
@@ -69,24 +70,34 @@ const GameDetails = ({ game }) => {
     if (!game.hasPlay) {
       alert('First purchase the game.')
     } else {
-      showGameFrame(true);
+      setShowGameFrame(true);
     }
   }
 
   useEffect(() => {
     const handleMessage = async (event) => {
-      console.log(event.data);
       if (event.data.type === 'UPDATE_POINTS') {
         console.log('Points:', event.data.points);
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const _contract = new ethers.Contract(contractAddress, contractABI, signer);
-        try{
-          const txResponse = await _contract.UpdateLeaderBoard(game.gameId,event.data.points);
+        try {
+          const pointd = parseInt(event.data.points);
+          console.log(game.gameId);
+          const estimatedGas = await _contract.estimateGas.UpdateLeaderBoard(game.gameId, pointd);
+
+          // Set a higher gas limit (e.g., 10% more than the estimated amount)
+          const gasLimit = estimatedGas.add(estimatedGas.div(10));
+
+          // Send transaction with specified gas limit
+          const txResponse = await _contract.UpdateLeaderBoard(game.gameId, pointd, {
+            gasLimit: gasLimit
+          });
+
           await txResponse.wait();
         }
-        catch(error){
-
+        catch (error) {
+          console.log("transaction", error);
         }
       } else if (event.data.type === 'LOBBY_JOINED') {
         console.log('Lobby Joined:', event.data.points);
@@ -354,7 +365,7 @@ const GameDetails = ({ game }) => {
       />
       {(!showGameFrame && (new Date() >= game.date && new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000)) ? <Button onClick={handleStartGame} m="2em">Go to Game</Button> : <Button onClick={() => setShowGameFrame(false)}>Hide</Button>)}
       {showGameFrame && (
-        <iframe
+        <iframe allow="fullscreen;"
           src={game.gameLink}
           frameborder="0"
           className="w-full h-[40em]"
