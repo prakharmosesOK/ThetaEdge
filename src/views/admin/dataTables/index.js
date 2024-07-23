@@ -133,6 +133,7 @@ export default function GamePage() {
               streamLink: player.streamLink ? player.streamLink : "/",
             }
             if (account === player.playerAddress) {
+              console.log("finally mila ");
               hasPlay = player.bHasPlayTicket;
               hasStream = player.bHasStreamTicket;
             }

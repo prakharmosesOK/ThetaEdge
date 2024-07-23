@@ -19,8 +19,12 @@ import { FaCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 import GameCard from "./GameCard";
+import Organiser from "../../../../contracts/Organiser.json";
 
 const MotionListItem = motion(ListItem);
+const { ethers } = require("ethers");
+const contractABI = Organiser.abi;
+const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
 
 const GameDetails = ({ game }) => {
   const [inviteCode, setInviteCode] = useState(null);
@@ -33,7 +37,24 @@ const GameDetails = ({ game }) => {
   const [showGameFrame, setShowGameFrame] = useState(false);
 
   const handlePaymentClicked = async () => {
-    console.log("Payment clicked")
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+    try {
+      let Tprice = 0;
+      if (paymentStatus.play) {
+        Tprice += game.gamePrice;
+      }
+      if (paymentStatus.stream) {
+        Tprice += game.streamTicketPrice;
+      }
+      const txResponse = await _contract.JoinGame(game.gameId, paymentStatus.play, paymentStatus.stream, game.maxParticipants, { value: Tprice });
+      await txResponse.wait();
+      alert('Transaction Done');
+      console.log('Transaction successful:');
+    } catch (error) {
+      console.error('Transaction error:', error);
+    }
   }
 
   const handleStartGame = () => {
@@ -53,10 +74,20 @@ const GameDetails = ({ game }) => {
   }
 
   useEffect(() => {
-    const handleMessage = (event) => {
+    const handleMessage = async (event) => {
       console.log(event.data);
       if (event.data.type === 'UPDATE_POINTS') {
         console.log('Points:', event.data.points);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+        try{
+          const txResponse = await _contract.UpdateLeaderBoard(game.gameId,event.data.points);
+          await txResponse.wait();
+        }
+        catch(error){
+
+        }
       } else if (event.data.type === 'LOBBY_JOINED') {
         console.log('Lobby Joined:', event.data.points);
       }
