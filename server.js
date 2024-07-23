@@ -126,6 +126,29 @@ app.post('/get-stream-details', async (req, res) => {
   }
 });
 
+app.get('/remove-streams', async (req, res) => {
+  const response = await fetch(`https://api.thetavideoapi.com/service_account/${serviceAccountId}/streams`, {
+    method: 'GET',
+    headers: {
+      'x-tva-sa-id': serviceAccountId,
+      'x-tva-sa-secret': serviceAccountSecret
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch livestreams');
+  }
+
+  const data = await response.json();
+  const returnData = [];
+  for(let i=0;i<data.body.streams.length;i++){
+
+    if(data.body.streams[i].status == "off"){
+      returnData.push(data.body.streams[i]);
+    }
+  } 
+  return returnData;
+});
 
 app.post('/game-over', async (req, res) => {
 
