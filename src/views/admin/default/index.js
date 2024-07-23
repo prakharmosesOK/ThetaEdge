@@ -60,26 +60,12 @@ import {
 // import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 import Organiser from "../../../contracts/Organiser.json";
 
-// Importing frames
-import frame1 from 'assets/img/dashboards/frame1.png'
-import frame2 from 'assets/img/dashboards/frame2.png'
-import frame3 from 'assets/img/dashboards/frame3.png'
-import frame4 from 'assets/img/dashboards/frame4.png'
-import frame5 from 'assets/img/dashboards/frame5.png'
-import frame6 from 'assets/img/dashboards/frame6.png'
-import frame7 from 'assets/img/dashboards/frame7.png'
-import frame8 from 'assets/img/dashboards/frame8.png'
-import frame9 from 'assets/img/dashboards/frame9.png'
-import frame10 from 'assets/img/dashboards/frame10.png'
-import defaultFrame from 'assets/img/dashboards/defaultFrame.png'
-
-const framesArray = [defaultFrame, frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10];
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
 const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
 
 export default function UserReports() {
-  const { account } = useContext(GameListContext);
+  const { account, framesArray } = useContext(GameListContext);
   const [profileData, setProfileData] = useState({
     address: account,
     nickName: "John Doe",
