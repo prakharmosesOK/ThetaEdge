@@ -130,7 +130,7 @@ export default function NFT(props) {
               Duration: {gameEvent.noOfHour} hours
             </Text>
             <Link
-              href={`/admin/data-tables/${gameEvent.gameId}`}
+              href={`/admin/${gameEvent.gameId}`}
               my={{
                 base: "0px",
                 md: "10px",
