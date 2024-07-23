@@ -76,7 +76,7 @@ import defaultFrame from 'assets/img/dashboards/defaultFrame.png'
 const framesArray = [defaultFrame, frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10];
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0xAc4868F06f8e797e65c0ea3328B31A7238695869';
+const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
 
 export default function UserReports() {
   const { account } = useContext(GameListContext);
