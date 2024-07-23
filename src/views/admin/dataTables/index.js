@@ -20,7 +20,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0xAc4868F06f8e797e65c0ea3328B31A7238695869';
+const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
 
 // const game = {
 //   gameId: 1,
