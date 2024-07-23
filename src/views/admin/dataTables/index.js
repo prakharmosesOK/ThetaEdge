@@ -8,7 +8,6 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import GameDetails from "./components/GameDetails";
-import GameStream from "./components/GameStream";
 import Leaderboard from './components/Leaderboard';
 
 // Importing frames and images
@@ -73,13 +72,14 @@ export default function GamePage() {
       playerScore: 78,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar6.png',
       frameImage: frame1,
-      streamLink: "/"
+      streamLink: "/fjfohjdf;o"
     }, {
       playerNickName: "Mohit",
       playerAddress: '0x66546513df1gdfgdf0df',
       playerScore: 67,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar2.png',
       frameImage: frame2,
+      streamLink: "/kdrtjorsj"
     }
   ])
 
@@ -101,10 +101,6 @@ export default function GamePage() {
       console.log(error);
       return null; // Return null in case of an error
     }
-  }
-
-  const GetLeaderBOard = async() => {
-     
   }
 
   useEffect(() => {
@@ -187,7 +183,7 @@ export default function GamePage() {
         gap="2%"
       >
         <Button
-          w={selectedTab === 'details' ? "60%" : "20%"}
+          w={selectedTab === 'details' ? "80%" : "20%"}
           onClick={() => setSelectedTab("details")}
           colorScheme="yellow"
           variant={selectedTab === "details" ? "solid" : "outline"}
@@ -211,31 +207,7 @@ export default function GamePage() {
           Game Details
         </Button>
         <Button
-          w={selectedTab === 'stream' ? "60%" : "20%"}
-          onClick={() => setSelectedTab("stream")}
-          colorScheme="purple"
-          variant={selectedTab === "stream" ? "solid" : "outline"}
-          _hover={{
-            bg: "purple.800",
-            color: "white",
-          }}
-          _focus={{
-            ring: 4,
-            outline: "none",
-            ringColor: "purple.300",
-          }}
-          fontWeight="medium"
-          fontSize="sm"
-          rounded="lg"
-          px={5}
-          py={2.5}
-          me={2}
-          mb={2}
-        >
-          Game Streaming
-        </Button>
-        <Button
-          w={selectedTab === 'leaderboard' ? "60%" : "20%"}
+          w={selectedTab === 'leaderboard' ? "80%" : "20%"}
           onClick={() => setSelectedTab("leaderboard")}
           colorScheme="green"
           variant={selectedTab === "leaderboard" ? "solid" : "outline"}
@@ -259,7 +231,7 @@ export default function GamePage() {
           Leaderboard
         </Button>
       </Flex>
-      {selectedTab === "details" ? <GameDetails game={game} /> : (selectedTab === 'stream' ? <GameStream game={game} /> : <Leaderboard gameParticipants={gameParticipants} />)}
+      {selectedTab === "details" ? <GameDetails game={game} /> : <Leaderboard gameParticipants={gameParticipants} />}
     </Box>
   );
 };
