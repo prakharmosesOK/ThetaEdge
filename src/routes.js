@@ -46,7 +46,7 @@ const routes = [
     name: "Event Page",
     layout: "/admin",
     icon: <Icon as={MdBarChart} width='20px' height='20px' color='inherit' />,
-    path: "/data-tables/:eventId",
+    path: "/:eventId",
     component: EventPage,
   },
   {

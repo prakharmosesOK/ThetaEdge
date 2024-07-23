@@ -11,9 +11,10 @@ import GameDetails from "./components/GameDetails";
 import GameStream from "./components/GameStream";
 import Leaderboard from './components/Leaderboard';
 
-// Importing frames
+// Importing frames and images
 import frame1 from 'assets/img/dashboards/frame1.png';
 import frame2 from 'assets/img/dashboards/frame2.png';
+import bgImage from 'assets/img/bgImage.jpg';
 
 import Organiser from "../../../contracts/Organiser.json";
 
@@ -169,7 +170,14 @@ export default function GamePage() {
 
 
   return (
-    <Box p={5} mt="4em">
+    <Box
+      p={5}
+      mt="4em"
+      bgImage={bgImage}
+      bgSize='fit'
+      w="full"
+      h="full"
+    >
       <Flex
         flexDirection="row"
         w="60vw"
