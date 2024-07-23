@@ -44,7 +44,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0xfdEE63eB6431E502809E6c5eC31A4994686Cfa63';
+const contractAddress = '0xAc4868F06f8e797e65c0ea3328B31A7238695869';
 
 
 const filters = [
@@ -76,48 +76,48 @@ const filters = [
 
 export default function Marketplace(props) {
   const [purchaseHistory, setPurchaseHistory] = useState([
-    {
-      gameName: "Colourfull Heaven",
-      datePurchased: "30s ago",
-      price: "0.911 ETH",
-      gameImage: Nft5,
-      purchaseCategory: "Stream Play"
-    },
-    {
-      gameName: "Abstract Colors",
-      datePurchased: "58s ago",
-      price: "0.911 ETH",
-      gameImage: Nft1,
-      purchaseCategory: "Stream Play"
-    },
-    {
-      gameName: "ETH AI Brain",
-      datePurchased: "1m ago",
-      price: "0.911 ETH",
-      gameImage: Nft2,
-      purchaseCategory: "Stream Play"
-    },
-    {
-      gameName: "Swipe Circles",
-      datePurchased: "1m ago",
-      price: "0.911 ETH",
-      gameImage: Nft4,
-      purchaseCategory: "Stream Play"
-    },
-    {
-      gameName: "Mesh Gradients",
-      datePurchased: "2m ago",
-      price: "0.911 ETH",
-      gameImage: Nft3,
-      purchaseCategory: "Stream Play"
-    },
-    {
-      gameName: "3D Cubes Art",
-      datePurchased: "3m ago",
-      price: "0.911 ETH",
-      gameImage: Nft6,
-      purchaseCategory: "Stream Play"
-    }
+    // {
+    //   gameName: "Colourfull Heaven",
+    //   datePurchased: "30s ago",
+    //   price: "0.911 ETH",
+    //   gameImage: Nft5,
+    //   purchaseCategory: "Stream Play"
+    // },
+    // {
+    //   gameName: "Abstract Colors",
+    //   datePurchased: "58s ago",
+    //   price: "0.911 ETH",
+    //   gameImage: Nft1,
+    //   purchaseCategory: "Stream Play"
+    // },
+    // {
+    //   gameName: "ETH AI Brain",
+    //   datePurchased: "1m ago",
+    //   price: "0.911 ETH",
+    //   gameImage: Nft2,
+    //   purchaseCategory: "Stream Play"
+    // },
+    // {
+    //   gameName: "Swipe Circles",
+    //   datePurchased: "1m ago",
+    //   price: "0.911 ETH",
+    //   gameImage: Nft4,
+    //   purchaseCategory: "Stream Play"
+    // },
+    // {
+    //   gameName: "Mesh Gradients",
+    //   datePurchased: "2m ago",
+    //   price: "0.911 ETH",
+    //   gameImage: Nft3,
+    //   purchaseCategory: "Stream Play"
+    // },
+    // {
+    //   gameName: "3D Cubes Art",
+    //   datePurchased: "3m ago",
+    //   price: "0.911 ETH",
+    //   gameImage: Nft6,
+    //   purchaseCategory: "Stream Play"
+    // }
   ]);
   const [filterState, setFilterState] = useState({
     'status': [],
@@ -174,6 +174,28 @@ export default function Marketplace(props) {
     }
   }
 
+  async function fetchPurchaseHistory() {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const _contract = new ethers.Contract(contractAddress, contractABI, provider);
+      const purchaseHist = await _contract.getUserHistory(account);
+      console.log("history", purchaseHist);
+      const historyWithGameDetails = purchaseHist.map((history) => {
+        const gameDetails = totalGamesList.find(game => game.gameId === history.gameId.toNumber());
+        return {
+          gameName: gameDetails?.gameName || "Unknown Game",
+          datePurchased: new Date(history.datePurchased.toNumber() * 1000).toLocaleString(),
+          price: `${ethers.utils.formatEther(history.amount)} ETH`,
+          gameImage: gameDetails?.gameImage || "defaultImagePath",
+          purchaseCategory: history.pos ? "received" : "spend"
+        };
+      });
+      setPurchaseHistory(historyWithGameDetails);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const fetchGamesList = async () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -184,6 +206,9 @@ export default function Marketplace(props) {
       const allGamesList = [];
       for (const [index, game] of gamesList.entries()) {
         const res = await getDataFromIpfs(game.Ipfs);
+        
+        const profileIpfs = await _contract.GetProfileIpfs(account);
+        const res2 = await getDataFromIpfs(profileIpfs);
         const gameData = {
           gameId: game.gameId.toNumber(),
           gameName: res.gameName,
@@ -191,8 +216,8 @@ export default function Marketplace(props) {
           gameDescription: res.description,
           gamePrice: game.gameTicketPrice.toNumber(),
           videoLink: res.videoLink,
-          streamTicketPrice : game.streamTicketPrice.toNumber(),
-          nickName: res.nickName ? res.nickName : "--",
+          streamTicketPrice: game.streamTicketPrice.toNumber(),
+          nickName: res2.nickName ? res2.nickName : "--",
           totalParticipants: game.playersJoined.length,
           maxParticipants: res.maxParticipants,
           totalPrizeMoney: game.totalRevenue.toNumber(),
@@ -201,14 +226,15 @@ export default function Marketplace(props) {
           bIsMultiplayer: res.bIsMultiplayer,
           organiserAddress: game.organiserAddress,
           date: new Date(res.date),
-          noOfHour : res.noOfHour,
-          lobbyTimeInMin : res.lobbyTimeInMin,
+          noOfHour: res.noOfHour,
+          lobbyTimeInMin: res.lobbyTimeInMin,
         };
         console.log(gameData);
         allGamesList.push(gameData);
       }
       setTotalGamesList(allGamesList);
       setTopGamesList(allGamesList.slice(0, 3));
+      await fetchPurchaseHistory();
     } catch (error) {
       console.error(error);
     }
@@ -279,18 +305,30 @@ export default function Marketplace(props) {
   }, [filterState, totalGamesList]);
 
   useEffect(() => {
-    const fetchPurchaseHistory = async () => {
-      try {
-        // const response = await fetch("https://api.example.com/purchase-history");
-        // const data = await response.json();
-        // setPurchaseHistory(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    // const fetchPurchaseHistory = async () => {
+    //   try {
+    //     const provider = new ethers.providers.Web3Provider(window.ethereum);
+    //     const _contract = new ethers.Contract(contractAddress, contractABI, provider);
+    //     const purchaseHist = await _contract.getUserHistory(account);
+
+    //     const historyWithGameDetails = purchaseHist.map((history) => {
+    //       const gameDetails = allGamesList.find(game => game.gameId === history.gameId);
+    //       return {
+    //         gameName: gameDetails?.gameName || "Unknown Game",
+    //         datePurchased: new Date(history.datePurchased * 1000).toLocaleString(),
+    //         price: `${ethers.utils.formatEther(history.amount)} ETH`,
+    //         gameImage: gameDetails?.gameImage || "defaultImagePath",
+    //         purchaseCategory: history.pos ? "+" : "-"
+    //       };
+    //     });
+    //     setPurchaseHistory(historyWithGameDetails);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
 
     // Call this function to fetch purchase history
-    // fetchPurchaseHistory();
+    //fetchPurchaseHistory();
   }, []);
 
   useEffect(() => {

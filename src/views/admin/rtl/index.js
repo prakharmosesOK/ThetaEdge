@@ -7,7 +7,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0xfdEE63eB6431E502809E6c5eC31A4994686Cfa63';
+const contractAddress = '0xAc4868F06f8e797e65c0ea3328B31A7238695869';
 
 export default function UserReports() {
   // Chakra Color Mode

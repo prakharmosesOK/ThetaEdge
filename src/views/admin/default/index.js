@@ -215,78 +215,6 @@ export default function UserReports() {
       "playPrize": 1024,
       "gameDate": "13 Mar 2021",
       "stream": 'Yes'
-    },
-    {
-      "gameName": ["Venus 3D Asset", true],
-      "playPrize": 858,
-      "gameDate": "24 Jan 2021",
-      "stream": 'No'
-    },
-    {
-      "gameName": ["Marketplace", false],
-      "playPrize": 258,
-      "gameDate": "24 Oct 2022",
-      "stream": 'Yes'
-    },
-    {
-      "gameName": ["New International Game", false],
-      "playPrize": 2458,
-      "gameDate": "12 Jan 2021",
-      "stream": 'No'
-    },
-    {
-      "gameName": ["Among Us", true],
-      "playPrize": 1485,
-      "gameDate": "21 Feb 2021",
-      "stream": 'Yes'
-    },
-    {
-      "gameName": ["Weekly Update", true],
-      "playPrize": 1024,
-      "gameDate": "13 Mar 2021",
-      "stream": 'No'
-    },
-    {
-      "gameName": ["Venus 3D Asset", true],
-      "playPrize": 858,
-      "gameDate": "24 Jan 2021",
-      "stream": 'Yes'
-    },
-    {
-      "gameName": ["Marketplace", false],
-      "playPrize": 258,
-      "gameDate": "24 Oct 2022",
-      "stream": 'No'
-    },
-    {
-      "gameName": ["New International Game", false],
-      "playPrize": 2458,
-      "gameDate": "12 Jan 2021",
-      "stream": 'Yes'
-    },
-    {
-      "gameName": ["Among Us", true],
-      "playPrize": 1485,
-      "gameDate": "21 Feb 2021",
-      "stream": 'No'
-    },
-    {
-      "gameName": ["Weekly Update", true],
-      "playPrize": 1024,
-      "gameDate": "13 Mar 2021",
-      "stream": 'Yes'
-    },
-    {
-      "gameName": ["Venus 3D Asset", true],
-      "playPrize": 858,
-      "gameDate": "24 Jan 2021",
-      "stream": 'No'
-    },
-    {
-      "gameName": ["Marketplace", false],
-      "playPrize": 258,
-      "gameDate": "24 Oct 2022",
-      "stream": 'Yes'
     }
   ]);
   const [complexGameOrganised, setComplexGameOrganised] = useState([
@@ -387,6 +315,68 @@ export default function UserReports() {
     }
   }
 
+  async function fetchGameParticipated() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const _contract = new ethers.Contract(contractAddress, contractABI, provider);
+    try {
+      const gameEvents = await Promise.all(
+        profileData.gamesParticipating.map(async (game) => {
+          const result = await _contract.getGameById(game.gameId);
+          const ipfsData = await getDataFromIpfs(result.Ipfs);
+          //console.log("ye bhi chahiye", ipfsData);
+          // console.log("ye bhi chahiye", result.playersJoined);
+          return {
+            gameId: game.gameId,
+            gameName: ipfsData.gameName,
+            isCollected: game.isCollected,
+            totalPrizeMoney: result.totalRevenue.toNumber(),
+            startDate: new Date(ipfsData.date),
+            score: result.playersJoined[account] ? result.playersJoined[account].leaderboardScore : 0, 
+          };
+        })
+      );
+      setGameParticipated(gameEvents);
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchGameEventsOrganised() {
+    console.log("ye to call hua hoga");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const _contract = new ethers.Contract(contractAddress, contractABI, provider);
+    console.log(profileData.gamesUpload);
+    try {
+      const gameEvents = await Promise.all(
+        profileData.gamesUpload.map(async (game) => {
+          console.log("first",game.gameId);
+          const result = await _contract.getGameById(game.gameId);
+          console.log("ye chahiye", result);
+          const ipfsData = await getDataFromIpfs(result.Ipfs);
+          // console.log(ipfsData);
+          return {
+            gameId: game.gameId,
+            playPrizeRevenue: result.totalRevenueFromGame.toNumber(),
+            streamRevenue: result.totalRevenueFromStream.toNumber(),
+            totalPrizeMoney: result.totalRevenue.toNumber(),
+            gameName: ipfsData.gameName,
+            noOfPlayers: result.playersJoined.length,
+            maxParticipants: ipfsData.maxParticipants,
+            startDate: new Date(ipfsData.date),
+            hours: ipfsData.noOfHour
+          };
+        })
+      );
+
+      setGameEventsOrganised(gameEvents);
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+  }
+
   useEffect(() => {
     const fetchProfileInfo = async () => {
       console.log(account);
@@ -395,16 +385,16 @@ export default function UserReports() {
       const _contract = new ethers.Contract(contractAddress, contractABI, provider);
       try {
         const result1 = await _contract.GetProfileIpfs(account);
-        console.log(result1);
-          const result = await getDataFromIpfs(result1);
-          console.log(result);
-            setProfileData(prevProfileData => ({
-              ...prevProfileData, // Keep the existing properties
-              nickName: result.nickName ? result.nickName : 'Adela', // Hardcoded new nickname
-              profileImage: result.profileImage ? result.profileImage : 'https://bootdey.com/img/Content/avatar/avatar6.png', // Hardcoded new moneyGained value
-              frameImage: result.frameImage ? result.frameImage : 0
-            }));
-          
+
+        //console.log(result1);
+        const result = await getDataFromIpfs(result1);
+        //console.log(result);
+        setProfileData(prevProfileData => ({
+          ...prevProfileData, // Keep the existing properties
+          nickName: result.nickName, // Hardcoded new nickname
+          profileImage: result.profileImage, // Hardcoded new moneyGained value
+          frameImage: result.frameImage ? result.frameImage : 0
+        }));
       }
       catch (error) {
         console.log(error);
@@ -412,7 +402,30 @@ export default function UserReports() {
 
       try {
         const result2 = await _contract.getGamesStatus(account);
+        const gamesJoined = result2[0].map(num => num.toNumber());
+        const gamesOrganized = result2[1].map(num => num.toNumber());
+        const frameImageArray = result2[4].map(num => num.toNumber());
+
+        const gamesParticipating = result2[5].slice(0, gamesJoined.length).map((game, index) => ({
+          gameId: game[0].toNumber(),
+          isCollected: game[1]
+        }));
+
+        const gamesUpload = result2[5].slice(gamesJoined.length).map((game, index) => ({
+          gameId: game[0].toNumber(),
+          isCollected: game[1]
+        }));
+        setProfileData(prevProfileData => ({
+          ...prevProfileData,
+          moneyGained: result2[2].toNumber(),
+          moneySpent: result2[3].toNumber(),
+          frameImageArray,
+          gamesParticipating,
+          gamesUpload,
+        }));
         console.log(result2);
+        await fetchGameEventsOrganised();
+        await fetchGameParticipated();
       }
       catch (error) {
         console.log(error);
@@ -420,25 +433,17 @@ export default function UserReports() {
 
     }
 
-    const fetchGameEventsOrganised = () => {
-    }
-
-    const fetchGameParticipated = () => {
-    }
-
-    // Call the function
     fetchProfileInfo();
   }, []);
 
   useEffect(() => {
     const fetchBarChartGameRevenue = () => {
       let lastGamesOrganised = gameEventsOrganised.toReversed().slice(0, 7);
-      console.log("Thw last games are: ", lastGamesOrganised);
       setBarChartGameOptions({
         ...barChartGameOptions,
         xaxis: {
           ...barChartGameOptions.xaxis,
-          categories: lastGamesOrganised.map(game => game.gameId)
+          categories: lastGamesOrganised.map(game => game.gameName)
         }
       })
 
@@ -455,40 +460,41 @@ export default function UserReports() {
     }
 
     // Call the function here
-    // fetchBarChartGameRevenue();
+    fetchBarChartGameRevenue();
   }, [profileData]);
 
-  // useEffect(() => {
-  //   const applyCheckGameParticipated = () => {
-  //     let gamesPart = gameParticipated.map(game => {
-  //       return {
-  //         gameName: [game.gameName, game.isCollected],
-  //         playPrize: `$${game.prizeWon}`,
-  //         gameDate: game.date,
-  //         stream: game.startDate
-  //       }
-  //     });
-  //     setCheckGameParticipated(gamesPart);
-  //   }
 
-  //   applyCheckGameParticipated();
-  // }, [gameParticipated])
+  useEffect(() => {
+    const applyCheckGameParticipated = () => {
+      let gamesPart = gameParticipated.map(game => {
+        return {
+          gameName: [game.gameName, game.isCollected],
+          playPrize: `$${game.totalPrizeMoney}`,
+          gameDate: game.startDate,
+          stream: game.score //score
+        }
+      });
+      setCheckGameParticipated(gamesPart);
+    }
 
-  // useEffect(() => {
-  //   const applyComplexGameOrganised = () => {
-  //     let gamesOrg = gameEventsOrganised.map(game => {
-  //       return {
-  //         gameName: game.gameName,
-  //         status: game.date > new Date() ? "Upcoming" : (new Date(game.date - game.hours*3600*1000) > new Date() ? "Live" : "Ended"),
-  //         prizePool: game.totalPrizeMoney,
-  //         participants: (game.totalParticipants / game.maxParticipants) *100
-  //       }
-  //     });
-  //     setComplexGameOrganised(gamesOrg);
-  //   }
+    applyCheckGameParticipated();
+  }, [gameParticipated])
 
-  //   applyComplexGameOrganised();
-  // }, [gameEventsOrganised]);
+  useEffect(() => {
+    const applyComplexGameOrganised = () => {
+      let gamesOrg = gameEventsOrganised.map(game => {
+        return {
+          gameName: game.gameName,
+          status: game.startDate > new Date() ? "Upcoming" : (new Date(game.startDate - game.hours * 3600 * 1000) > new Date() ? "Live" : "Ended"),
+          prizePool: game.totalPrizeMoney,
+          participants: (game.noOfPlayers / parseFloat(game.maxParticipants)) * 100,
+        }
+      });
+      setComplexGameOrganised(gamesOrg);
+    }
+
+    applyComplexGameOrganised();
+  }, [gameEventsOrganised]);
 
   return (
     <Box mt={{ base: "8em", md: "8em", xl: "6em" }}>
