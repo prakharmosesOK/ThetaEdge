@@ -122,7 +122,6 @@ export default function GamePage() {
         let hasStream = false;
 
         if (gamed.playersJoined) {
-          console.log("valid");
           const LeaderBoardArray = [];
           for (const player of gamed.playersJoined) {
             const Playerdata = await _contract.GetProfileIpfs(player.playerAddress);
@@ -135,12 +134,13 @@ export default function GamePage() {
               frameImage: playerProfileData.frameImage ? playerProfileData.frameImage : 0,
               streamLink: player.streamLink ? player.streamLink : "/",
             }
-            if (account === player.playerAddress) {
+            if (String(account).toLowerCase() === String(player.playerAddress).toLowerCase()) {
               hasPlay = player.bHasPlayTicket;
               hasStream = player.bHasStreamTicket;
             }
             LeaderBoardArray.push(leaderboardData);
           }
+          LeaderBoardArray.sort((a, b) => b.playerScore - a.playerScore);
           setGameParticipants(LeaderBoardArray);
         }
         //console.log(gamed.playersJoined);
