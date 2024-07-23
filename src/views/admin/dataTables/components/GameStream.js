@@ -16,7 +16,6 @@ const GameStream = ({ game }) => {
         style={{ border: 0 }}
         allowFullScreen
       ></iframe>
-      <Button mt={5} colorScheme="green">Make Payment</Button>
     </Box>
   );
 };

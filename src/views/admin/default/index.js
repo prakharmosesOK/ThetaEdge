@@ -400,8 +400,8 @@ export default function UserReports() {
           console.log(result);
             setProfileData(prevProfileData => ({
               ...prevProfileData, // Keep the existing properties
-              nickName: result.nickName ? result.nickName : '', // Hardcoded new nickname
-              profileImage: result.profileImage ? result.profileImage : '', // Hardcoded new moneyGained value
+              nickName: result.nickName ? result.nickName : 'Adela', // Hardcoded new nickname
+              profileImage: result.profileImage ? result.profileImage : 'https://bootdey.com/img/Content/avatar/avatar6.png', // Hardcoded new moneyGained value
               frameImage: result.frameImage ? result.frameImage : 0
             }));
           
@@ -463,8 +463,8 @@ export default function UserReports() {
   //     let gamesPart = gameParticipated.map(game => {
   //       return {
   //         gameName: [game.gameName, game.isCollected],
-  //         playPrize: `$${game.gameDate}`,
-  //         gameDate: game.gameDate,
+  //         playPrize: `$${game.prizeWon}`,
+  //         gameDate: game.date,
   //         stream: game.startDate
   //       }
   //     });
@@ -479,9 +479,9 @@ export default function UserReports() {
   //     let gamesOrg = gameEventsOrganised.map(game => {
   //       return {
   //         gameName: game.gameName,
-  //         status: game.startDate > new Date() ? "Upcoming" : (new Date(game.startDate - game.hours*3600*1000) > new Date() ? "Live" : "Ended"),
+  //         status: game.date > new Date() ? "Upcoming" : (new Date(game.date - game.hours*3600*1000) > new Date() ? "Live" : "Ended"),
   //         prizePool: game.totalPrizeMoney,
-  //         participants: game.participants
+  //         participants: (game.totalParticipants / game.maxParticipants) *100
   //       }
   //     });
   //     setComplexGameOrganised(gamesOrg);
@@ -491,7 +491,7 @@ export default function UserReports() {
   // }, [gameEventsOrganised]);
 
   return (
-    <Box mt={{ base: "130px", md: "80px", xl: "80px" }}>
+    <Box mt={{ base: "8em", md: "8em", xl: "6em" }}>
       <Flex flexDirection="row">
         <ProfileIcon
           profileData={profileData}
