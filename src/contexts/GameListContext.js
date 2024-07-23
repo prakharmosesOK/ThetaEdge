@@ -1,5 +1,18 @@
 import { useState, createContext } from 'react';
 
+// Importing frames
+import frame1 from 'assets/img/dashboards/frame1.png'
+import frame2 from 'assets/img/dashboards/frame2.png'
+import frame3 from 'assets/img/dashboards/frame3.png'
+import frame4 from 'assets/img/dashboards/frame4.png'
+import frame5 from 'assets/img/dashboards/frame5.png'
+import frame6 from 'assets/img/dashboards/frame6.png'
+import frame7 from 'assets/img/dashboards/frame7.png'
+import frame8 from 'assets/img/dashboards/frame8.png'
+import frame9 from 'assets/img/dashboards/frame9.png'
+import frame10 from 'assets/img/dashboards/frame10.png'
+import defaultFrame from 'assets/img/dashboards/defaultFrame.png'
+
 export const GameListContext = createContext();
 
 export const GameListProvider = ({ children }) => {
@@ -71,10 +84,11 @@ export const GameListProvider = ({ children }) => {
     const [filteredGamesList, setFilteredGamesList] = useState(totalGamesList);
     const [searchedGamesList, setSearchedGamesList] = useState(totalGamesList);
     const [account, setAccount] = useState(localStorage.getItem('account') || '0x0');
+    const framesArray = [defaultFrame, frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10];
 
     return (
         <GameListContext.Provider
-            value={{totalGamesList, setTotalGamesList, filteredGamesList, setFilteredGamesList, searchedGamesList, setSearchedGamesList, account, setAccount}}
+            value={{totalGamesList, setTotalGamesList, filteredGamesList, setFilteredGamesList, searchedGamesList, setSearchedGamesList, account, setAccount, framesArray}}
         >
             {children}
         </GameListContext.Provider>

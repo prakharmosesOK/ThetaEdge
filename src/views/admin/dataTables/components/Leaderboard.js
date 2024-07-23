@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
     Box,
     Table,
@@ -14,8 +14,10 @@ import {
     Button,
     Flex,
 } from "@chakra-ui/react";
+import { GameListContext } from "contexts/GameListContext";
 
 const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream }) => {
+    const { framesArray } = useContext(GameListContext);
     const [streamUrl, setStreamUrl] = useState('/');
     const bg = useColorModeValue("gray.100", "gray.900");
     const textColor = useColorModeValue("gray.800", "white");
@@ -30,7 +32,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream }) =>
 
     return (
         <Box w="full" p={4} bg={bg} borderRadius="md" boxShadow="md">
-            <Flex flexDirection="row" w="60em" justifyContent="space-between">
+            <Flex flexDirection="row" w="60em" gap="5em">
                 <Text fontSize="2xl" fontWeight="bold" mb={4} color={textColor}>
                     Leaderboard
                 </Text>
@@ -60,11 +62,11 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream }) =>
                                     h="3em"
                                 />
                                 <Image
-                                    src={player.frameImage}
+                                    src={framesArray[player.frameImage]}
                                     alt="Frame"
                                     position="absolute"
-                                    top={`${5 * index + 17}em`}
-                                    left="14vw"
+                                    top={`${5 * index + 17.6}em`}
+                                    left="12.3vw"
                                     w="4.6em"
                                     h="4.6em"
                                     zIndex={30}

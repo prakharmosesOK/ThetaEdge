@@ -22,10 +22,10 @@ import GameCard from "./GameCard";
 
 const MotionListItem = motion(ListItem);
 
-const GameDetails = ({ game }) => {
+const GameDetails = ({ game, setGame }) => {
   const [inviteCode, setInviteCode] = useState(null);
   // const [lobbyCode, setLobbyCode] = useState(null);
-  const [obsApi, setObsApi] = useState(null);
+  // const [obsApi, setObsApi] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState({
     stream: false,
     play: false
@@ -33,23 +33,42 @@ const GameDetails = ({ game }) => {
   const [showGameFrame, setShowGameFrame] = useState(false);
 
   const handlePaymentClicked = async () => {
-    console.log("Payment clicked")
+    const response = await fetch('http://localhost:5000/get-stream-details', {
+      method: "POST",
+      body: JSON.stringify({ "count": "1" }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    // Ensure the response is in JSON format
+    console.log("Ye wala ", response)
+    const output = await response.json();
+    console.log("Payment clicked and data is output: ", output)
+    setGame({
+      ...game,
+      streamDetails: {
+        stream_id: output.assignments[0].stream_id,
+        stream_key: output.assignments[0].stream_key,
+        stream_server: output.assignments[0].stream_server
+      }
+    });
   }
 
   const handleStartGame = () => {
-    if (obsApi === null || obsApi === '') {
-      alert('Please enter the OBS API first to proceed! This is essential for anti-hacking proactives.');
-      return;
-    }
+    // if (obsApi === null || obsApi === '') {
+    //   alert('Please enter the OBS API first to proceed! This is essential for anti-hacking proactives.');
+    //   return;
+    // }
     if (game.bIsInvite && inviteCode === null && inviteCode !== game.privateCode) {
       alert('Please enter the correct invite code.');
       return;
     }
-    if (!game.hasPlay) {
-      alert('First purchase the game.')
-    } else {
+    // if (!game.hasPlay) {
+    //   alert('First purchase the game.')
+    // } else {
       showGameFrame(true);
-    }
+    // }
   }
 
   useEffect(() => {
@@ -314,13 +333,10 @@ const GameDetails = ({ game }) => {
           )
         )}
       </Flex>
-      <Input
-        placeholder="Enter OBS apis"
-        value={obsApi}
-        onChange={(e) => setObsApi(e.target.value)}
-        color="white"
-        m="2em auto"
-      />
+      <Flex flexDirection="column">
+        <Text>Stream Server: {game.streamDetails.stream_server}</Text>
+        <Text>Stream key: {game.streamDetails.stream_key}</Text>
+      </Flex>
       {(!showGameFrame && (new Date() >= game.date && new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000)) ? <Button onClick={handleStartGame} m="2em">Go to Game</Button> : <Button onClick={() => setShowGameFrame(false)}>Hide</Button>)}
       {showGameFrame && (
         <iframe

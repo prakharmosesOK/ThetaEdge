@@ -14,8 +14,6 @@ import Leaderboard from './components/Leaderboard';
 import { GameListContext } from "contexts/GameListContext";
 
 // Importing frames and images
-import frame1 from 'assets/img/dashboards/frame1.png';
-import frame2 from 'assets/img/dashboards/frame2.png';
 import bgImage from 'assets/img/bgImage.jpg';
 
 import Organiser from "../../../contracts/Organiser.json";
@@ -68,22 +66,27 @@ export default function GamePage() {
     time: new Date().getTime(),
     noOfHour: 2,
     lobbyTimeInMin: 10,
+    streamDetails: {
+      stream_id: "",
+      stream_key: "",
+      stream_server: ""
+    }
   });
-  const [timeToDisplay, setTimeToDisplay] = useState((game.date.getTime() - parseInt(game.noOfHour) * 3600 * 1000) / 1000)
+  const [timeToDisplay, setTimeToDisplay] = useState(new Date().getSeconds());
   const [gameParticipants, setGameParticipants] = useState([
     {
       playerNickName: "Aman",
       playerAddress: "0x054654616df1gdf5hgh1",
       playerScore: 78,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar6.png',
-      frameImage: frame1,
+      frameImage: 1,
       streamLink: "/fjfohjdf;o"
     }, {
       playerNickName: "Mohit",
       playerAddress: '0x66546513df1gdfgdf0df',
       playerScore: 67,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar2.png',
-      frameImage: frame2,
+      frameImage: 2,
       streamLink: "/kdrtjorsj"
     }
   ])
@@ -167,10 +170,15 @@ export default function GamePage() {
           hasPlay: hasPlay,
           hasStream: hasStream,
           gameLink: res.gameLink,
+          streamDetails: {
+            stream_id: "",
+            stream_server: "",
+            stream_key: ""
+          },
         }
         setgame(gameData);
         console.log("Inside fetching the Game: ", timeToDisplay);
-        setTimeToDisplay((new Date(res.date).getTime() - parseInt(res.noOfHour) * 3600 * 1000) / 1000);
+        // setTimeToDisplay((new Date(res.date).getTime() - parseInt(res.noOfHour) * 3600 * 1000) / 1000);
       }
       catch (error) {
         console.log(error);
@@ -181,11 +189,19 @@ export default function GamePage() {
   }, []);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeToDisplay(Math.abs(game.date.getTime() - parseInt(game.noOfHour) * 3600 * 1000) / 1000);
-    }, 1000);
+    if (game.date >= new Date()) {
+      const intervalId = setInterval(() => {
+        setTimeToDisplay(Math.round((game.date - new Date()) / 1000));
+      }, 1000);
 
-    return () => clearInterval(intervalId);
+      return () => clearInterval(intervalId);
+    } else {
+      const intervalId = setInterval(() => {
+        setTimeToDisplay(Math.round((new Date(game.date.getTime() + parseInt(game.noOfHour)*3600*1000) - new Date()) / 1000));
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
   }, [game]);
 
   useEffect(() => {
@@ -269,8 +285,12 @@ export default function GamePage() {
         fontSize="1em"
         color="#1eb8fa"
         float="right"
-      >{timeToDisplay > 0 ? 'Starts in' : 'Live since'} {timeToDisplay > 0 ? secondsToHMS(new Date(timeToDisplay)) : secondsToHMS(new Date(-timeToDisplay))}</Text>
-      {selectedTab === "details" ? <GameDetails game={game} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} />}
+        position="relative"
+        top="2em"
+        right="1em"
+        fontWeight="bold"
+      >{new Date() < game.date ? `Starts in ${secondsToHMS(timeToDisplay)}` : `Ends in ${secondsToHMS(timeToDisplay)}`}</Text>
+      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} />}
     </Box>
   );
 };
