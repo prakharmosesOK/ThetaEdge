@@ -28,6 +28,10 @@ const GameDetails = ({ game }) => {
   const [lobbyCode, setLobbyCode] = useState(null);
   const [obsApi, setObsApi] = useState(null);
   const [timeToDisplay, setTimeToDisplay] = useState(new Date().getTime())
+  const [paymentStatus, setPaymentStatus] = useState({
+    stream: false,
+    play: false
+  });
 
   const handlePaymentClicked = async () => {
     console.log("Payment clicked")
@@ -241,7 +245,7 @@ const GameDetails = ({ game }) => {
       </div>
       <Box
         as="iframe"
-        src="https://www.youtube.com/embed/7fjOw8ApZ1I?si=jWSEQvz9l-lXGt3-"
+        src={game.videoLink}
         width="52em"
         height="450px"
         borderRadius="lg"
@@ -258,16 +262,24 @@ const GameDetails = ({ game }) => {
           onChange={(e) => setInviteCode(e.target.value)}
           color="white"
         />}
-        {<Button onClick={handlePaymentClicked} ml="2em">Join Game</Button>}
+        {(
+          <>
+            <label>Buy Stream</label>
+            <Input type="checkbox" checked={paymentStatus.stream} onChange={() => setPaymentStatus({ ...paymentStatus, stream: !paymentStatus.stream })} />
+            <label>Buy Play</label>
+            <Input type="checkbox" checked={paymentStatus.play} onChange={() => setPaymentStatus({ ...paymentStatus, play: !paymentStatus.play })} />
+            <Button onClick={handlePaymentClicked} ml="2em">Join Game</Button>
+          </>
+        )}
       </Flex>
       {game.bIsMultiplayer === true && (
-          <Input
-            placeholder="Enter OBS apis"
-            value={obsApi}
-            onChange={(e) => setObsApi(e.target.value)}
-            color="white"
-            m="2em auto"
-          />
+        <Input
+          placeholder="Enter OBS apis"
+          value={obsApi}
+          onChange={(e) => setObsApi(e.target.value)}
+          color="white"
+          m="2em auto"
+        />
       )}
       <Button onClick={handleStartGame} m="2em">Go to Game</Button>
     </Box >
