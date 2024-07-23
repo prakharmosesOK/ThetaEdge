@@ -258,7 +258,7 @@ const GameDetails = ({ game }) => {
           onChange={(e) => setInviteCode(e.target.value)}
           color="white"
         />}
-        {<Button onClick={handlePaymentClicked}>Join Game</Button>}
+        {<Button onClick={handlePaymentClicked} ml="2em">Join Game</Button>}
       </Flex>
       {game.bIsMultiplayer === true && (
           <Input
@@ -269,7 +269,7 @@ const GameDetails = ({ game }) => {
             m="2em auto"
           />
       )}
-      <Button onClick={handleStartGame}>Go to Game</Button>
+      <Button onClick={handleStartGame} m="2em">Go to Game</Button>
     </Box >
   );
 };
