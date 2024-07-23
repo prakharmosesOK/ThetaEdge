@@ -17,7 +17,7 @@ import frame2 from 'assets/img/dashboards/frame2.png';
 const game = {
   gameId: 1,
   gameName: "Game 1",
-  gameImage: "https://via.placeholder.com/150",
+  gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdr2OZSEgsmXE14s9auzTchMIOPCMtVIoymQ&s",
   gameStreamLink: "https://dfhfjfhdfgdgd",
   gamePrice: 200,
   gameAuthor: "0x0",

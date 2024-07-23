@@ -26,18 +26,17 @@ const GameDetails = ({ game }) => {
 
   return (
     <Box p={5}>
-      <Text>{timeToDisplay.toString()} remaining</Text>
+      {/* <Text>{timeToDisplay.toString()} remaining</Text> */}
       <Image
         src={game.gameImage}
         alt="Game image"
-        w="67vw"
+        // fit="contain"
+        w="50em"
+        h="30em"
+        shadow="0 0 20px 10px black"
         mx="auto"
-        mt="1em"
-        rounded="3em"
-        h="24em"
-        sizes="fit"
       />
-      <Flex
+      {/* <Flex
         flexDirection="column"
         alignItems="center"
         justifyContent="space-evenly"
@@ -95,7 +94,7 @@ const GameDetails = ({ game }) => {
             <Button onClick={handleStartGame}>Go to Game</Button>
           </>
         )}
-      </Flex>
+      </Flex> */}
     </Box>
   );
 };
