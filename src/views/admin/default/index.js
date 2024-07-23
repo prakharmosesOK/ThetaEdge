@@ -59,6 +59,7 @@ import {
 // import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 // import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 import Organiser from "../../../contracts/Organiser.json";
+
 // Importing frames
 import frame1 from 'assets/img/dashboards/frame1.png'
 import frame2 from 'assets/img/dashboards/frame2.png'
@@ -323,8 +324,6 @@ export default function UserReports() {
         profileData.gamesParticipating.map(async (game) => {
           const result = await _contract.getGameById(game.gameId);
           const ipfsData = await getDataFromIpfs(result.Ipfs);
-          //console.log("ye bhi chahiye", ipfsData);
-          // console.log("ye bhi chahiye", result.playersJoined);
           return {
             gameId: game.gameId,
             gameName: ipfsData.gameName,
@@ -343,16 +342,15 @@ export default function UserReports() {
   }
 
   async function fetchGameEventsOrganised() {
-    console.log("ye to call hua hoga");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const _contract = new ethers.Contract(contractAddress, contractABI, provider);
-    console.log(profileData.gamesUpload);
+    
     try {
       const gameEvents = await Promise.all(
         profileData.gamesUpload.map(async (game) => {
-          console.log("first",game.gameId);
+          //console.log("first",game.gameId);
           const result = await _contract.getGameById(game.gameId);
-          console.log("ye chahiye", result);
+          //console.log("ye chahiye", result);
           const ipfsData = await getDataFromIpfs(result.Ipfs);
           // console.log(ipfsData);
           return {
@@ -441,7 +439,8 @@ export default function UserReports() {
 
   useEffect(() => {
     const fetchBarChartGameRevenue = () => {
-      let lastGamesOrganised = gameEventsOrganised.toReversed().slice(0, 7);
+      let lastGamesOrganised = gameEventsOrganised.toReversed().slice(0, 4);
+      console.log("organise", lastGamesOrganised);
       setBarChartGameOptions({
         ...barChartGameOptions,
         xaxis: {
@@ -464,7 +463,7 @@ export default function UserReports() {
 
     // Call the function here
     fetchBarChartGameRevenue();
-  }, [profileData]);
+  }, [profileData,gameEventsOrganised]);
 
 
   useEffect(() => {
