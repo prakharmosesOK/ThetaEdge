@@ -12,22 +12,30 @@ import {
     useColorModeValue,
     Image,
     Button,
+    Flex,
 } from "@chakra-ui/react";
 
-const Leaderboard = ({ gameParticipants }) => {
+const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream }) => {
     const [streamUrl, setStreamUrl] = useState('/');
     const bg = useColorModeValue("gray.100", "gray.900");
     const textColor = useColorModeValue("gray.800", "white");
 
-    useEffect(() => {
+    const handleRefreshStandings = async () => {
+        console.log('Standings refresh!');
+    }
 
-    }, [streamUrl]);
+    const handleCollectReward = async () => {
+        console.log('Rewards')
+    }
 
     return (
         <Box w="full" p={4} bg={bg} borderRadius="md" boxShadow="md">
-            <Text fontSize="2xl" fontWeight="bold" mb={4} color={textColor}>
-                Leaderboard
-            </Text>
+            <Flex flexDirection="row" w="60em" justifyContent="space-between">
+                <Text fontSize="2xl" fontWeight="bold" mb={4} color={textColor}>
+                    Leaderboard
+                </Text>
+                <Button onClick={handleRefreshStandings}>Refresh</Button>
+            </Flex>
             <Table variant="simple">
                 <TableCaption>Current standings of the game</TableCaption>
                 <Thead>
@@ -70,9 +78,9 @@ const Leaderboard = ({ gameParticipants }) => {
                     ))}
                 </Tbody>
             </Table>
-            {streamUrl !== '/' && (
+            <Button onClick={handleCollectReward} w="fit-content" mx="auto">Collect Reward</Button>
+            {streamUrl !== '/' && hasStream && (
                 <div id="default-modal" tabIndex="-1" aria-hidden="true" className="absolute top-[0em] left-[5em] z-[500] flex w-[60em] h-[40em]">
-                    {/* <div className="relative p-4 w-full max-w-2xl max-h-full"> */}
                         <div className="bg-white rounded-lg shadow dark:bg-gray-700">
                             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -94,7 +102,6 @@ const Leaderboard = ({ gameParticipants }) => {
                                 ></iframe>
                             </div>
                         </div>
-                    {/* </div> */}
                 </div>
             )}
         </Box>

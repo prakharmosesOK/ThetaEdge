@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -17,7 +17,6 @@ import { GiDuration, GiTargetPrize } from "react-icons/gi";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { FaCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { MdDescription } from "react-icons/md";
 
 import GameCard from "./GameCard";
 
@@ -25,21 +24,50 @@ const MotionListItem = motion(ListItem);
 
 const GameDetails = ({ game }) => {
   const [inviteCode, setInviteCode] = useState(null);
-  const [lobbyCode, setLobbyCode] = useState(null);
+  // const [lobbyCode, setLobbyCode] = useState(null);
   const [obsApi, setObsApi] = useState(null);
-  const [timeToDisplay, setTimeToDisplay] = useState(new Date().getTime())
   const [paymentStatus, setPaymentStatus] = useState({
     stream: false,
     play: false
   });
+  const [showGameFrame, setShowGameFrame] = useState(false);
 
   const handlePaymentClicked = async () => {
     console.log("Payment clicked")
   }
 
-  const handleStartGame = async () => {
-    console.log("Game Started");
+  const handleStartGame = () => {
+    if (obsApi === null || obsApi === '') {
+      alert('Please enter the OBS API first to proceed! This is essential for anti-hacking proactives.');
+      return;
+    }
+    if (game.bIsInvite && inviteCode === null && inviteCode !== game.privateCode) {
+      alert('Please enter the correct invite code.');
+      return;
+    }
+    if (!game.hasPlay) {
+      alert('First purchase the game.')
+    } else {
+      showGameFrame(true);
+    }
   }
+
+  useEffect(() => {
+    const handleMessage = (event) => {
+      console.log(event.data);
+      if (event.data.type === 'UPDATE_POINTS') {
+        console.log('Points:', event.data.points);
+      } else if (event.data.type === 'LOBBY_JOINED') {
+        console.log('Lobby Joined:', event.data.points);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   return (
     <Box p={5}>
@@ -53,10 +81,6 @@ const GameDetails = ({ game }) => {
         <Text
           fontSize="2em" fontWeight="extrabold" color="yellow.500" textShadow="0 1px 10px #008080"
         >{game.gameId} &nbsp; {game.gameName}</Text>
-        <Text
-          fontSize="1em"
-          color="#1eb8fa"
-        >{(timeToDisplay / 3600000).toFixed(0).toString()}:{((timeToDisplay % 3600000) / 60000).toFixed().toString()}:{((timeToDisplay % 3600000) % 60000).toString()} remaining</Text>
       </Flex>
       <Image
         src={game.gameImage}
@@ -262,26 +286,49 @@ const GameDetails = ({ game }) => {
           onChange={(e) => setInviteCode(e.target.value)}
           color="white"
         />}
-        {(
-          <>
-            <label>Buy Stream</label>
-            <Input type="checkbox" checked={paymentStatus.stream} onChange={() => setPaymentStatus({ ...paymentStatus, stream: !paymentStatus.stream })} />
-            <label>Buy Play</label>
-            <Input type="checkbox" checked={paymentStatus.play} onChange={() => setPaymentStatus({ ...paymentStatus, play: !paymentStatus.play })} />
-            <Button onClick={handlePaymentClicked} ml="2em">Join Game</Button>
-          </>
+        {(!game.hasPlay && !game.hasStream) && (
+          new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000) ? (
+            <Flex w="60em" alignItems="center" justifyContent="space-evenly">
+              <Flex gap="2em">
+                <label>Buy Stream: </label>
+                <input
+                  type="checkbox"
+                  className="w-6"
+                  checked={paymentStatus.stream}
+                  onChange={() => setPaymentStatus({ ...paymentStatus, stream: !paymentStatus.stream })}
+                />
+              </Flex>
+              <Flex gap="2em">
+                <label>Buy Play: </label>
+                <input
+                  type="checkbox"
+                  className="w-6"
+                  checked={paymentStatus.play}
+                  onChange={() => setPaymentStatus({ ...paymentStatus, play: !paymentStatus.play })}
+                />
+              </Flex>
+              <Button onClick={handlePaymentClicked} ml="2em" w="8em">Join Game</Button>
+            </Flex>
+          ) : (
+            <Text>Game has Ended!</Text>
+          )
         )}
       </Flex>
-      {game.bIsMultiplayer === true && (
-        <Input
-          placeholder="Enter OBS apis"
-          value={obsApi}
-          onChange={(e) => setObsApi(e.target.value)}
-          color="white"
-          m="2em auto"
-        />
+      <Input
+        placeholder="Enter OBS apis"
+        value={obsApi}
+        onChange={(e) => setObsApi(e.target.value)}
+        color="white"
+        m="2em auto"
+      />
+      {(!showGameFrame && (new Date() >= game.date && new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000)) ? <Button onClick={handleStartGame} m="2em">Go to Game</Button> : <Button onClick={() => setShowGameFrame(false)}>Hide</Button>)}
+      {showGameFrame && (
+        <iframe
+          src={game.gameLink}
+          frameborder="0"
+          className="w-full h-[40em]"
+        ></iframe>
       )}
-      <Button onClick={handleStartGame} m="2em">Go to Game</Button>
     </Box >
   );
 };

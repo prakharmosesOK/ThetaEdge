@@ -14,14 +14,21 @@ import {
 // Custom components
 import Card from "components/card/Card.js";
 // Assets
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function NFT(props) {
   const { gameEvent } = props;
   const textColor = useColorModeValue("navy.700", "white");
   const textColorBid = useColorModeValue("brand.500", "white");
+
+  useEffect(() => {
+    console.log("Game starts at: ", gameEvent.date);
+    console.log("Game Ends at: ", new Date(gameEvent.date + parseInt(gameEvent.noOfHour)*3600*1000));
+    console.log("Number of hours: ", typeof parseFloat(gameEvent.noOfHour))
+  }, []);
+
   return (
-    <Card p='20px' h="10em" shadow={`0 0 10px 0.4px ${gameEvent.date > new Date() ? "#fafa02" : (new Date(gameEvent.date - gameEvent.noOfHour*3600*1000) > new Date() ? "#56fc35" : "red")}`}>
+    <Card p='20px' h="10em" shadow={`0 0 10px 0.4px ${gameEvent.date > new Date() ? "#fafa02" : (new Date(gameEvent.date.getTime() + parseInt(gameEvent.noOfHour)*3600*1000) > new Date() ? "#56fc35" : "red")}`}>
       <Flex direction="row" justify='center'>
         <Box mb="20px" position='absolute' left={{ base: "20px", md: "30px" }}>
           <Image

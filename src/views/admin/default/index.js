@@ -487,7 +487,7 @@ export default function UserReports() {
       let gamesOrg = gameEventsOrganised.map(game => {
         return {
           gameName: game.gameName,
-          status: game.startDate > new Date() ? "Upcoming" : (new Date(game.startDate - game.hours * 3600 * 1000) > new Date() ? "Live" : "Ended"),
+          status: game.startDate > new Date() ? "Upcoming" : (new Date(game.startDate.getTime() - parseInt(game.hours) * 3600 * 1000) > new Date() ? "Live" : "Ended"),
           prizePool: game.totalPrizeMoney,
           participants: (game.noOfPlayers / parseFloat(game.maxParticipants)) * 100,
         }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import {
   Box,
@@ -6,9 +6,12 @@ import {
   Button,
   VStack,
   HStack,
+  Text,
 } from "@chakra-ui/react";
 import GameDetails from "./components/GameDetails";
 import Leaderboard from './components/Leaderboard';
+
+import { GameListContext } from "contexts/GameListContext";
 
 // Importing frames and images
 import frame1 from 'assets/img/dashboards/frame1.png';
@@ -43,6 +46,7 @@ const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
 
 export default function GamePage() {
   const { eventId } = useParams();
+  const { account } = useContext(GameListContext);
   const [selectedTab, setSelectedTab] = useState("details");
   const [game, setgame] = useState({
     gameId: 1,
@@ -65,6 +69,7 @@ export default function GamePage() {
     noOfHour: 2,
     lobbyTimeInMin: 10,
   });
+  const [timeToDisplay, setTimeToDisplay] = useState((game.date.getTime() - parseInt(game.noOfHour) * 3600 * 1000) / 1000)
   const [gameParticipants, setGameParticipants] = useState([
     {
       playerNickName: "Aman",
@@ -110,8 +115,10 @@ export default function GamePage() {
       const _contract = new ethers.Contract(contractAddress, contractABI, provider);
       try {
         const gamed = await _contract.getGameById(eventId);
+        let hasPlay = false;
+        let hasStream = false;
 
-        if(gamed.playersJoined){
+        if (gamed.playersJoined) {
           console.log("valid");
           const LeaderBoardArray = [];
           for (const player of gamed.playersJoined) {
@@ -122,12 +129,16 @@ export default function GamePage() {
               playerAddress: player.playerAddress,
               playerScore: player.leaderboardScore.toNumber(),
               profileImage: playerProfileData.profileImage,
-              frameImage: playerProfileData.frameImage ? playerProfileData.frameImage : 0 ,
+              frameImage: playerProfileData.frameImage ? playerProfileData.frameImage : 0,
               streamLink: player.streamLink ? player.streamLink : "/",
             }
+            if (account === player.playerAddress) {
+              hasPlay = player.bHasPlayTicket;
+              hasStream = player.bHasStreamTicket;
+            }
             LeaderBoardArray.push(leaderboardData);
-            setGameParticipants(LeaderBoardArray);
           }
+          setGameParticipants(LeaderBoardArray);
         }
         //console.log(gamed.playersJoined);
         //console.log(gamed);
@@ -153,17 +164,40 @@ export default function GamePage() {
           date: new Date(res.date),
           noOfHour: res.noOfHour,
           lobbyTimeInMin: res.lobbyTimeInMin,
+          hasPlay: hasPlay,
+          hasStream: hasStream,
+          gameLink: res.gameLink,
         }
         setgame(gameData);
+        console.log("Inside fetching the Game: ", timeToDisplay);
+        setTimeToDisplay((new Date(res.date).getTime() - parseInt(res.noOfHour) * 3600 * 1000) / 1000);
       }
       catch (error) {
         console.log(error);
       }
-  
+
     }
     getGameData();
   }, []);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimeToDisplay(Math.abs(game.date.getTime() - parseInt(game.noOfHour) * 3600 * 1000) / 1000);
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [game]);
+
+  useEffect(() => {
+    console.log("The remaining time is: ", timeToDisplay);
+  }, [timeToDisplay])
+
+  function secondsToHMS(secs) {
+    function z(n) { return (n < 10 ? '0' : '') + n; }
+    var sign = secs < 0 ? '-' : '';
+    secs = Math.abs(secs);
+    return sign + z(secs / 3600 | 0) + ':' + z((secs % 3600) / 60 | 0) + ':' + Math.round(z(secs % 60));
+  }
 
   return (
     <Box
@@ -231,7 +265,12 @@ export default function GamePage() {
           Leaderboard
         </Button>
       </Flex>
-      {selectedTab === "details" ? <GameDetails game={game} /> : <Leaderboard gameParticipants={gameParticipants} />}
+      <Text
+        fontSize="1em"
+        color="#1eb8fa"
+        float="right"
+      >{timeToDisplay > 0 ? 'Starts in' : 'Live since'} {timeToDisplay > 0 ? secondsToHMS(new Date(timeToDisplay)) : secondsToHMS(new Date(-timeToDisplay))}</Text>
+      {selectedTab === "details" ? <GameDetails game={game} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} />}
     </Box>
   );
 };

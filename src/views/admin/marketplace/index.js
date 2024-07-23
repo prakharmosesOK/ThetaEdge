@@ -233,7 +233,6 @@ export default function Marketplace(props) {
       }
       setTotalGamesList(allGamesList);
       setTopGamesList(allGamesList.slice(0, 3));
-      await fetchPurchaseHistory();
     } catch (error) {
       console.error(error);
     }
@@ -301,6 +300,7 @@ export default function Marketplace(props) {
 
   useEffect(() => {
     applyFilters();
+    fetchPurchaseHistory();
   }, [filterState, totalGamesList]);
 
   useEffect(() => {
@@ -409,6 +409,7 @@ export default function Marketplace(props) {
             p='0px'
             w={{ base: "40em", md: "32em", xl: "23em" }}
             mx="auto"
+            mt="1em"
           >
             <Flex
               align={{ sm: "flex-start", lg: "center" }}
