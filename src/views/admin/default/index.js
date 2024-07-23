@@ -385,6 +385,7 @@ export default function UserReports() {
       const _contract = new ethers.Contract(contractAddress, contractABI, provider);
       try {
         const result1 = await _contract.GetProfileIpfs(account);
+
         //console.log(result1);
         const result = await getDataFromIpfs(result1);
         //console.log(result);
@@ -394,7 +395,6 @@ export default function UserReports() {
           profileImage: result.profileImage, // Hardcoded new moneyGained value
           frameImage: result.frameImage ? result.frameImage : 0
         }));
-
       }
       catch (error) {
         console.log(error);
@@ -463,6 +463,7 @@ export default function UserReports() {
     fetchBarChartGameRevenue();
   }, [profileData]);
 
+
   useEffect(() => {
     const applyCheckGameParticipated = () => {
       let gamesPart = gameParticipated.map(game => {
@@ -496,7 +497,7 @@ export default function UserReports() {
   }, [gameEventsOrganised]);
 
   return (
-    <Box mt={{ base: "130px", md: "80px", xl: "80px" }}>
+    <Box mt={{ base: "8em", md: "8em", xl: "6em" }}>
       <Flex flexDirection="row">
         <ProfileIcon
           profileData={profileData}

@@ -68,13 +68,12 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
             profileImage: newProfileImage,
             frameImage: newFrameImage,
         })
-        console.log(profileData);
         const jsonObject = {
             nickName: newName ? newName : profileData.nickName,
             profileImage: newProfileImage ? newProfileImage : profileData.profileImage,
             frameImage: newFrameImage ? newFrameImage : profileData.frameImage,
         };
-        console.log(jsonObject);
+        console.log("The new profile data is: ", jsonObject);
 
         const addr = profileData.address ? profileData.address : "address";
         
@@ -137,15 +136,15 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
                     flexDirection="column"
                     zIndex={5}
                     position="absolute"
-                    w="18em"
+                    w="22.9em"
                     h="4em"
-                    left="1.8em"
+                    left="-0.5em"
                     top="22em"
                     bg="#f2f218"
                     alignItems="center"
                     justifyContent="space-evenly"
                     p="0.3em"
-                    rounded="full"
+                    rounded="1em"
                 >
                     <Box
                         w="3em"
