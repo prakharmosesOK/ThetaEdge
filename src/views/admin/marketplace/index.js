@@ -207,7 +207,7 @@ export default function Marketplace(props) {
       for (const [index, game] of gamesList.entries()) {
         const res = await getDataFromIpfs(game.Ipfs);
         
-        const profileIpfs = await _contract.GetProfileIpfs(account);
+        const profileIpfs = await _contract.GetProfileIpfs(game.organiserAddress);
         const res2 = await getDataFromIpfs(profileIpfs);
         const gameData = {
           gameId: game.gameId.toNumber(),
@@ -229,7 +229,6 @@ export default function Marketplace(props) {
           noOfHour: res.noOfHour,
           lobbyTimeInMin: res.lobbyTimeInMin,
         };
-        console.log(gameData);
         allGamesList.push(gameData);
       }
       setTotalGamesList(allGamesList);
