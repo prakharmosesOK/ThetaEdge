@@ -80,7 +80,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream }) =>
                     ))}
                 </Tbody>
             </Table>
-            <Button onClick={handleCollectReward} w="fit-content" mx="auto">Collect Reward</Button>
+            {new Date() > new Date(startTime.getTime() + parseInt(hoursActive)*3600*1000) && <Button onClick={handleCollectReward} w="fit-content" mx="auto">Collect Reward</Button>}
             {streamUrl !== '/' && hasStream && (
                 <div id="default-modal" tabIndex="-1" aria-hidden="true" className="absolute top-[0em] left-[5em] z-[500] flex w-[60em] h-[40em]">
                         <div className="bg-white rounded-lg shadow dark:bg-gray-700">
