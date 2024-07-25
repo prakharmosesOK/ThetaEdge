@@ -111,6 +111,8 @@ export default function GamePage() {
     }
   }
 
+    
+
   useEffect(() => {
     const getGameData = async () => {
       console.log("sad", eventId);
