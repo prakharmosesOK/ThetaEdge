@@ -72,7 +72,7 @@ export default function GamePage() {
       stream_server: ""
     }
   });
-  const [timeToDisplay, setTimeToDisplay] = useState(new Date().getSeconds());
+  const [timeToDisplay, setTimeToDisplay] = useState([0, new Date().getSeconds()]);
   const [gameParticipants, setGameParticipants] = useState([
     {
       playerNickName: "Aman",
@@ -191,16 +191,24 @@ export default function GamePage() {
   useEffect(() => {
     if (game.date >= new Date()) {
       const intervalId = setInterval(() => {
-        setTimeToDisplay(Math.round((game.date - new Date()) / 1000));
+        setTimeToDisplay([0, Math.round((game.date - new Date()) / 1000)]);
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    } else if (game.bIsMultiplayer && new Date(game.date.getTime() + parseInt(game.lobbyTimeInMin) * 60 * 1000) >= new Date()) {
+      const intervalId = setInterval(() => {
+        setTimeToDisplay([1, Math.round((new Date(game.date.getTime() + parseInt(game.lobbyTimeInMin)*60*1000) - new Date()) / 1000)]);
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    } else if (new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000) >= new Date()) {
+      const intervalId = setInterval(() => {
+        setTimeToDisplay([2, Math.round((new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000) - new Date()) / 1000)]);
       }, 1000);
 
       return () => clearInterval(intervalId);
     } else {
-      const intervalId = setInterval(() => {
-        setTimeToDisplay(Math.round((new Date(game.date.getTime() + parseInt(game.noOfHour)*3600*1000) - new Date()) / 1000));
-      }, 1000);
-
-      return () => clearInterval(intervalId);
+      setTimeToDisplay([3, "Event has ended!"]);
     }
   }, [game]);
 
@@ -285,7 +293,7 @@ export default function GamePage() {
         top="2em"
         right="1em"
         fontWeight="bold"
-      >{new Date() < game.date ? `Starts in ${secondsToHMS(timeToDisplay)}` : `Ends in ${secondsToHMS(timeToDisplay)}`}</Text>
+      >{timeToDisplay[0] === 0 ? `Starts in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 1 ? `Lobby time ends in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 2 ? `Event ends in ${timeToDisplay[1]}` : 'The event has been ended!'))}</Text>
       {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} />}
     </Box>
   );

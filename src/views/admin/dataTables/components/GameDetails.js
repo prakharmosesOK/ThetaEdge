@@ -96,13 +96,12 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
     }
   }
   useEffect(() => {
-    if (lobbyCalled && (timeToDisplay + parseInt(game.lobbyTimeInMin) * 60) >= 0) {
-      //console.log((timeToDisplay + parseInt(game.lobbyTimeInMin) * 60));
-      const gameIframe = document.getElementById('game-iframe');
-      if (gameIframe) {
-        gameIframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: (parseInt(timeToDisplay) + parseInt(game.lobbyTimeInMin)*60 -1 ) }, '*');
-      }
-    }
+    // if (lobbyCalled && (timeToDisplay + parseInt(game.lobbyTimeInMin) * 60) >= 0) {
+    //   const iframe = document.querySelector('iframe');
+    //   if (iframe) {
+    //     iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(game.lobbyTimeInMin) * 60 }, '*');
+    //   }
+    // }
     //console.log(parseInt(game.lobbyTimeInMin)*60);
   }, [timeToDisplay])
 

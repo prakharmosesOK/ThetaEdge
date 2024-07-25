@@ -27,7 +27,7 @@ export default function App() {
           <GameListProvider>
             <BrowserRouter>
               <Switch>
-                <Route path={`/auth`} component={AuthLayout} />
+                <Route path={`/aboutUs`} component={AuthLayout} />
                 <Route
                   path={`/admin`}
                   render={(props) => <AdminLayout {...props} />}
