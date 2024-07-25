@@ -24,7 +24,7 @@ import Organiser from "../../../../contracts/Organiser.json";
 const MotionListItem = motion(ListItem);
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
+const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
 
 const GameDetails = ({ game, setGame, timeToDisplay }) => {
   // timeToDisplay + parseInt(game.lobbyTimeInMin)*60
@@ -96,13 +96,13 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
     }
   }
   useEffect(() => {
-    // if (lobbyCalled && (timeToDisplay + parseInt(game.lobbyTimeInMin) * 60) >= 0) {
-    //   const iframe = document.querySelector('iframe');
-    //   if (iframe) {
-    //     iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(game.lobbyTimeInMin) * 60 }, '*');
-    //   }
-    // }
-    //console.log(parseInt(game.lobbyTimeInMin)*60);
+    if (lobbyCalled && timeToDisplay[0]===1 ) {
+      const iframe = document.querySelector('iframe');
+      if (iframe) {
+        iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: (timeToDisplay[1]-2) }, '*');
+      }
+    }
+    console.log(parseInt(game.lobbyTimeInMin)*60);
   }, [timeToDisplay])
 
   useEffect(() => {
@@ -131,21 +131,25 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
           console.log("transaction", error);
         }
       } else if (event.data.type === 'LOBBY_JOINED') {
-        const iframe = document.querySelector('iframe');
-        if (iframe) {
-          iframe.contentWindow.postMessage({ type: 'JOIN_LOBBY_FUNCTION', value: `${game.maxParticipants}|${game.gameId}` }, '*');
+        const gameIframe = document.getElementById('game-iframe');
+        if (gameIframe) {
+          console.log("inside iframe",`${game.maxParticipants}|${game.gameId}`);
+          gameIframe.contentWindow.postMessage({ type: 'JOIN_LOBBY_FUNCTION', value: `${game.maxParticipants}|${game.gameId}` }, '*');
         }
         setlobbyCalled(true);
         console.log('Lobby Joined:', event.data.points);
       }
     };
-
+    if(game.gameId === -1){
+      return;
+    }
+    console.log("event added");
     window.addEventListener('message', handleMessage);
 
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, []);
+  }, [game.gameId]);
 
   return (
     <Box p={5}>
@@ -347,6 +351,7 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
       </div>
       <Box
         as="iframe"
+        id="video-iframe"
         src={game.videoLink}
         width="52em"
         height="450px"
@@ -396,9 +401,11 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
         <Text>Stream Server: {game.streamDetails.stream_server}</Text>
         <Text>Stream key: {game.streamDetails.stream_key}</Text>
       </Flex>
-      {(!showGameFrame && (new Date() >= game.date && new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000)) ? <Button onClick={handleStartGame} m="2em">Go to Game</Button> : <Button onClick={() => setShowGameFrame(false)}>Hide</Button>)}
+       {/* timeToDisplay[0]=== 1 || timeToDisplay[0]=== 2 */}
+      {(!showGameFrame && ((game.bIsMultiplayer && timeToDisplay[0]=== 1 ) || (!game.bIsMultiplayer && timeToDisplay[0]=== 2)) ? <Button onClick={handleStartGame} m="2em">Go to Game</Button> : <Button onClick={() => setShowGameFrame(false)}>Hide</Button>)}
       {showGameFrame && (
         <iframe allow="fullscreen;"
+          id="game-iframe"
           src={game.gameLink}
           frameborder="0"
           className="w-full h-[40em]"

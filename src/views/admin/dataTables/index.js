@@ -20,7 +20,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
+const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
 
 // const game = {
 //   gameId: 1,
@@ -47,7 +47,7 @@ export default function GamePage() {
   const { account } = useContext(GameListContext);
   const [selectedTab, setSelectedTab] = useState("details");
   const [game, setgame] = useState({
-    gameId: 1,
+    gameId: -1,
     gameName: "Game 1",
     gameImage: "https://via.placeholder.com/150",
     gamePrice: 200,
