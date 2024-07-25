@@ -26,10 +26,10 @@ const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
 const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
 
-const GameDetails = ({ game, setGame , timeToDisplay }) => {
+const GameDetails = ({ game, setGame, timeToDisplay }) => {
   // timeToDisplay + parseInt(game.lobbyTimeInMin)*60
   const [inviteCode, setInviteCode] = useState(null);
-  const [lobbyCalled , setlobbyCalled] = useState(false);
+  const [lobbyCalled, setlobbyCalled] = useState(false);
   // const [lobbyCode, setLobbyCode] = useState(null);
   // const [obsApi, setObsApi] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState({
@@ -65,7 +65,7 @@ const GameDetails = ({ game, setGame , timeToDisplay }) => {
     //     'Content-Type': 'application/json',
     //   }
     // });
-    
+
     // // Ensure the response is in JSON format
     // console.log("Ye wala ", response)
     // const output = await response.json();
@@ -96,11 +96,14 @@ const GameDetails = ({ game, setGame , timeToDisplay }) => {
     }
   }
   useEffect(() => {
-    if(lobbyCalled){
-      
+    if (lobbyCalled && (timeToDisplay + parseInt(game.lobbyTimeInMin) * 60) >= 0) {
+      const iframe = document.querySelector('iframe');
+      if (iframe) {
+        iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(game.lobbyTimeInMin) * 60 }, '*');
+      }
     }
     //console.log(parseInt(game.lobbyTimeInMin)*60);
-  },[timeToDisplay])
+  }, [timeToDisplay])
 
   useEffect(() => {
     const handleMessage = async (event) => {
@@ -129,8 +132,8 @@ const GameDetails = ({ game, setGame , timeToDisplay }) => {
         }
       } else if (event.data.type === 'LOBBY_JOINED') {
         const iframe = document.querySelector('iframe');
-        if(iframe){
-            iframe.contentWindow.postMessage({type: 'JOIN_LOBBY_FUNCTION', value : `${game.maxParticipants}|${game.gameId}`} , '*');
+        if (iframe) {
+          iframe.contentWindow.postMessage({ type: 'JOIN_LOBBY_FUNCTION', value: `${game.maxParticipants}|${game.gameId}` }, '*');
         }
         setlobbyCalled(true);
         console.log('Lobby Joined:', event.data.points);
