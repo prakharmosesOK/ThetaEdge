@@ -47,7 +47,7 @@ export default function GamePage() {
   const { account } = useContext(GameListContext);
   const [selectedTab, setSelectedTab] = useState("details");
   const [game, setgame] = useState({
-    gameId: 1,
+    gameId: -1,
     gameName: "Game 1",
     gameImage: "https://via.placeholder.com/150",
     gamePrice: 200,

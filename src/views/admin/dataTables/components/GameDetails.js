@@ -141,13 +141,16 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
         console.log('Lobby Joined:', event.data.points);
       }
     };
-
+    if(game.gameId === -1){
+      return;
+    }
+    console.log("event added");
     window.addEventListener('message', handleMessage);
 
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, []);
+  }, [game.gameId]);
 
   return (
     <Box p={5}>
