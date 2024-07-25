@@ -96,12 +96,12 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
     }
   }
   useEffect(() => {
-    if (lobbyCalled && (timeToDisplay + parseInt(game.lobbyTimeInMin) * 60) >= 0) {
-      const iframe = document.querySelector('iframe');
-      if (iframe) {
-        iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(game.lobbyTimeInMin) * 60 }, '*');
-      }
-    }
+    // if (lobbyCalled && (timeToDisplay + parseInt(game.lobbyTimeInMin) * 60) >= 0) {
+    //   const iframe = document.querySelector('iframe');
+    //   if (iframe) {
+    //     iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(game.lobbyTimeInMin) * 60 }, '*');
+    //   }
+    // }
     //console.log(parseInt(game.lobbyTimeInMin)*60);
   }, [timeToDisplay])
 

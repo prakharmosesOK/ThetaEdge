@@ -14,11 +14,11 @@ export default function Auth() {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   // functions for changing the states from components
   const getRoute = () => {
-    return window.location.pathname !== "/auth/full-screen-maps";
+    return window.location.pathname !== "/aboutUs/full-screen-maps";
   };
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
-      if (prop.layout === "/auth") {
+      if (prop.layout === "/aboutUs") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -63,7 +63,7 @@ export default function Auth() {
                 {getRoutes(routes)}
                 <Redirect
                   from='/auth'
-                  to='/auth/sign-in/default
+                  to='/aboutUs/default
                   '
                 />
               </Switch>

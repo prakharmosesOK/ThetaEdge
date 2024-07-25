@@ -58,8 +58,8 @@ const routes = [
   },
   {
     name: "About Us",
-    layout: "/auth",
-    path: "/sign-in",
+    layout: "/aboutUs",
+    path: "/",
     icon: <Icon as={MdLock} width='20px' height='20px' color='inherit' />,
     component: SignInCentered,
   },
