@@ -56,26 +56,26 @@ const GameDetails = ({ game, setGame }) => {
       console.error('Transaction error:', error);
     }
 
-    const response = await fetch('http://localhost:5000/get-stream-details', {
-      method: "POST",
-      body: JSON.stringify({ "count": "1" }),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
+    // const response = await fetch('http://localhost:5000/get-stream-details', {
+    //   method: "POST",
+    //   body: JSON.stringify({ "count": "1" }),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   }
+    // });
     
-    // Ensure the response is in JSON format
-    console.log("Ye wala ", response)
-    const output = await response.json();
-    console.log("Payment clicked and data is output: ", output)
-    setGame({
-      ...game,
-      streamDetails: {
-        stream_id: output.assignments[0].stream_id,
-        stream_key: output.assignments[0].stream_key,
-        stream_server: output.assignments[0].stream_server
-      }
-    });
+    // // Ensure the response is in JSON format
+    // console.log("Ye wala ", response)
+    // const output = await response.json();
+    // console.log("Payment clicked and data is output: ", output)
+    // setGame({
+    //   ...game,
+    //   streamDetails: {
+    //     stream_id: output.assignments[0].stream_id,
+    //     stream_key: output.assignments[0].stream_key,
+    //     stream_server: output.assignments[0].stream_server
+    //   }
+    // });
   }
 
   const handleStartGame = () => {
