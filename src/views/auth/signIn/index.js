@@ -1,250 +1,136 @@
-/* eslint-disable */
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
 import React from "react";
 import { NavLink } from "react-router-dom";
-// Chakra imports
 import {
   Box,
-  Button,
-  Checkbox,
-  Flex,
-  FormControl,
-  FormLabel,
   Heading,
-  Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
   Text,
   useColorModeValue,
+  VStack,
+  HStack,
+  Divider,
+  Table,
+  Tr,
+  Tbody,
+  Td,
 } from "@chakra-ui/react";
-// Custom components
-import { HSeparator } from "components/separator/Separator";
-import DefaultAuth from "layouts/auth/Default";
-// Assets
-import illustration from "assets/img/auth/auth.png";
-import { FcGoogle } from "react-icons/fc";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { RiEyeCloseLine } from "react-icons/ri";
+import bgAboutUs from 'assets/img/bgAboutUs.jpg';
 
-function SignIn() {
-  // Chakra color mode
+function AboutUs() {
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
   const textColorBrand = useColorModeValue("brand.500", "white");
   const brandStars = useColorModeValue("brand.500", "brand.400");
-  const googleBg = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
-  const googleText = useColorModeValue("navy.700", "white");
-  const googleHover = useColorModeValue(
-    { bg: "gray.200" },
-    { bg: "whiteAlpha.300" }
-  );
-  const googleActive = useColorModeValue(
-    { bg: "secondaryGray.300" },
-    { bg: "whiteAlpha.200" }
-  );
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
+
   return (
-    <Box p={8}>
-      <Heading as="h1" size="xl" mb={4} colorScheme={textColor}>
-        About Our Event Streaming Platform
-      </Heading>
-      <Text fontSize="lg" colorScheme={textColorSecondary}>
-        Welcome to our decentralized event streaming platform! Here, users can stream and play games, all powered by web3 technology. Whether you're a game developer or a player, you're in control.
-      </Text>
-      <Text fontSize="lg" mt={4} colorScheme={textColorSecondary}>
-        Our NFT-based ticketing system ensures fair play, and winners receive exciting prizes. Join us and be part of the future of gaming!
-      </Text>
+    <Box
+      p={8}
+      m="4em 5em"
+      h="35em"
+      overflowY="auto"
+      shadow="0 0 30px 4px red"
+      position="relative"
+    >
+      <Box
+        position="absolute"
+        inset="0"
+        bgImage={`url(${bgAboutUs})`}
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        opacity="0.2"
+      />
+      <VStack spacing={6} align="start" zIndex="1" position="relative">
+        <Heading as="h1" size="xl" color="yellow.300">About Us</Heading>
+
+        <Text fontSize="lg" color={textColor}>
+          Welcome to GamETHa, your ultimate destination for game streaming and hosting! We are revolutionizing the gaming industry by providing a decentralized platform where game developers, from large firms and institutions to individual creators, can showcase their talents and reach a global audience.
+        </Text>
+
+        <Heading as="h2" size="lg" color="yellow.400">Our Vision</Heading>
+        <Text fontSize="md" color={textColorSecondary}>
+          At GamETHa, our vision is to democratize the gaming industry. We believe in empowering developers of all sizes to host, publish, and monetize their games without the constraints of traditional platforms. Our mission is to create an inclusive, innovative, and accessible environment for gamers and developers alike.
+        </Text>
+
+        <Heading as="h2" size="lg" color="yellow.400">What We Offer</Heading>
+        <VStack spacing={4} align="start">
+        <Table>
+          <Tbody>
+          <Tr spacing={2} align="start">
+            <Td><Heading as="h3" size="md" color={textColor}>Game Streaming and Hosting</Heading></Td>
+            <Td><Text fontSize="md" color={textColorSecondary}>
+              Our platform enables developers to stream and host their games effortlessly. Whether you're a solo developer or a large gaming firm, you can leverage our infrastructure to bring your games to life. Our user-friendly interface makes it easy to upload, manage, and update your games.
+            </Text></Td>
+          </Tr>
+
+          <Tr spacing={2} align="start">
+            <Td><Heading as="h3" size="md" color={textColor}>Flexible Pricing and Revenue Distribution</Heading></Td>
+            <Td><Text fontSize="md" color={textColorSecondary}>
+              We understand that every game is unique, and so are the needs of its developers. That’s why we offer flexible pricing options. Hosts can set their own prices for their games, and the revenue is fairly distributed among the participants of the game. This ensures that everyone involved in the creation and enjoyment of the game benefits.
+            </Text></Td>
+          </Tr>
+
+          <Tr spacing={2} align="start">
+            <Td><Heading as="h3" size="md" color={textColor}>Zero-Fee Options</Heading></Td>
+            <Td><Text fontSize="md" color={textColorSecondary}>
+              To foster creativity and innovation, we offer zero-fee options for those who want to share their games for free. Our platform is designed to support and promote developers who wish to provide free access to their games while still benefiting from our robust hosting and streaming services.
+            </Text></Td>
+          </Tr>
+
+          <Tr spacing={2} align="start">
+            <Td><Heading as="h3" size="md" color={textColor}>Cost-Effective Advertising</Heading></Td>
+            <Td><Text fontSize="md" color={textColorSecondary}>
+              Advertising your game shouldn’t break the bank. We provide cost-effective advertising solutions to help you reach your target audience. Promote your games on our platform at a fraction of the cost of traditional advertising methods and watch your player base grow.
+            </Text></Td>
+          </Tr>
+        </Tbody>
+        </Table>
+        </VStack>
+
+        <Heading as="h2" size="lg" color="yellow.400">Why Choose Us?</Heading>
+
+        <VStack spacing={4} align="start">
+          <Table>
+            <Tbody>
+                <Tr spacing={2} align="start">
+                  <Td><Heading as="h3" size="md" color={textColor}>Decentralized and Secure</Heading></Td>
+                  <Td><Text fontSize="md" color={textColorSecondary}>
+                    Built on cutting-edge web3 technology, our platform ensures secure, transparent, and decentralized hosting and streaming of games.
+                  </Text></Td>
+                </Tr>
+
+                <Tr spacing={2} align="start">
+                  <Td><Heading as="h3" size="md" color={textColor}>Global Reach</Heading></Td>
+                  <Td><Text fontSize="md" color={textColorSecondary}>
+                    Connect with gamers and developers from around the world. Our platform is designed to support a diverse and vibrant gaming community.
+                  </Text></Td>
+                </Tr>
+
+                <Tr spacing={2} align="start">
+                  <Td><Heading as="h3" size="md" color={textColor}>Innovative Technology</Heading></Td>
+                  <Td><Text fontSize="md" color={textColorSecondary}>
+                    Leverage the power of NFTs for ticketing and prize distribution, making the gaming experience more engaging and rewarding.
+                  </Text></Td>
+                </Tr>
+
+                <Tr spacing={2} align="start">
+                  <Td><Heading as="h3" size="md" color={textColor}>Supportive Community</Heading></Td>
+                  <Td><Text fontSize="md" color={textColorSecondary}>
+                    Join a community of like-minded developers and gamers who are passionate about creating and enjoying the best games.
+                  </Text></Td>
+                </Tr>
+            </Tbody>
+          </Table>
+        </VStack>
+
+        <Divider />
+
+        <Text fontSize="lg" color={textColor}>
+          Join us at GamETHa and be part of the future of gaming. Whether you’re looking to host, stream, or play, we provide the tools and support you need to succeed. Let’s build a better gaming world together!
+        </Text>
+      </VStack>
     </Box>
   );
 }
-// <DefaultAuth illustrationBackground={illustration} image={illustration}>
-//   <Flex
-//     maxW={{ base: "100%", md: "max-content" }}
-//     w='100%'
-//     mx={{ base: "auto", lg: "0px" }}
-//     me='auto'
-//     h='100%'
-//     alignItems='start'
-//     justifyContent='center'
-//     mb={{ base: "30px", md: "60px" }}
-//     px={{ base: "25px", md: "0px" }}
-//     mt={{ base: "40px", md: "14vh" }}
-//     flexDirection='column'>
-//     <Box me='auto'>
-//       <Heading color={textColor} fontSize='36px' mb='10px'>
-//         Sign In
-//       </Heading>
-//       <Text
-//         mb='36px'
-//         ms='4px'
-//         color={textColorSecondary}
-//         fontWeight='400'
-//         fontSize='md'>
-//         Enter your email and password to sign in!
-//       </Text>
-//     </Box>
-//     <Flex
-//       zIndex='2'
-//       direction='column'
-//       w={{ base: "100%", md: "420px" }}
-//       maxW='100%'
-//       background='transparent'
-//       borderRadius='15px'
-//       mx={{ base: "auto", lg: "unset" }}
-//       me='auto'
-//       mb={{ base: "20px", md: "auto" }}>
-//       <Button
-//         fontSize='sm'
-//         me='0px'
-//         mb='26px'
-//         py='15px'
-//         h='50px'
-//         borderRadius='16px'
-//         bg={googleBg}
-//         color={googleText}
-//         fontWeight='500'
-//         _hover={googleHover}
-//         _active={googleActive}
-//         _focus={googleActive}>
-//         <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
-//         Sign in with Google
-//       </Button>
-//       <Flex align='center' mb='25px'>
-//         <HSeparator />
-//         <Text color='gray.400' mx='14px'>
-//           or
-//         </Text>
-//         <HSeparator />
-//       </Flex>
-//       <FormControl>
-//         <FormLabel
-//           display='flex'
-//           ms='4px'
-//           fontSize='sm'
-//           fontWeight='500'
-//           color={textColor}
-//           mb='8px'>
-//           Email<Text color={brandStars}>*</Text>
-//         </FormLabel>
-//         <Input
-//           isRequired={true}
-//           variant='auth'
-//           fontSize='sm'
-//           ms={{ base: "0px", md: "0px" }}
-//           type='email'
-//           placeholder='mail@simmmple.com'
-//           mb='24px'
-//           fontWeight='500'
-//           size='lg'
-//         />
-//         <FormLabel
-//           ms='4px'
-//           fontSize='sm'
-//           fontWeight='500'
-//           color={textColor}
-//           display='flex'>
-//           Password<Text color={brandStars}>*</Text>
-//         </FormLabel>
-//         <InputGroup size='md'>
-//           <Input
-//             isRequired={true}
-//             fontSize='sm'
-//             placeholder='Min. 8 characters'
-//             mb='24px'
-//             size='lg'
-//             type={show ? "text" : "password"}
-//             variant='auth'
-//           />
-//           <InputRightElement display='flex' alignItems='center' mt='4px'>
-//             <Icon
-//               color={textColorSecondary}
-//               _hover={{ cursor: "pointer" }}
-//               as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-//               onClick={handleClick}
-//             />
-//           </InputRightElement>
-//         </InputGroup>
-//         <Flex justifyContent='space-between' align='center' mb='24px'>
-//           <FormControl display='flex' alignItems='center'>
-//             <Checkbox
-//               id='remember-login'
-//               colorScheme='brandScheme'
-//               me='10px'
-//             />
-//             <FormLabel
-//               htmlFor='remember-login'
-//               mb='0'
-//               fontWeight='normal'
-//               color={textColor}
-//               fontSize='sm'>
-//               Keep me logged in
-//             </FormLabel>
-//           </FormControl>
-//           <NavLink to='/auth/forgot-password'>
-//             <Text
-//               color={textColorBrand}
-//               fontSize='sm'
-//               w='124px'
-//               fontWeight='500'>
-//               Forgot password?
-//             </Text>
-//           </NavLink>
-//         </Flex>
-//         <Button
-//           fontSize='sm'
-//           variant='brand'
-//           fontWeight='500'
-//           w='100%'
-//           h='50'
-//           mb='24px'>
-//           Sign In
-//         </Button>
-//       </FormControl>
-//       <Flex
-//         flexDirection='column'
-//         justifyContent='center'
-//         alignItems='start'
-//         maxW='100%'
-//         mt='0px'>
-//         <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
-//           Not registered yet?
-//           <NavLink to='/auth/sign-up'>
-//             <Text
-//               color={textColorBrand}
-//               as='span'
-//               ms='5px'
-//               fontWeight='500'>
-//               Create an Account
-//             </Text>
-//           </NavLink>
-//         </Text>
-//       </Flex>
-//     </Flex>
-//   </Flex>
-// </DefaultAuth>
 
-export default SignIn;
+export default AboutUs;
