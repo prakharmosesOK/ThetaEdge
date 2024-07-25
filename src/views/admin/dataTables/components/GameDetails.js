@@ -97,9 +97,10 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
   }
   useEffect(() => {
     if (lobbyCalled && (timeToDisplay + parseInt(game.lobbyTimeInMin) * 60) >= 0) {
-      const iframe = document.querySelector('iframe');
-      if (iframe) {
-        iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(game.lobbyTimeInMin) * 60 }, '*');
+      //console.log((timeToDisplay + parseInt(game.lobbyTimeInMin) * 60));
+      const gameIframe = document.getElementById('game-iframe');
+      if (gameIframe) {
+        gameIframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: (parseInt(timeToDisplay) + parseInt(game.lobbyTimeInMin)*60 -1 ) }, '*');
       }
     }
     //console.log(parseInt(game.lobbyTimeInMin)*60);
@@ -131,9 +132,10 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
           console.log("transaction", error);
         }
       } else if (event.data.type === 'LOBBY_JOINED') {
-        const iframe = document.querySelector('iframe');
-        if (iframe) {
-          iframe.contentWindow.postMessage({ type: 'JOIN_LOBBY_FUNCTION', value: `${game.maxParticipants}|${game.gameId}` }, '*');
+        const gameIframe = document.getElementById('game-iframe');
+        if (gameIframe) {
+          console.log("inside iframe",`${game.maxParticipants}|${game.gameId}`);
+          gameIframe.contentWindow.postMessage({ type: 'JOIN_LOBBY_FUNCTION', value: `${game.maxParticipants}|${game.gameId}` }, '*');
         }
         setlobbyCalled(true);
         console.log('Lobby Joined:', event.data.points);
@@ -347,6 +349,7 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
       </div>
       <Box
         as="iframe"
+        id="video-iframe"
         src={game.videoLink}
         width="52em"
         height="450px"
@@ -399,6 +402,7 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
       {(!showGameFrame && (new Date() >= game.date && new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000)) ? <Button onClick={handleStartGame} m="2em">Go to Game</Button> : <Button onClick={() => setShowGameFrame(false)}>Hide</Button>)}
       {showGameFrame && (
         <iframe allow="fullscreen;"
+          id="game-iframe"
           src={game.gameLink}
           frameborder="0"
           className="w-full h-[40em]"
