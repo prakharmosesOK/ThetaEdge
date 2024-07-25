@@ -31,14 +31,9 @@ function AboutUs() {
       shadow="0 0 30px 4px red"
       position="relative"
     >
-      <Box
-        position="absolute"
-        inset="0"
-        bgImage={`url(${bgAboutUs})`}
-        bgSize="cover"
-        bgPosition="center"
-        bgRepeat="no-repeat"
-        opacity="0.2"
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 z-[0]"
+        style={{ backgroundImage: `url(${bgAboutUs})` }}
       />
       <VStack spacing={6} align="start" zIndex="1" position="relative">
         <Heading as="h1" size="xl" color="yellow.300">About Us</Heading>
