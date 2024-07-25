@@ -100,13 +100,12 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
     }
   }
   useEffect(() => {
-    if (lobbyCalled && timeToDisplay[0] === 1) {
-      const iframe = document.querySelector('iframe');
-      if (iframe) {
-        iframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: (timeToDisplay[1] - 2) }, '*');
+    if (lobbyCalled && timeToDisplay[0]===1 ) {
+      const gameIframe = document.getElementById('game-iframe');
+      if (gameIframe) {
+        gameIframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(timeToDisplay[1]-2) }, '*');
       }
     }
-    console.log(parseInt(game.lobbyTimeInMin) * 60);
   }, [timeToDisplay])
 
   useEffect(() => {
