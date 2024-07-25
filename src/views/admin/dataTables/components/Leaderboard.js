@@ -81,6 +81,8 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
         console.log('Rewards')
     }
 
+    useEffect(() => handleRefreshStandings(), []);
+
     return (
         <Box w="full" p={4} bg={bg} borderRadius="md" boxShadow="md">
             <Flex flexDirection="row" w="60em" gap="5em">
