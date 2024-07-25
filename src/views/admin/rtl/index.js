@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormControl, FormLabel, Input, Select, Checkbox, Button } from '@chakra-ui/react';
 // import DateTimePicker from 'react-datetime-picker';
 import DateTimePicker from './components/DateTimePicker';
@@ -7,7 +7,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
+const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -42,6 +42,7 @@ export default function UserReports() {
   const handlePlayTicketPriceChange = (e) => setPlayTicketPrice(e.target.value);
   const handleStreamTicketPriceChange = (e) => setStreamTicketPrice(e.target.value);
   const handleIsMultiplayerChange = (e) => setIsMultiplayer(e.target.checked);
+  const handlelobbyTimeInMin = (e) => setlobbyTimeInMin(e.target.value);
   const handleIsInviteChange = (e) => setIsInvite(e.target.value);
   const handlePrivateCodeChange = (e) => setPrivateCode(e.target.value);
   const handleMaxParticipantsChange = (e) => setMaxParticipants(e.target.value);
@@ -91,8 +92,13 @@ export default function UserReports() {
     }
   }
 
+  useEffect(()=> {
+
+  },[])
+
   const handleSubmit = async () => {
 
+    
     const jsonObject = {
       "gameName": gameName,
       "gameLink": gameLink,
@@ -104,8 +110,8 @@ export default function UserReports() {
       "bIsInvite" : isInvite === "InviteOnly",
       "privateCode" : privateCode,
       "maxParticipants": maxParticipants,
-      "date" : selectedDate,
-      "time" : selectedTime,
+      "date" : new Date(new Date(selectedDate.setHours(0,0,0,0)).getTime() + (parseInt(selectedTime.slice(0,2))+(parseInt(selectedTime.slice(3,5))/60))*3600*1000),
+      //"time" : selectedTime,
       "noOfHour" : noOfHour,
     };
     console.log(jsonObject);
@@ -161,6 +167,11 @@ export default function UserReports() {
       <FormControl>
         <FormLabel>Is Multiplayer</FormLabel>
         <Checkbox isChecked={isMultiplayer} onChange={handleIsMultiplayerChange} />
+      </FormControl>
+
+      <FormControl>
+        <FormLabel>Lobby Time in min</FormLabel>
+        <Input type="text" value={lobbyTimeInMin} onChange={handlelobbyTimeInMin} />
       </FormControl>
 
       <FormControl>

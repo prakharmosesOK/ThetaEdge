@@ -32,7 +32,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
+const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
 
 export default function Home() {
   const [topGames, setTopGames] = useState([

@@ -24,10 +24,12 @@ import Organiser from "../../../../contracts/Organiser.json";
 const MotionListItem = motion(ListItem);
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
+const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
 
-const GameDetails = ({ game, setGame }) => {
+const GameDetails = ({ game, setGame , timeToDisplay }) => {
+  // timeToDisplay + parseInt(game.lobbyTimeInMin)*60
   const [inviteCode, setInviteCode] = useState(null);
+  const [lobbyCalled , setlobbyCalled] = useState(false);
   // const [lobbyCode, setLobbyCode] = useState(null);
   // const [obsApi, setObsApi] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState({
@@ -56,26 +58,26 @@ const GameDetails = ({ game, setGame }) => {
       console.error('Transaction error:', error);
     }
 
-    const response = await fetch('http://localhost:5000/get-stream-details', {
-      method: "POST",
-      body: JSON.stringify({ "count": "1" }),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
+    // const response = await fetch('http://localhost:5000/get-stream-details', {
+    //   method: "POST",
+    //   body: JSON.stringify({ "count": "1" }),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   }
+    // });
     
-    // Ensure the response is in JSON format
-    console.log("Ye wala ", response)
-    const output = await response.json();
-    console.log("Payment clicked and data is output: ", output)
-    setGame({
-      ...game,
-      streamDetails: {
-        stream_id: output.assignments[0].stream_id,
-        stream_key: output.assignments[0].stream_key,
-        stream_server: output.assignments[0].stream_server
-      }
-    });
+    // // Ensure the response is in JSON format
+    // console.log("Ye wala ", response)
+    // const output = await response.json();
+    // console.log("Payment clicked and data is output: ", output)
+    // setGame({
+    //   ...game,
+    //   streamDetails: {
+    //     stream_id: output.assignments[0].stream_id,
+    //     stream_key: output.assignments[0].stream_key,
+    //     stream_server: output.assignments[0].stream_server
+    //   }
+    // });
   }
 
   const handleStartGame = () => {
@@ -93,6 +95,12 @@ const GameDetails = ({ game, setGame }) => {
       setShowGameFrame(true);
     }
   }
+  useEffect(() => {
+    if(lobbyCalled){
+      
+    }
+    //console.log(parseInt(game.lobbyTimeInMin)*60);
+  },[timeToDisplay])
 
   useEffect(() => {
     const handleMessage = async (event) => {
@@ -120,6 +128,11 @@ const GameDetails = ({ game, setGame }) => {
           console.log("transaction", error);
         }
       } else if (event.data.type === 'LOBBY_JOINED') {
+        const iframe = document.querySelector('iframe');
+        if(iframe){
+            iframe.contentWindow.postMessage({type: 'JOIN_LOBBY_FUNCTION', value : `${game.maxParticipants}|${game.gameId}`} , '*');
+        }
+        setlobbyCalled(true);
         console.log('Lobby Joined:', event.data.points);
       }
     };
