@@ -62,7 +62,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
+const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
 
 export default function UserReports() {
   const { account, framesArray } = useContext(GameListContext);
@@ -72,12 +72,9 @@ export default function UserReports() {
     profileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
     frameImage: 0,
     gamesParticipating: [
-      { gameId: 1, isCollected: false },
-      { gameId: 2, isCollected: true }
+      { gameId: 1, isCollected: false }
     ],
-    gamesUpload: [{ gameId: 3, isCollected: true },
-    { gameId: 4, isCollected: false },
-    { gameId: 5, isCollected: true }
+    gamesUpload: [{ gameId: 3, isCollected: true }
     ],
     moneyGained: 65896,
     moneySpent: 7897,
@@ -334,11 +331,11 @@ export default function UserReports() {
     try {
       const gameEvents = await Promise.all(
         profileData.gamesUpload.map(async (game) => {
-          //console.log("first",game.gameId);
+          console.log("first",game.gameId);
           const result = await _contract.getGameById(game.gameId);
-          //console.log("ye chahiye", result);
+          console.log("ye chahiye", result);
           const ipfsData = await getDataFromIpfs(result.Ipfs);
-          // console.log(ipfsData);
+          console.log(ipfsData);
           return {
             gameId: game.gameId,
             playPrizeRevenue: result.totalRevenueFromGame.toNumber(),
@@ -373,19 +370,16 @@ export default function UserReports() {
         //console.log(result1);
         const result = await getDataFromIpfs(result1);
         //console.log(result);
-        setProfileData(prevProfileData => ({
-          ...prevProfileData, // Keep the existing properties
-          nickName: result.nickName, // Hardcoded new nickname
-          profileImage: result.profileImage, // Hardcoded new moneyGained value
-          frameImage: result.frameImage ? result.frameImage : 0
-        }));
-      }
-      catch (error) {
-        console.log(error);
-      }
-
-      try {
+        // setProfileData(prevProfileData => ({
+        //   ...prevProfileData, // Keep the existing properties
+        //   nickName: result.nickName, // Hardcoded new nickname
+        //   profileImage: result.profileImage, // Hardcoded new moneyGained value
+        //   frameImage: result.frameImage ? result.frameImage : 0
+        // }));
+        //console.log("profile done");
+        console.log(account);
         const result2 = await _contract.getGamesStatus(account);
+        console.log(result2);
         const gamesJoined = result2[0].map(num => num.toNumber());
         const gamesOrganized = result2[1].map(num => num.toNumber());
         const frameImageArray = result2[4].map(num => num.toNumber());
@@ -401,13 +395,15 @@ export default function UserReports() {
         }));
         setProfileData(prevProfileData => ({
           ...prevProfileData,
+          nickName: result.nickName, // Hardcoded new nickname
+          profileImage: result.profileImage, // Hardcoded new moneyGained value
+          frameImage: result.frameImage ? result.frameImage : 0,
           moneyGained: result2[2].toNumber(),
           moneySpent: result2[3].toNumber(),
           frameImageArray,
           gamesParticipating,
           gamesUpload,
         }));
-        console.log(result2);
       }
       catch (error) {
         console.log(error);
@@ -419,8 +415,8 @@ export default function UserReports() {
   }, []);
 
   useEffect(async () => {
-    await fetchGameEventsOrganised();
-    await fetchGameParticipated();
+    fetchGameEventsOrganised();
+    fetchGameParticipated();
   }, [profileData]);
 
   useEffect(() => {

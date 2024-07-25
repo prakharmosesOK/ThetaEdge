@@ -20,7 +20,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x191e1fa2056d68d167930db8b8cdecb7b9cfce9c';
+const contractAddress = '0xf92D803aD522221a6d466fa68A961c92F1C528af';
 
 // const game = {
 //   gameId: 1,
@@ -177,7 +177,7 @@ export default function GamePage() {
           },
         }
         setgame(gameData);
-        console.log("Inside fetching the Game: ", timeToDisplay);
+        console.log("Inside fetching the Game: ", gameData);
         // setTimeToDisplay((new Date(res.date).getTime() - parseInt(res.noOfHour) * 3600 * 1000) / 1000);
       }
       catch (error) {
@@ -203,10 +203,6 @@ export default function GamePage() {
       return () => clearInterval(intervalId);
     }
   }, [game]);
-
-  useEffect(() => {
-    console.log("The remaining time is: ", timeToDisplay);
-  }, [timeToDisplay])
 
   function secondsToHMS(secs) {
     function z(n) { return (n < 10 ? '0' : '') + n; }
@@ -290,7 +286,7 @@ export default function GamePage() {
         right="1em"
         fontWeight="bold"
       >{new Date() < game.date ? `Starts in ${secondsToHMS(timeToDisplay)}` : `Ends in ${secondsToHMS(timeToDisplay)}`}</Text>
-      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} />}
+      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} />}
     </Box>
   );
 };
