@@ -108,6 +108,23 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
     }
   }, [timeToDisplay])
 
+  function mapIntegerToAlphabetString(number) {
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+  
+    const digits = String(number).split('');
+    for (const digit of digits) {
+      const index = parseInt(digit, 10) - 1;
+      if (index >= 0 && index < 26) {
+        result += alphabet[index];
+      } else {
+        throw new Error(`Invalid digit ${digit} in number ${number}`);
+      }
+    }
+  
+    return result;
+  }
+
   useEffect(() => {
     const handleMessage = async (event) => {
       if (event.data.type === 'UPDATE_POINTS') {
@@ -136,8 +153,9 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
       } else if (event.data.type === 'LOBBY_JOINED') {
         const gameIframe = document.getElementById('game-iframe');
         if (gameIframe) {
-          console.log("inside iframe", `${game.maxParticipants}|${game.gameId}`);
-          gameIframe.contentWindow.postMessage({ type: 'JOIN_LOBBY_FUNCTION', value: `${game.maxParticipants}|${game.gameId}` }, '*');
+          const mappedGameId = mapIntegerToAlphabetString(game.gameId);
+          console.log("inside iframe", `${game.maxParticipants}|${mappedGameId}`);
+          gameIframe.contentWindow.postMessage({ type: 'JOIN_LOBBY_FUNCTION', value: `${game.maxParticipants}|${mappedGameId}` }, '*');
         }
         setlobbyCalled(true);
         console.log('Lobby Joined:', event.data.points);
