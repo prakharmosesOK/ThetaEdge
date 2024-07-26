@@ -24,7 +24,7 @@ import Organiser from "../../../../contracts/Organiser.json";
 const MotionListItem = motion(ListItem);
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
+const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 
 const GameDetails = ({ game, setGame, timeToDisplay }) => {
   const [inviteCode, setInviteCode] = useState(null);
@@ -61,25 +61,25 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
       console.error('Transaction error:', error);
     }
 
-    const response = await fetch('http://localhost:5000/get-stream-details', {
-      method: "POST",
-      body: JSON.stringify({ "count": "1" }),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
+    // const response = await fetch('http://localhost:5000/get-stream-details', {
+    //   method: "POST",
+    //   body: JSON.stringify({ "count": "1" }),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   }
+    // });
 
     // Ensure the response is in JSON format
-    const output = await response.json();
-    setGame({
-      ...game,
-      streamLink: `https://live5.thetavideoapi.com/hls/live/2015862/${output.assignments[0].stream_server}/1721935096573/master.m3u8`,
-      streamDetails: {
-        stream_id: output.assignments[0].stream_id,
-        stream_key: output.assignments[0].stream_key,
-        stream_server: output.assignments[0].stream_server
-      }
-    });
+    // const output = await response.json();
+    // setGame({
+    //   ...game,
+    //   streamLink: `https://live5.thetavideoapi.com/hls/live/2015862/${output.assignments[0].stream_server}/1721935096573/master.m3u8`,
+    //   streamDetails: {
+    //     stream_id: output.assignments[0].stream_id,
+    //     stream_key: output.assignments[0].stream_key,
+    //     stream_server: output.assignments[0].stream_server
+    //   }
+    // });
   }
 
   const generateStreamDetails = async () => {

@@ -62,7 +62,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
+const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 
 export default function UserReports() {
   const { account, framesArray } = useContext(GameListContext);
@@ -72,9 +72,9 @@ export default function UserReports() {
     profileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
     frameImage: 0,
     gamesParticipating: [
-      { gameId: 1, isCollected: false }
+      // { gameId: 1, isCollected: false }
     ],
-    gamesUpload: [{ gameId: 3, isCollected: true }
+    gamesUpload: [//{ gameId: 3, isCollected: true }
     ],
     moneyGained: 65896,
     moneySpent: 7897,
@@ -85,14 +85,14 @@ export default function UserReports() {
   const [gameParticipated, setGameParticipated] = useState([]);
   const [currentCurrency, setCurrentCurrency] = useState('usa');
   const [barChartGameRevenue, setBarChartGameRevenue] = useState([
-    {
-      name: "Game Play",
-      data: [400, 370, 330],
-    },
-    {
-      name: "Stream",
-      data: [400, 370, 330],
-    },
+    // {
+    //   name: "Game Play",
+    //   data: [400, 370, 330],
+    // },
+    // {
+    //   name: "Stream",
+    //   data: [400, 370, 330],
+    // },
   ])
   const [barChartGameOptions, setBarChartGameOptions] = useState({
     chart: {
@@ -182,98 +182,98 @@ export default function UserReports() {
     }
   });
   const [checkGameParticipated, setCheckGameParticipated] = useState([
-    {
-      "gameName": ["New International Game", false],
-      "playPrize": 2458,
-      "gameDate": "12 Jan 2021",
-      "stream": 'Yes'
-    },
-    {
-      "gameName": ["Among Us", true],
-      "playPrize": 1485,
-      "gameDate": "21 Feb 2021",
-      "stream": 'No'
-    },
-    {
-      "gameName": ["Weekly Update", true],
-      "playPrize": 1024,
-      "gameDate": "13 Mar 2021",
-      "stream": 'Yes'
-    }
+    // {
+    //   "gameName": ["New International Game", false],
+    //   "playPrize": 2458,
+    //   "gameDate": "12 Jan 2021",
+    //   "stream": 'Yes'
+    // },
+    // {
+    //   "gameName": ["Among Us", true],
+    //   "playPrize": 1485,
+    //   "gameDate": "21 Feb 2021",
+    //   "stream": 'No'
+    // },
+    // {
+    //   "gameName": ["Weekly Update", true],
+    //   "playPrize": 1024,
+    //   "gameDate": "13 Mar 2021",
+    //   "stream": 'Yes'
+    // }
   ]);
   const [complexGameOrganised, setComplexGameOrganised] = useState([
-    {
-      "gameName": "Clash of Clans",
-      "status": "Upcoming",
-      "prizePool": '$65',
-      "participants": 75.5
-    },
-    {
-      "gameName": "Ninja Fighter",
-      "status": "Ended",
-      "prizePool": "$85",
-      "participants": 25.5
-    },
-    {
-      "gameName": "Free Fire",
-      "status": "Live",
-      "prizePool": "$94",
-      "participants": 90
-    },
-    {
-      "gameName": "Weekly Updates",
-      "status": "Live",
-      "prizePool": "$35",
-      "participants": 50.5
-    },
-    {
-      "gameName": "Clash of Clans",
-      "status": "Upcoming",
-      "prizePool": '$65',
-      "participants": 75.5
-    },
-    {
-      "gameName": "Ninja Fighter",
-      "status": "Ended",
-      "prizePool": "$85",
-      "participants": 25.5
-    },
-    {
-      "gameName": "Free Fire",
-      "status": "Live",
-      "prizePool": "$94",
-      "participants": 90
-    },
-    {
-      "gameName": "Weekly Updates",
-      "status": "Live",
-      "prizePool": "$35",
-      "participants": 50.5
-    },
-    {
-      "gameName": "Clash of Clans",
-      "status": "Upcoming",
-      "prizePool": '$65',
-      "participants": 75.5
-    },
-    {
-      "gameName": "Ninja Fighter",
-      "status": "Ended",
-      "prizePool": "$85",
-      "participants": 25.5
-    },
-    {
-      "gameName": "Free Fire",
-      "status": "Live",
-      "prizePool": "$94",
-      "participants": 90
-    },
-    {
-      "gameName": "Weekly Updates",
-      "status": "Live",
-      "prizePool": "$35",
-      "participants": 50.5
-    },
+    // {
+    //   "gameName": "Clash of Clans",
+    //   "status": "Upcoming",
+    //   "prizePool": '$65',
+    //   "participants": 75.5
+    // },
+    // {
+    //   "gameName": "Ninja Fighter",
+    //   "status": "Ended",
+    //   "prizePool": "$85",
+    //   "participants": 25.5
+    // },
+    // {
+    //   "gameName": "Free Fire",
+    //   "status": "Live",
+    //   "prizePool": "$94",
+    //   "participants": 90
+    // },
+    // {
+    //   "gameName": "Weekly Updates",
+    //   "status": "Live",
+    //   "prizePool": "$35",
+    //   "participants": 50.5
+    // },
+    // {
+    //   "gameName": "Clash of Clans",
+    //   "status": "Upcoming",
+    //   "prizePool": '$65',
+    //   "participants": 75.5
+    // },
+    // {
+    //   "gameName": "Ninja Fighter",
+    //   "status": "Ended",
+    //   "prizePool": "$85",
+    //   "participants": 25.5
+    // },
+    // {
+    //   "gameName": "Free Fire",
+    //   "status": "Live",
+    //   "prizePool": "$94",
+    //   "participants": 90
+    // },
+    // {
+    //   "gameName": "Weekly Updates",
+    //   "status": "Live",
+    //   "prizePool": "$35",
+    //   "participants": 50.5
+    // },
+    // {
+    //   "gameName": "Clash of Clans",
+    //   "status": "Upcoming",
+    //   "prizePool": '$65',
+    //   "participants": 75.5
+    // },
+    // {
+    //   "gameName": "Ninja Fighter",
+    //   "status": "Ended",
+    //   "prizePool": "$85",
+    //   "participants": 25.5
+    // },
+    // {
+    //   "gameName": "Free Fire",
+    //   "status": "Live",
+    //   "prizePool": "$94",
+    //   "participants": 90
+    // },
+    // {
+    //   "gameName": "Weekly Updates",
+    //   "status": "Live",
+    //   "prizePool": "$35",
+    //   "participants": 50.5
+    // },
   ]);
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
@@ -325,17 +325,18 @@ export default function UserReports() {
   }
 
   async function fetchGameEventsOrganised() {
+    console.log("gurantee",profileData);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const _contract = new ethers.Contract(contractAddress, contractABI, provider);
     
     try {
       const gameEvents = await Promise.all(
         profileData.gamesUpload.map(async (game) => {
-          console.log("first",game.gameId);
+          //console.log("first",game.gameId);
           const result = await _contract.getGameById(game.gameId);
-          console.log("ye chahiye", result);
+          //console.log("ye chahiye", result);
           const ipfsData = await getDataFromIpfs(result.Ipfs);
-          console.log(ipfsData);
+          //console.log(ipfsData);
           return {
             gameId: game.gameId,
             playPrizeRevenue: result.totalRevenueFromGame.toNumber(),
@@ -360,7 +361,7 @@ export default function UserReports() {
 
   useEffect(() => {
     const fetchProfileInfo = async () => {
-      console.log(account);
+      //console.log(account);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       //const signer = provider.getSigner();
       const _contract = new ethers.Contract(contractAddress, contractABI, provider);
@@ -377,7 +378,7 @@ export default function UserReports() {
         //   frameImage: result.frameImage ? result.frameImage : 0
         // }));
         //console.log("profile done");
-        console.log(account);
+        //console.log(account);
         const result2 = await _contract.getGamesStatus(account);
         console.log(result2);
         const gamesJoined = result2[0].map(num => num.toNumber());
@@ -416,13 +417,13 @@ export default function UserReports() {
 
   useEffect(async () => {
     fetchGameEventsOrganised();
-    fetchGameParticipated();
+    //fetchGameParticipated();
   }, [profileData]);
 
   useEffect(() => {
     const fetchBarChartGameRevenue = () => {
       let lastGamesOrganised = gameEventsOrganised.toReversed().slice(0, 4);
-      console.log("organise", lastGamesOrganised);
+      //console.log("organise", lastGamesOrganised);
       setBarChartGameOptions({
         ...barChartGameOptions,
         xaxis: {

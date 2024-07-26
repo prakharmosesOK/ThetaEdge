@@ -20,7 +20,7 @@ import Organiser from "../../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
+const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 
 const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setGameParticipants, eventId }) => {
     const { framesArray } = useContext(GameListContext);
