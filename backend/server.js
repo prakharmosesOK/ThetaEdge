@@ -129,6 +129,7 @@ app.post('/get-stream-details', async (req, res) => {
 });
 
 app.get('/remove-streams', async (req, res) => {
+  console.log("---------------------------------- Entering inside remove streams! -------------------------------------------------");
   const response = await fetch(`https://api.thetavideoapi.com/service_account/${serviceAccountId}/streams`, {
     method: 'GET',
     headers: {
@@ -136,21 +137,41 @@ app.get('/remove-streams', async (req, res) => {
       'x-tva-sa-secret': serviceAccountSecret
     }
   });
+  console.log("The response received is: ", response);
 
   if (!response.ok) {
     throw new Error('Failed to fetch livestreams');
   }
 
   const data = await response.json();
+  console.log("the data received is: ", data);
   const returnData = [];
   for(let i=0;i<data.body.streams.length;i++){
 
     if(data.body.streams[i].status == "off"){
-      returnData.push(data.body.streams[i]);
+      returnData.push(data.body.streams[i].id);
     }
-  } 
-  return returnData;
+  }
+  console.log("The return data is: ", returnData); 
+  res.status(200).json(returnData);
 });
+
+app.post('/find-iframe', async (req, res) => {
+  const streamId = req.body.streamId;
+  const response = await fetch(`https://api.thetavideoapi.com/stream/${streamId}`, {
+    method: 'GET',
+    headers: {
+      'x-tva-sa-id': serviceAccountId,
+      'x-tva-sa-secret': serviceAccountSecret
+    }
+  });
+  const data = await response.json();
+  if (data.body.playback_uri === null) {
+    res.status(500).json({ status: 'error', message: 'Playback URI not found' });
+  } else {
+    res.json({ status: 'error', message: data.body.playback_uri })
+  }
+})
 
 app.post('/game-over', async (req, res) => {
 

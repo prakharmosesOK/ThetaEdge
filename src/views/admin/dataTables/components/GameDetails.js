@@ -30,7 +30,7 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
   const [inviteCode, setInviteCode] = useState(null);
   const [lobbyCalled, setlobbyCalled] = useState(false);
   // const [lobbyCode, setLobbyCode] = useState(null);
-  // const [obsApi, setObsApi] = useState(null);
+  const [obsApi, setObsApi] = useState(null);
   const [paymentStatus, setPaymentStatus] = useState({
     stream: false,
     play: false
@@ -57,38 +57,86 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
         hasStream: paymentStatus.stream
       })
       alert('Now you can join the game.');
-      console.log('Transaction successful:');
     } catch (error) {
       console.error('Transaction error:', error);
     }
 
-    // const response = await fetch('http://localhost:5000/get-stream-details', {
-    //   method: "POST",
-    //   body: JSON.stringify({ "count": "1" }),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   }
-    // });
+    const response = await fetch('http://localhost:5000/get-stream-details', {
+      method: "POST",
+      body: JSON.stringify({ "count": "1" }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
 
-    // // Ensure the response is in JSON format
-    // console.log("Ye wala ", response)
-    // const output = await response.json();
-    // console.log("Payment clicked and data is output: ", output)
-    // setGame({
-    //   ...game,
-    //   streamDetails: {
-    //     stream_id: output.assignments[0].stream_id,
-    //     stream_key: output.assignments[0].stream_key,
-    //     stream_server: output.assignments[0].stream_server
-    //   }
-    // });
+    // Ensure the response is in JSON format
+    const output = await response.json();
+    setGame({
+      ...game,
+      streamLink: `https://live5.thetavideoapi.com/hls/live/2015862/${output.assignments[0].stream_server}/1721935096573/master.m3u8`,
+      streamDetails: {
+        stream_id: output.assignments[0].stream_id,
+        stream_key: output.assignments[0].stream_key,
+        stream_server: output.assignments[0].stream_server
+      }
+    });
   }
 
-  const handleStartGame = () => {
-    // if (obsApi === null || obsApi === '') {
-    //   alert('Please enter the OBS API first to proceed! This is essential for anti-hacking proactives.');
-    //   return;
-    // }
+  const generateStreamDetails = async () => {
+    const response = await fetch('http://localhost:5000/get-stream-details', {
+      method: "POST",
+      body: JSON.stringify({ "count": "1" }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    const res = await fetch('http://127.0.0.1:5000/find-iframe', {
+      method: 'POST',
+      body: JSON.stringify({ "streamId": game.streamDetails.stream_id }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+
+    // Ensure the response is in JSON format
+    const output = await response.json();
+    setGame({
+      ...game,
+      streamLink: `https://live5.thetavideoapi.com/hls/live/2015862/${output.assignments[0].stream_server}/1721935096573/master.m3u8`,
+      streamDetails: {
+        stream_id: output.assignments[0].stream_id,
+        stream_key: output.assignments[0].stream_key,
+        stream_server: output.assignments[0].stream_server
+      }
+    });
+  }
+
+  const handleStartGame = async () => {
+    let flag = false;
+    try {
+      const response = await fetch('http://localhost:5000/remove-streams', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].stream_id === game.streamDetails.stream_id) {
+            flag = true;
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    if (flag) {
+      alert('First enter the Stream key and Stream server in your OBS studio.');
+      return;
+    }
     if (game.bIsInvite && inviteCode === null && inviteCode !== game.privateCode) {
       alert('Please enter the correct invite code.');
       return;
@@ -100,10 +148,10 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
     }
   }
   useEffect(() => {
-    if (lobbyCalled && timeToDisplay[0]===1 ) {
+    if (lobbyCalled && timeToDisplay[0] === 1) {
       const gameIframe = document.getElementById('game-iframe');
       if (gameIframe) {
-        gameIframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(timeToDisplay[1]-2) }, '*');
+        gameIframe.contentWindow.postMessage({ type: 'LOBBY_TIMER_FUNC', value: parseInt(timeToDisplay[1] - 2) }, '*');
       }
     }
   }, [timeToDisplay])
@@ -422,6 +470,7 @@ const GameDetails = ({ game, setGame, timeToDisplay }) => {
         <Text>Stream Server: {game.streamDetails.stream_server}</Text>
         <Text>Stream key: {game.streamDetails.stream_key}</Text>
       </Flex>
+      <Button onClick={generateStreamDetails}>Generate Stream Details</Button>
 
       {((game.bIsMultiplayer && timeToDisplay[0] === 1) || (!game.bIsMultiplayer && timeToDisplay[0] === 2)) ?
         (!showGameFrame ?
