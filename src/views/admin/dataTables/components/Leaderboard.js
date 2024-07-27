@@ -28,25 +28,32 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
     const bg = useColorModeValue("gray.100", "gray.900");
     const textColor = useColorModeValue("gray.800", "white");
 
-    async function getDataFromIpfs(requestId) {
-        var myHeaders = new Headers();
-        myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+    async function retrieveJsonData(fileKey) {
+        const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+        const response = await fetch(fileUrl);
+        const data = await response.json();
+        return data;
+      }
 
-        var requestOptions = {
-            method: 'GET',
-            headers: myHeaders,
-            redirect: 'follow'
-        };
+    // async function getDataFromIpfs(requestId) {
+    //     var myHeaders = new Headers();
+    //     myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
 
-        try {
-            const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
-            const result = await response.json();
-            return result; // Return the result
-        } catch (error) {
-            console.log(error);
-            return null; // Return null in case of an error
-        }
-    }
+    //     var requestOptions = {
+    //         method: 'GET',
+    //         headers: myHeaders,
+    //         redirect: 'follow'
+    //     };
+
+    //     try {
+    //         const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
+    //         const result = await response.json();
+    //         return result; // Return the result
+    //     } catch (error) {
+    //         console.log(error);
+    //         return null; // Return null in case of an error
+    //     }
+    // }
 
     const handleRefreshStandings = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -58,7 +65,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                 const LeaderBoardArray = [];
                 for (const player of gamed.playersJoined) {
                     const Playerdata = await _contract.GetProfileIpfs(player.playerAddress);
-                    const playerProfileData = await getDataFromIpfs(Playerdata);
+                    const playerProfileData = await retrieveJsonData(Playerdata);
                     const leaderboardData = {
                         playerNickName: playerProfileData.nickName,
                         playerAddress: player.playerAddress,

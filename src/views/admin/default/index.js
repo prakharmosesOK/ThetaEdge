@@ -279,25 +279,32 @@ export default function UserReports() {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
 
-  async function getDataFromIpfs(requestId) {
-    var myHeaders = new Headers();
-    myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
-
-    try {
-      const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
-      const result = await response.json();
-      return result; // Return the result
-    } catch (error) {
-      console.log(error);
-      return null; // Return null in case of an error
-    }
+  async function retrieveJsonData(fileKey) {
+    const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+    const response = await fetch(fileUrl);
+    const data = await response.json();
+    return data;
   }
+
+  // async function getDataFromIpfs(requestId) {
+  //   var myHeaders = new Headers();
+  //   myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+
+  //   var requestOptions = {
+  //     method: 'GET',
+  //     headers: myHeaders,
+  //     redirect: 'follow'
+  //   };
+
+  //   try {
+  //     const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
+  //     const result = await response.json();
+  //     return result; // Return the result
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null; // Return null in case of an error
+  //   }
+  // }
 
   async function fetchGameParticipated() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -306,7 +313,7 @@ export default function UserReports() {
       const gameEvents = await Promise.all(
         profileData.gamesParticipating.map(async (game) => {
           const result = await _contract.getGameById(game.gameId);
-          const ipfsData = await getDataFromIpfs(result.Ipfs);
+          const ipfsData = await retrieveJsonData(result.Ipfs);
           return {
             gameId: game.gameId,
             gameName: ipfsData.gameName,
@@ -335,7 +342,7 @@ export default function UserReports() {
           //console.log("first",game.gameId);
           const result = await _contract.getGameById(game.gameId);
           //console.log("ye chahiye", result);
-          const ipfsData = await getDataFromIpfs(result.Ipfs);
+          const ipfsData = await retrieveJsonData(result.Ipfs);
           //console.log(ipfsData);
           return {
             gameId: game.gameId,
@@ -369,7 +376,7 @@ export default function UserReports() {
         const result1 = await _contract.GetProfileIpfs(account);
 
         //console.log(result1);
-        const result = await getDataFromIpfs(result1);
+        const result = await retrieveJsonData(result1);
         //console.log(result);
         // setProfileData(prevProfileData => ({
         //   ...prevProfileData, // Keep the existing properties

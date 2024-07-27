@@ -154,25 +154,32 @@ export default function Marketplace(props) {
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
 
-  async function getDataFromIpfs(requestId) {
-    var myHeaders = new Headers();
-    myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
-
-    try {
-      const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
-      const result = await response.json();
-      return result; // Return the result
-    } catch (error) {
-      console.log(error);
-      return null; // Return null in case of an error
-    }
+  async function retrieveJsonData(fileKey) {
+    const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+    const response = await fetch(fileUrl);
+    const data = await response.json();
+    return data;
   }
+
+  // async function getDataFromIpfs(requestId) {
+  //   var myHeaders = new Headers();
+  //   myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+
+  //   var requestOptions = {
+  //     method: 'GET',
+  //     headers: myHeaders,
+  //     redirect: 'follow'
+  //   };
+
+  //   try {
+  //     const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
+  //     const result = await response.json();
+  //     return result; // Return the result
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null; // Return null in case of an error
+  //   }
+  // }
 
   async function fetchPurchaseHistory() {
     console.log("fetch purchase");
@@ -206,10 +213,10 @@ export default function Marketplace(props) {
 
       const allGamesList = [];
       for (const [index, game] of gamesList.entries()) {
-        const res = await getDataFromIpfs(game.Ipfs);
+        const res = await retrieveJsonData(game.Ipfs);
         
         const profileIpfs = await _contract.GetProfileIpfs(game.organiserAddress);
-        const res2 = await getDataFromIpfs(profileIpfs);
+        const res2 = await retrieveJsonData(profileIpfs);
         const gameData = {
           gameId: game.gameId.toNumber(),
           gameName: res.gameName,

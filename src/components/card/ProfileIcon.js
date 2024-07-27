@@ -9,12 +9,48 @@ import Organiser from "../../contracts/Organiser.json";
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
 const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
+const Myaddress = '0x885df0da95b731d9ce9f4f56afe5762fd23e573c';
 
 export default function ProfileIcon({ profileData, setProfileData, framesArray }) {
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(profileData.nickName);
     const [newProfileImage, setNewProfileImage] = useState(profileData.profileImage);
     const [newFrameImage, setNewFrameImage] = useState(profileData.frameImage);
+
+    async function getAuthToken() {
+        if (!window.ethereum) {
+          throw 'wallet not installed';
+        }
+      
+        const timestamp = Date.now().toString();
+        const msg = 'Theta EdgeStore Call ' + timestamp;
+      
+        const sig = await window.ethereum.request({
+          method: 'personal_sign',
+          params: [msg, Myaddress],
+        });
+      
+        return `${timestamp}.${Myaddress}.${sig}`;
+      }
+
+    async function uploadJsonData(jsonData) {
+        const authToken = await getAuthToken();
+      
+        const blob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
+        const formData = new FormData();
+        formData.append('file', blob, 'data.json');
+      
+        const response = await fetch('https://api.thetaedgestore.com/api/v2/data', {
+          method: 'POST',
+          headers: {
+            'x-theta-edgestore-auth': authToken,
+          },
+          body: formData,
+        });
+      
+        const result = await response.json();
+        return result.key;
+      }
 
     async function uploadToIPFS(jsonObject, address) {
         var myHeaders = new Headers();
@@ -61,7 +97,7 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
     }
 
     const handleEdit = () => setIsEditing(true);
-    const handleSave = () => {
+    const handleSave = async () => {
         setProfileData({
             ...profileData,
             nickName: newName,
@@ -77,14 +113,25 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
 
         const addr = profileData.address ? profileData.address : "address";
         
-        uploadToIPFS(jsonObject, addr).then(ipfs => {
-            if (ipfs) {
-                console.log(`IPFS CID: ${ipfs}`);
-                uploadProfileTOContract(ipfs);
+        try {
+            const fileKey = await uploadJsonData(jsonObject);
+            if (fileKey) {
+              console.log(`File Key: ${fileKey}`);
+              uploadProfileTOContract(fileKey);
             } else {
-                console.log("Failed to upload to IPFS");
+              console.log("Failed to upload to Theta EdgeStore");
             }
-        });
+          } catch (error) {
+            console.error("Error uploading JSON data:", error);
+          }
+        // uploadToIPFS(jsonObject, addr).then(ipfs => {
+        //     if (ipfs) {
+        //         console.log(`IPFS CID: ${ipfs}`);
+        //         uploadProfileTOContract(ipfs);
+        //     } else {
+        //         console.log("Failed to upload to IPFS");
+        //     }
+        // });
         setIsEditing(false);
     };
     const handleCancel = () => {
