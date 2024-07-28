@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormControl, FormLabel, Input, Select, Checkbox, Button, Box, Flex, Center, Textarea ,Text ,Image } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Select, Checkbox, Button, Box, Flex, Center, Textarea, Text, Image } from '@chakra-ui/react';
 // import DateTimePicker from 'react-datetime-picker';
 import DateTimePicker from './components/DateTimePicker';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import bgOrganise from 'assets/img/bgOrganisePage.jpg';
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
 const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
-const Myaddress = '0x885df0da95b731d9ce9f4f56afe5762fd23e573c';  
+const Myaddress = '0x885df0da95b731d9ce9f4f56afe5762fd23e573c';
 
 export default function UserReports() {
   // const [selectedFile, setSelectedFile] = useState(null);
@@ -20,7 +20,7 @@ export default function UserReports() {
   //   setSelectedFile(event.target.files[0]);
   // };
 
-  
+
 
   // const uploadFile = async () => {
   //   if (!selectedFile) return;
@@ -90,7 +90,10 @@ export default function UserReports() {
   const handleGameLinkChange = (e) => setGameLink(e.target.value);
   const handleGameImageChange = (e) => setGameImage(e.target.value);
   const handleGameDescriptionChange = (e) => setGameDescription(e.target.value);
-  const handleGameVideoLinkChange = (e) => setGameVideoLink(e.target.value);
+  const handleGameVideoLinkChange = (e) => {
+    setGameVideoLink(e.target.value);
+    console.log(e.target.value);
+  };
   const handlePlayTicketPriceChange = (e) => setPlayTicketPrice(e.target.value);
   const handleStreamTicketPriceChange = (e) => setStreamTicketPrice(e.target.value);
   const handleIsMultiplayerChange = (e) => setIsMultiplayer(e.target.checked);
@@ -106,25 +109,25 @@ export default function UserReports() {
     if (!window.ethereum) {
       throw 'wallet not installed';
     }
-  
+
     const timestamp = Date.now().toString();
     const msg = 'Theta EdgeStore Call ' + timestamp;
-  
+
     const sig = await window.ethereum.request({
       method: 'personal_sign',
       params: [msg, Myaddress],
     });
-  
+
     return `${timestamp}.${Myaddress}.${sig}`;
   }
 
   async function uploadJsonData(jsonData) {
     const authToken = await getAuthToken();
-  
+
     const blob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
     const formData = new FormData();
     formData.append('file', blob, 'data.json');
-  
+
     const response = await fetch('https://api.thetaedgestore.com/api/v2/data', {
       method: 'POST',
       headers: {
@@ -132,7 +135,7 @@ export default function UserReports() {
       },
       body: formData,
     });
-  
+
     const result = await response.json();
     console.log(result.key);
     return result.key;
@@ -181,45 +184,75 @@ export default function UserReports() {
     }
   }
 
-  useEffect(()=> {
+  useEffect(() => {
 
-  },[])
+  }, [])
+
+  async function GetVideoFromLink() {
+
+  }
+
+  const handleAllVideos = async () => {
+    console.log("statrt");
+    const response = await fetch("http://localhost:5000/videos", {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    console.log("res = ",response);
+    const data = await response.json();
+    console.log(data);
+  }
 
   const handleSubmit = async () => {
 
     try {
+      console.log("start", gameVideoLink);
       const response = await fetch("http://localhost:5000/upload-video", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ videoUrl: gameVideo })
+        body: JSON.stringify({ videoUrl: gameVideoLink })
       });
-  
+      console.log("response", response);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-    
+
       const data = await response.json();
       console.log(data);
+
+      const idd = data.body.videos[0].id;
+      console.log("iddd=", idd);
+      const response2 = await fetch("http://localhost:5000/videos", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ videoId: idd })
+      });
+      const data2 = await response2.json();
+      console.log(data2);
     } catch (error) {
       console.log(error);
     }
-
+    return;
     const jsonObject = {
       "gameName": gameName,
       "gameLink": gameLink,
       "gameImage": gameImage,
       "description": gameDescription,
       "videoLink": gameVideoLink,
-      "bIsMultiplayer" : isMultiplayer,
-      "lobbyTimeInMin" : lobbyTimeInMin,
-      "bIsInvite" : isInvite === "InviteOnly",
-      "privateCode" : privateCode,
+      "bIsMultiplayer": isMultiplayer,
+      "lobbyTimeInMin": lobbyTimeInMin,
+      "bIsInvite": isInvite === "InviteOnly",
+      "privateCode": privateCode,
       "maxParticipants": maxParticipants,
-      "date" : new Date(new Date(selectedDate.setHours(0,0,0,0)).getTime() + (parseInt(selectedTime.slice(0,2))+(parseInt(selectedTime.slice(3,5))/60))*3600*1000),
+      "date": new Date(new Date(selectedDate.setHours(0, 0, 0, 0)).getTime() + (parseInt(selectedTime.slice(0, 2)) + (parseInt(selectedTime.slice(3, 5)) / 60)) * 3600 * 1000),
       //"time" : selectedTime,
-      "noOfHour" : noOfHour,
+      "noOfHour": noOfHour,
     };
     console.log(jsonObject);
     //return;
@@ -365,8 +398,11 @@ export default function UserReports() {
           <Button mt="2em" p="0.8em" colorScheme="teal" type="submit" onClick={handleSubmit} fontWeight="extrabold" w="15em" >
             Submit
           </Button>
+          <Button mt="2em" p="0.8em" colorScheme="teal" type="submit" onClick={handleAllVideos} fontWeight="extrabold" w="15em" >
+            Get all videos
+          </Button>
         </Center>
-        
+
         {/* <Center flexDirection="column" mt="5em">
       <Box>
         <Text fontSize="2xl" mb="1em">Theta EdgeStore</Text>
@@ -388,7 +424,7 @@ export default function UserReports() {
     </Center> */}
       </Box>
 
-      
+
     </main>
   );
 };
