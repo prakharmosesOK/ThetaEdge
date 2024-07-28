@@ -462,7 +462,7 @@ export default function UserReports() {
         return {
           gameName: [game.gameName, game.isCollected],
           playPrize: `$${game.totalPrizeMoney}`,
-          gameDate: game.startDate,
+          gameDate: new Date(game.startDate),
           stream: game.score //score
         }
       });

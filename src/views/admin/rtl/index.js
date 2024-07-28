@@ -134,6 +134,7 @@ export default function UserReports() {
     });
   
     const result = await response.json();
+    console.log(result.key);
     return result.key;
   }
 
@@ -186,7 +187,25 @@ export default function UserReports() {
 
   const handleSubmit = async () => {
 
+    try {
+      const response = await fetch("http://localhost:5000/upload-video", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ videoUrl: gameVideo })
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+
     const jsonObject = {
       "gameName": gameName,
       "gameLink": gameLink,

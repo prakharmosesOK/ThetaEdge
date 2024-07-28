@@ -214,9 +214,12 @@ export default function Marketplace(props) {
       const allGamesList = [];
       for (const [index, game] of gamesList.entries()) {
         const res = await retrieveJsonData(game.Ipfs);
+        console.log("res",res);
         
         const profileIpfs = await _contract.GetProfileIpfs(game.organiserAddress);
+        console.log("iipfs",profileIpfs);
         const res2 = await retrieveJsonData(profileIpfs);
+        console.log(res2);
         const gameData = {
           gameId: game.gameId.toNumber(),
           gameName: res.gameName,
@@ -307,7 +310,7 @@ export default function Marketplace(props) {
   }, [searchText]);
 
   useEffect(() => {
-    fetchPurchaseHistory();
+    //fetchPurchaseHistory();
     applyFilters();
   }, [filterState, totalGamesList]);
 

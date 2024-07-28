@@ -15,6 +15,7 @@ import {
     Flex,
 } from "@chakra-ui/react";
 import { GameListContext } from "contexts/GameListContext";
+import LiveStreaming from "./LiveStream";
 
 import Organiser from "../../../../contracts/Organiser.json";
 
@@ -35,6 +36,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
         return data;
       }
 
+      
     // async function getDataFromIpfs(requestId) {
     //     var myHeaders = new Headers();
     //     myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
@@ -85,12 +87,24 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
     }
 
     const handleCollectReward = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+        try{
+            const txResponse = await _contract.GetReward(eventId);
+            await txResponse.wait();
+            console.log('Reward Collected successful:');
+        }
+        catch(error){
+            console.log(error);
+        }
         console.log('Rewards')
     }
 
     useEffect(() => handleRefreshStandings(), []);
 
     return (
+
         <Box w="full" p={4} bg={bg} borderRadius="md" boxShadow="md">
             <Flex flexDirection="row" w="60em" gap="5em">
                 <Text fontSize="2xl" fontWeight="bold" mb={4} color={textColor}>
@@ -135,7 +149,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                             <Td>{player.playerNickName}</Td>
                             <Td>{player.playerAddress}</Td>
                             <Td>{player.playerScore}</Td>
-                            <Td><Button color="yellow" onClick={() => setStreamUrl(player.streamLink)}>Go to stream</Button></Td>
+                            <Td><Button color="yellow" onClick={() => setStreamUrl("https://live5.thetavideoapi.com/hls/live/2015895/stream_ur1s1rnyyyuxgjpbikug30y7h/1722105236551/master.m3u8")}>Go to stream</Button></Td>
                         </Tr>
                     ))}
                 </Tbody>
@@ -157,15 +171,17 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                         </div>
                         <hr />
                         <div className="p-4 md:p-5 space-y-4">
-                            <iframe
+                            <LiveStreaming />
+                            {/* <iframe
                                 src={streamUrl}
                                 frameborder="0"
                                 className="w-[60em] h-[32em]"
-                            ></iframe>
+                            ></iframe> */}
                         </div>
                     </div>
                 </div>
             )}
+            
         </Box>
     );
 };
