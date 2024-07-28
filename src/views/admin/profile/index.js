@@ -32,7 +32,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
+const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 
 export default function Home() {
   const [topGames, setTopGames] = useState([
@@ -54,25 +54,32 @@ export default function Home() {
     }
   ]);
 
-  async function getDataFromIpfs(requestId) {
-    var myHeaders = new Headers();
-    myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
-
-    try {
-      const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
-      const result = await response.json();
-      return result; // Return the result
-    } catch (error) {
-      console.log(error);
-      return null; // Return null in case of an error
-    }
+  async function retrieveJsonData(fileKey) {
+    const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+    const response = await fetch(fileUrl);
+    const data = await response.json();
+    return data;
   }
+
+  // async function getDataFromIpfs(requestId) {
+  //   var myHeaders = new Headers();
+  //   myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+
+  //   var requestOptions = {
+  //     method: 'GET',
+  //     headers: myHeaders,
+  //     redirect: 'follow'
+  //   };
+
+  //   try {
+  //     const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
+  //     const result = await response.json();
+  //     return result; // Return the result
+  //   } catch (error) {
+  //     console.log(error);
+  //     return null; // Return null in case of an error
+  //   }
+  // }
 
   useEffect(() => {
     const fetchTopGame = async () => {
@@ -83,7 +90,7 @@ export default function Home() {
         let gameListArray = [];
 
         for (const [index, game] of gamesList.entries()) {
-          const res = await getDataFromIpfs(game.Ipfs);
+          const res = await retrieveJsonData(game.Ipfs);
           const profileIpfs = await _contract.GetProfileIpfs(game.organiserAddress);
           const gameData = {
             gameId: game.gameId.toNumber(),

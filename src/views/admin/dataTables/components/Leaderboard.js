@@ -15,12 +15,13 @@ import {
     Flex,
 } from "@chakra-ui/react";
 import { GameListContext } from "contexts/GameListContext";
+import LiveStreaming from "./LiveStream";
 
 import Organiser from "../../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
+const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 
 const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setGameParticipants, eventId }) => {
     const { framesArray } = useContext(GameListContext);
@@ -28,25 +29,33 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
     const bg = useColorModeValue("gray.100", "gray.900");
     const textColor = useColorModeValue("gray.800", "white");
 
-    async function getDataFromIpfs(requestId) {
-        var myHeaders = new Headers();
-        myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
+    async function retrieveJsonData(fileKey) {
+        const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+        const response = await fetch(fileUrl);
+        const data = await response.json();
+        return data;
+      }
 
-        var requestOptions = {
-            method: 'GET',
-            headers: myHeaders,
-            redirect: 'follow'
-        };
+      
+    // async function getDataFromIpfs(requestId) {
+    //     var myHeaders = new Headers();
+    //     myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
 
-        try {
-            const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
-            const result = await response.json();
-            return result; // Return the result
-        } catch (error) {
-            console.log(error);
-            return null; // Return null in case of an error
-        }
-    }
+    //     var requestOptions = {
+    //         method: 'GET',
+    //         headers: myHeaders,
+    //         redirect: 'follow'
+    //     };
+
+    //     try {
+    //         const response = await fetch(`https://api.quicknode.com/ipfs/rest/v1/s3/get-object/${requestId}`, requestOptions);
+    //         const result = await response.json();
+    //         return result; // Return the result
+    //     } catch (error) {
+    //         console.log(error);
+    //         return null; // Return null in case of an error
+    //     }
+    // }
 
     const handleRefreshStandings = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -58,7 +67,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                 const LeaderBoardArray = [];
                 for (const player of gamed.playersJoined) {
                     const Playerdata = await _contract.GetProfileIpfs(player.playerAddress);
-                    const playerProfileData = await getDataFromIpfs(Playerdata);
+                    const playerProfileData = await retrieveJsonData(Playerdata);
                     const leaderboardData = {
                         playerNickName: playerProfileData.nickName,
                         playerAddress: player.playerAddress,
@@ -78,12 +87,24 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
     }
 
     const handleCollectReward = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+        try{
+            const txResponse = await _contract.GetReward(eventId);
+            await txResponse.wait();
+            console.log('Reward Collected successful:');
+        }
+        catch(error){
+            console.log(error);
+        }
         console.log('Rewards')
     }
 
     useEffect(() => handleRefreshStandings(), []);
 
     return (
+
         <Box w="full" p={4} bg={bg} borderRadius="md" boxShadow="md">
             <Flex flexDirection="row" w="60em" gap="5em">
                 <Text fontSize="2xl" fontWeight="bold" mb={4} color={textColor}>
@@ -128,7 +149,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                             <Td>{player.playerNickName}</Td>
                             <Td>{player.playerAddress}</Td>
                             <Td>{player.playerScore}</Td>
-                            <Td><Button color="yellow" onClick={() => setStreamUrl(player.streamLink)}>Go to stream</Button></Td>
+                            <Td><Button color="yellow" onClick={() => setStreamUrl("https://live5.thetavideoapi.com/hls/live/2015895/stream_ur1s1rnyyyuxgjpbikug30y7h/1722105236551/master.m3u8")}>Go to stream</Button></Td>
                         </Tr>
                     ))}
                 </Tbody>
@@ -150,15 +171,17 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                         </div>
                         <hr />
                         <div className="p-4 md:p-5 space-y-4">
-                            <iframe
+                            <LiveStreaming />
+                            {/* <iframe
                                 src={streamUrl}
                                 frameborder="0"
                                 className="w-[60em] h-[32em]"
-                            ></iframe>
+                            ></iframe> */}
                         </div>
                     </div>
                 </div>
             )}
+            
         </Box>
     );
 };

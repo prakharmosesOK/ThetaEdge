@@ -20,7 +20,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
+const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 
 // const game = {
 //   gameId: 1,
@@ -52,7 +52,7 @@ export default function GamePage() {
     gameImage: "https://via.placeholder.com/150",
     gamePrice: 200,
     videoLink: "https://youtu.be/wjJU3lbiGTU?si=d6NC--IjqY6_xtev",
-    streamLink: "https://live5.thetavideoapi.com/hls/live/2015862/stream_ur1s1rnyyyuxgjpbikug30y7h/1721935096573/master.m3u8",
+    //streamLink: "/",
     gameDescription: "dfhfbd rtjhdkr kdrhvtir niurrvthd viur kv liuigoi livihrdli lvgrsmh mghls  vigs  mjgr mjgis mjgl",
     streamTicketPrice: 100,
     nickName: "gjdos",
@@ -81,16 +81,23 @@ export default function GamePage() {
       playerScore: 78,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar6.png',
       frameImage: 1,
-      streamLink: "/fjfohjdf;o"
+      streamLink: "/"
     }, {
       playerNickName: "Mohit",
       playerAddress: '0x66546513df1gdfgdf0df',
       playerScore: 67,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar2.png',
       frameImage: 2,
-      streamLink: "/kdrtjorsj"
+      streamLink: "/"
     }
   ])
+
+  async function retrieveJsonData(fileKey) {
+    const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+    const response = await fetch(fileUrl);
+    const data = await response.json();
+    return data;
+  }
 
   async function getDataFromIpfs(requestId) {
     var myHeaders = new Headers();
@@ -128,7 +135,7 @@ export default function GamePage() {
           const LeaderBoardArray = [];
           for (const player of gamed.playersJoined) {
             const Playerdata = await _contract.GetProfileIpfs(player.playerAddress);
-            const playerProfileData = await getDataFromIpfs(Playerdata);
+            const playerProfileData = await retrieveJsonData(Playerdata);
             const leaderboardData = {
               playerNickName: playerProfileData.nickName,
               playerAddress: player.playerAddress,
@@ -148,9 +155,9 @@ export default function GamePage() {
         }
         //console.log(gamed.playersJoined);
         //console.log(gamed);
-        const res = await getDataFromIpfs(gamed.Ipfs);
+        const res = await retrieveJsonData(gamed.Ipfs);
         const profileIpfs = await _contract.GetProfileIpfs(gamed.organiserAddress);
-        const res2 = await getDataFromIpfs(profileIpfs);
+        const res2 = await retrieveJsonData(profileIpfs);
         const gameData = {
           gameId: eventId,
           gameName: res.gameName,
@@ -298,7 +305,7 @@ export default function GamePage() {
         right="1em"
         fontWeight="bold"
       >{timeToDisplay[0] === 0 ? `Starts in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 1 ? `Lobby time ends in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 2 ? `Event ends in ${secondsToHMS(timeToDisplay[1])}` : 'The event has been ended!'))}</Text>
-      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} setGameParticipants={setGameParticipants} eventId={game.gameId} />}
+      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} setGameParticipants={setGameParticipants}/> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} setGameParticipants={setGameParticipants} eventId={game.gameId} />}
     </Box>
   );
 };
