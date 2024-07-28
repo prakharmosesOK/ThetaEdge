@@ -201,7 +201,7 @@ app.use(bodyParser.json());
 app.post('/upload-video', async (req, res) => {
     try {
         const { videoUrl } = req.body;
-
+        console.log("Video url = ",videoUrl);
         const presignedUrlResponse = await fetch('https://api.thetavideoapi.com/upload', {
             method: 'POST',
             headers: {
@@ -251,6 +251,7 @@ app.post('/upload-video', async (req, res) => {
 });
 
 app.get('/videos', async (req, res) => {
+  console.log("called");
     try {
         const videosResponse = await fetch(`https://api.thetavideoapi.com/video/${TVA_SA_ID}/list?page=1&number=100`, {
             method: 'GET',
@@ -258,9 +259,11 @@ app.get('/videos', async (req, res) => {
                 'x-tva-sa-id': TVA_SA_ID,
                 'x-tva-sa-secret': TVA_SA_SECRET,
             },
-        });
+        }); 
+        console.log("videoResponse =", videosResponse);
 
         const videosData = await videosResponse.json();
+        console.log("videoData = =",videosData);
         res.json(videosData);
     } catch (error) {
         res.status(500).json({ error: error.message });
