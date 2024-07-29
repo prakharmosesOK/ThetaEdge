@@ -5,13 +5,18 @@ const DateTimePicker = (props) => {
     const { selectedDate, setSelectedDate, selectedTime, setSelectedTime } = props;
 
   const times = [
-    '10:00', '10:30', '11:00', '11:30', 
-    '12:00', '12:30', '13:00', '13:30', 
+    '00:00', '00:30', '01:00', '01:30',
+    '02:00', '02:30', '03:00', '03:30',
+    '04:00', '04:30', '05:00', '05:30',
+    '06:00', '06:30', '07:00', '07:30',
+    '08:00', '08:30', '09:00', '09:30',
+    '10:00', '10:30', '11:00', '11:30',
+    '12:00', '12:30', '13:00', '13:30',
     '14:00', '14:30', '15:00', '15:30',
     '16:00', '16:30', '17:00', '17:30',
     '18:00', '18:30', '19:00', '19:30',
     '20:00', '20:30', '21:00', '21:30',
-    '23:50', '00:25'
+    '22:00', '22:30', '23:00', '23:30',
   ];
 
   const handleDateChange = (date) => {
@@ -40,7 +45,7 @@ const DateTimePicker = (props) => {
         <button
           type="button"
           data-collapse-toggle="timetable"
-          className="inline-flex items-center w-full py-2 px-5 me-2 justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+          className="inline-flex items-center w-[47.8em] py-2 px-5 me-2 justify-center text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
         >
           <svg
             className="w-4 h-4 text-gray-800 dark:text-white me-2"
@@ -60,7 +65,7 @@ const DateTimePicker = (props) => {
           Pick a time
         </button>
         <label className="sr-only">Pick a time</label>
-        <ul id="timetable" className="grid w-full grid-cols-2 gap-2 mt-5">
+        <ul id="timetable" className="grid w-[42em] grid-cols-4 gap-2 mt-5">
           {times.map((time) => (
             <li key={time}>
               <input

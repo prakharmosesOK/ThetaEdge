@@ -1,15 +1,30 @@
 import React, { useState } from 'react';
 import { Box, Button, Image, Textarea, HStack, Flex, Input, FormLabel } from '@chakra-ui/react';
-
+import axios from 'axios';
 const ImageSelector = (props) => {
     const { profileImage, frameImage, name, setProfileImage, setFrameImage, setName, framesArray, frameAllowed } = props;
     const [description, setDescription] = useState('');
     const [selectedImage, setSelectedImage] = useState(0);
+    const [ImageUrl,setImageUrl ] = useState('');
 
     const handleGenerateImages = async () => {
-        // const generatedImages = await generateImages(description);
-        // setProfileImage(generatedImages);
-        // setSelectedImage(null);
+        console.log("desc = ",description);
+        const response = await axios.post('http://localhost:5000/image-gen', {
+            body: {prompt: description}
+        }, {
+            responseType: 'blob', // Important for receiving a Blob response
+          });
+          console.log("response", response);
+    
+          // Create a URL for the received Blob
+          const imageBlob = new Blob([response.data], { type: 'image/png' });
+          console.log("imageblob",imageBlob);
+          const imageObjectUrl = URL.createObjectURL(imageBlob);
+          
+          // Set the image URL to state
+          setImageUrl(imageObjectUrl);
+          setProfileImage(imageObjectUrl);
+          console.log("Image url ", imageObjectUrl);
     };
 
     const handleImageSelect = (index) => {

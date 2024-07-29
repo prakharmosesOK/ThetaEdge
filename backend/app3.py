@@ -5,11 +5,13 @@ import requests
 import time
 from PIL import Image
 import io
-import genai
+import google.generativeai as genai
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
 # Define the API key
-STABILITY_KEY = 'sk-OcDi2sVP6x3bVEGrHXSKe3Mn5OlZ4Nj9q4USR84iQoUeFFM7'
+STABILITY_KEY = 'sk-ywbzALB8JcmFc6DoBTzfjQjodV6Pr1sALdWzYT0loPHqbpmv'
 api = "AIzaSyCQf5hWGMyjjnp32er0OJy31fXv6XHPi_w"
 
 
@@ -64,11 +66,24 @@ def send_generation_request(host, params):
 @app.route('/image-gen', methods=['POST'])
 def image_gen():
     data = request.json
-    prompt = data.get("prompt", "dark high contrast render of a psychedelic tree of life illuminating dust in a mystical cave.")
-    negative_prompt = data.get("negative_prompt", "")
-    aspect_ratio = data.get("aspect_ratio", "3:2")
-    seed = data.get("seed", 0)
-    output_format = data.get("output_format", "png")
+
+# Access the 'body' key first
+    body = data.get("body", {})
+
+    # Now access keys within the 'body' dictionary
+    prompt = body.get("prompt", "dark high contrast render of a psychedelic tree of life illuminating dust in a mystical cave.")
+    negative_prompt = body.get("negative_prompt", "")
+    aspect_ratio = body.get("aspect_ratio", "3:2")
+    seed = body.get("seed", 0)
+    output_format = body.get("output_format", "png")
+
+    # Print statements to verify the values
+    print(f"Prompt: {prompt}")
+    print(f"Negative Prompt: {negative_prompt}")
+    print(f"Aspect Ratio: {aspect_ratio}")
+    print(f"Seed: {seed}")
+    print(f"Output Format: {output_format}")
+
 
     host = f"https://api.stability.ai/v2beta/stable-image/generate/ultra"
     params = {
