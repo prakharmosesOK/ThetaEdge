@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FormControl, FormLabel, Input, Select, Checkbox, Button, Box, Flex, Center, Textarea, Text, Image } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Select, Checkbox, Button, Box, Flex, Center, Textarea, Text, Image, useToast, VStack, Heading } from '@chakra-ui/react';
 // import DateTimePicker from 'react-datetime-picker';
 import DateTimePicker from './components/DateTimePicker';
 import axios from 'axios';
@@ -12,6 +12,156 @@ const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 const Myaddress = '0x885df0da95b731d9ce9f4f56afe5762fd23e573c';
 
 export default function UserReports() {
+  const [selectedVideoFile, setselectedVideoFile] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [videoDetails, setVideoDetails] = useState(null);
+
+  const [gameName, setGameName] = useState("");
+  const [gameLink, setGameLink] = useState("");
+  const [gameImage, setGameImage] = useState("");
+  const [gameDescription, setGameDescription] = useState("");
+  const [gameVideoLink, setGameVideoLink] = useState("");
+  //const [gameVideo, setGameVideo] = useState(null);
+  const [playTicketPrice, setPlayTicketPrice] = useState(0);
+  const [streamTicketPrice, setStreamTicketPrice] = useState(0);
+  const [isMultiplayer, setIsMultiplayer] = useState(false);
+  const [lobbyTimeInMin, setlobbyTimeInMin] = useState("");
+  const [isInvite, setIsInvite] = useState("OpenToAll");
+  const [privateCode, setPrivateCode] = useState("");
+  const [maxParticipants, setMaxParticipants] = useState("");
+  const [PrizeFromOwner, setPrizeFromOwner] = useState("");
+  const [noOfHour, setNoOfHour] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState('12:00 AM');
+  const [uploadType, setUploadType] = useState('link');
+
+
+  const handleGameNameChange = (e) => setGameName(e.target.value);
+  const handleGameLinkChange = (e) => setGameLink(e.target.value);
+  const handleGameImageChange = (e) => setGameImage(e.target.value);
+  const handleGameDescriptionChange = (e) => setGameDescription(e.target.value);
+  
+  const handlePlayTicketPriceChange = (e) => setPlayTicketPrice(e.target.value);
+  const handleStreamTicketPriceChange = (e) => setStreamTicketPrice(e.target.value);
+  const handleIsMultiplayerChange = (e) => setIsMultiplayer(e.target.checked);
+  const handlelobbyTimeInMin = (e) => setlobbyTimeInMin(e.target.value);
+  const handleIsInviteChange = (e) => setIsInvite(e.target.value);
+  const handlePrivateCodeChange = (e) => setPrivateCode(e.target.value);
+  const handleMaxParticipantsChange = (e) => setMaxParticipants(e.target.value);
+  const handlePrizeFromOwnerChange = (e) => setPrizeFromOwner(e.target.value);
+  const handleNoOfHourChange = (e) => setNoOfHour(e.target.value);
+  //const handleVideoUpload = (e) => setGameVideo(e.target.files[0]);
+  const toast = useToast();
+
+  const handleVideoFileChange = (event) => {
+    setselectedVideoFile(event.target.files[0]);
+  };
+
+  const getPreSignedUrl = async () => {
+    try {
+      const response = await axios.post('https://api.thetavideoapi.com/upload', {}, {
+        headers: {
+          'x-tva-sa-id': 'srvacc_vxg3d3cpwi6zrhrtrctvi40ph',
+          'x-tva-sa-secret': '5b9x5rjibn5wihwezp4qeebhdpmfteai',
+        },
+      });
+      return response.data.body.uploads[0];
+    } catch (error) {
+      console.error('Error getting pre-signed URL:', error);
+      throw error;
+    }
+  };
+
+  const uploadToPreSignedUrl = async (presignedUrl) => {
+    try {
+      await axios.put(presignedUrl, selectedVideoFile, {
+        headers: {
+          'Content-Type': 'application/octet-stream',
+        },
+      });
+    } catch (error) {
+      console.error('Error uploading to pre-signed URL:', error);
+      throw error;
+    }
+  };
+
+  const transcodeVideo = async (uploadId) => {
+    try {
+      const response = await axios.post('https://api.thetavideoapi.com/video', {
+        source_upload_id: uploadId,
+        playback_policy: 'public',
+        metadata: {},
+      }, {
+        headers: {
+          'x-tva-sa-id': 'srvacc_vxg3d3cpwi6zrhrtrctvi40ph',
+          'x-tva-sa-secret': '5b9x5rjibn5wihwezp4qeebhdpmfteai',
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data.body.videos[0];
+    } catch (error) {
+      console.error('Error transcoding video:', error);
+      throw error;
+    }
+  };
+
+  const checkVideoStatus = async (videoId) => {
+    try {
+      const response = await axios.get(`https://api.thetavideoapi.com/video/${videoId}`, {
+        headers: {
+          'x-tva-sa-id': 'srvacc_vxg3d3cpwi6zrhrtrctvi40ph',
+          'x-tva-sa-secret': '5b9x5rjibn5wihwezp4qeebhdpmfteai',
+        },
+      });
+      return response.data.body.videos[0];
+    } catch (error) {
+      console.error('Error checking video status:', error);
+      throw error;
+    }
+  };
+
+  const uploadVideo = async () => {
+    if (!selectedVideoFile) {
+      toast({
+        title: 'No file selected.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    setUploadStatus('Uploading video...');
+
+    try {
+      const preSignedUrlData = await getPreSignedUrl();
+      await uploadToPreSignedUrl(preSignedUrlData.presigned_url);
+
+      setUploadStatus('Video uploaded. Transcoding...');
+
+      const videoData = await transcodeVideo(preSignedUrlData.id);
+      setVideoDetails(videoData);
+
+      const pollInterval = setInterval(async () => {
+        const status = await checkVideoStatus(videoData.id);
+
+        if (status.state === 'success') {
+          setUploadStatus('Video upload and transcode successful!');
+          setVideoDetails(status);
+          const playBackuril = `https://player.thetavideoapi.com/video/${status.id}`;
+          setGameVideoLink(playBackuril);
+          console.log(playBackuril);
+          clearInterval(pollInterval);
+        } else {
+          setUploadStatus(`Transcoding in progress... ${status.progress}%`);
+        }
+      }, 5000); // Poll every 5 seconds
+
+    } catch (error) {
+      setUploadStatus('Failed to upload video.');
+      console.error('Error uploading video:', error);
+    }
+  };
   // const [selectedFile, setSelectedFile] = useState(null);
   // const [uploadedKey, setUploadedKey] = useState('');
   // const [retrievedImage, setRetrievedImage] = useState('');
@@ -36,8 +186,9 @@ export default function UserReports() {
   //         'x-theta-edgestore-auth': authToken,
   //       },
   //     });
-
   //     setUploadedKey(response.data.key);
+  //     console.log(response.data.key);
+  //     console.log(response.data.url);
   //     alert('File uploaded successfully!');
   //   } catch (error) {
   //     console.error('Error uploading file:', error);
@@ -66,44 +217,7 @@ export default function UserReports() {
   // const brandColor = useColorModeValue("brand.500", "white");
   // const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
 
-  const [gameName, setGameName] = useState("");
-  const [gameLink, setGameLink] = useState("");
-  const [gameImage, setGameImage] = useState("");
-  const [gameDescription, setGameDescription] = useState("");
-  const [gameVideoLink, setGameVideoLink] = useState("");
-  const [gameVideo, setGameVideo] = useState(null);
-  const [playTicketPrice, setPlayTicketPrice] = useState(0);
-  const [streamTicketPrice, setStreamTicketPrice] = useState(0);
-  const [isMultiplayer, setIsMultiplayer] = useState(false);
-  const [lobbyTimeInMin, setlobbyTimeInMin] = useState("");
-  const [isInvite, setIsInvite] = useState("OpenToAll");
-  const [privateCode, setPrivateCode] = useState("");
-  const [maxParticipants, setMaxParticipants] = useState("");
-  const [PrizeFromOwner, setPrizeFromOwner] = useState("");
-  const [noOfHour, setNoOfHour] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('12:00 AM');
-  const [uploadType, setUploadType] = useState('link');
-
-
-  const handleGameNameChange = (e) => setGameName(e.target.value);
-  const handleGameLinkChange = (e) => setGameLink(e.target.value);
-  const handleGameImageChange = (e) => setGameImage(e.target.value);
-  const handleGameDescriptionChange = (e) => setGameDescription(e.target.value);
-  const handleGameVideoLinkChange = (e) => {
-    setGameVideoLink(e.target.value);
-    console.log(e.target.value);
-  };
-  const handlePlayTicketPriceChange = (e) => setPlayTicketPrice(e.target.value);
-  const handleStreamTicketPriceChange = (e) => setStreamTicketPrice(e.target.value);
-  const handleIsMultiplayerChange = (e) => setIsMultiplayer(e.target.checked);
-  const handlelobbyTimeInMin = (e) => setlobbyTimeInMin(e.target.value);
-  const handleIsInviteChange = (e) => setIsInvite(e.target.value);
-  const handlePrivateCodeChange = (e) => setPrivateCode(e.target.value);
-  const handleMaxParticipantsChange = (e) => setMaxParticipants(e.target.value);
-  const handlePrizeFromOwnerChange = (e) => setPrizeFromOwner(e.target.value);
-  const handleNoOfHourChange = (e) => setNoOfHour(e.target.value);
-  const handleVideoUpload = (e) => setGameVideo(e.target.files[0]);
+  
 
   async function getAuthToken() {
     if (!window.ethereum) {
@@ -184,14 +298,6 @@ export default function UserReports() {
     }
   }
 
-  useEffect(() => {
-
-  }, [])
-
-  async function GetVideoFromLink() {
-
-  }
-
   const handleAllVideos = async () => {
     console.log("statrt");
     const response = await fetch("http://localhost:5000/videos", {
@@ -200,45 +306,45 @@ export default function UserReports() {
         'Content-Type': 'application/json'
       }
     })
-    console.log("res = ",response);
+    console.log("res = ", response);
     const data = await response.json();
     console.log(data);
   }
 
   const handleSubmit = async () => {
 
-    try {
-      console.log("start", gameVideoLink);
-      const response = await fetch("http://localhost:5000/upload-video", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ videoUrl: gameVideoLink })
-      });
-      console.log("response", response);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    // try {
+    //   console.log("start", gameVideo);
+    //   const response = await fetch("http://localhost:5000/upload-video", {
+    //     method: "POST",
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ videoUrl: gameVideo })
+    //   });
+    //   console.log("response", response);
+    //   if (!response.ok) {
+    //     throw new Error(`HTTP error! status: ${response.status}`);
+    //   }
 
-      const data = await response.json();
-      console.log(data);
+    //   const data = await response.json();
+    //   console.log(data);
 
-      const idd = data.body.videos[0].id;
-      console.log("iddd=", idd);
-      const response2 = await fetch("http://localhost:5000/videos", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ videoId: idd })
-      });
-      const data2 = await response2.json();
-      console.log(data2);
-    } catch (error) {
-      console.log(error);
-    }
-    return;
+    //   const idd = data.body.videos[0].id;
+    //   console.log("iddd=", idd);
+    //   const response2 = await fetch("http://localhost:5000/videos", {
+    //     method: "POST",
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ videoId: idd })
+    //   });
+    //   const data2 = await response2.json();
+    //   console.log(data2);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // return;
     const jsonObject = {
       "gameName": gameName,
       "gameLink": gameLink,
@@ -302,7 +408,7 @@ export default function UserReports() {
           <Textarea type="text" value={gameDescription} onChange={handleGameDescriptionChange} h="8em">Enter the description of the event</Textarea>
         </FormControl>
 
-        <Flex alignItems="center" flexDirection="row" w="40em" mx="auto" justifyContent="space-evenly">
+        {/* <Flex alignItems="center" flexDirection="row" w="40em" mx="auto" justifyContent="space-evenly">
           <Button onClick={() => setUploadType('link')} border={uploadType === 'link' ? "2px solid orange" : null} w="15em">Upload via Link</Button>
           <Button onClick={() => setUploadType('upload')} border={uploadType === 'upload' ? "2px solid orange" : null} w="15em">Upload File</Button>
         </Flex>
@@ -312,9 +418,26 @@ export default function UserReports() {
             <FormLabel textColor="yellow">Game Video Link</FormLabel>
             <Input type="text" value={gameVideoLink} onChange={handleGameVideoLinkChange} />
           </FormControl>
-        )}
+        )} */}
 
-        {uploadType === 'upload' && (
+        <Center flexDirection="column" mt="5em">
+          <Box>
+            <Heading as="h1" mb="1em">Upload Video</Heading>
+            <VStack spacing={4} align="start">
+              <Input type="file" onChange={handleVideoFileChange} />
+              <Button colorScheme="teal" onClick={uploadVideo}>Upload Video</Button>
+              <Text>{uploadStatus}</Text>
+            </VStack>
+          </Box>
+          {/* {videoDetails && (
+            <Box mt="2em">
+              <Heading as="h2" size="md">Video Details</Heading>
+              <pre>{JSON.stringify(videoDetails, null, 2)}</pre>
+            </Box>
+          )} */}
+        </Center>
+
+        {/* {uploadType === 'upload' && (
           <FormControl mb="1.5em">
             <FormLabel textColor="yellow">Default size</FormLabel>
             <input
@@ -325,7 +448,7 @@ export default function UserReports() {
               onChange={handleVideoUpload}
             />
           </FormControl>
-        )}
+        )} */}
 
 
         <Flex flexDirection="row" mb="1.5em" w="full" alignItems="center" gap="2em" mx="auto">
@@ -422,6 +545,7 @@ export default function UserReports() {
         </Box>
       )}
     </Center> */}
+
       </Box>
 
 
