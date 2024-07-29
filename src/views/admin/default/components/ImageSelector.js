@@ -1,35 +1,71 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Image, Textarea, HStack, Flex, Input, FormLabel } from '@chakra-ui/react';
-import axios from 'axios';
+
 const ImageSelector = (props) => {
     const { profileImage, frameImage, name, setProfileImage, setFrameImage, setName, framesArray, frameAllowed } = props;
     const [description, setDescription] = useState('');
     const [selectedImage, setSelectedImage] = useState(0);
-    const [ImageUrl,setImageUrl ] = useState('');
+    const [newImage, setNewImage] = useState(null);
+
+    async function getAuthToken() {
+        if (!window.ethereum) {
+            throw 'wallet not installed';
+        }
+
+        const timestamp = Date.now().toString();
+        const msg = 'Theta EdgeStore Call ' + timestamp;
+
+        const sig = await window.ethereum.request({
+            method: 'personal_sign',
+            params: [msg, Myaddress],
+        });
+
+        return `${timestamp}.${Myaddress}.${sig}`;
+    }
+
+    const handleNewImageUpload = async (e) => {
+        setNewImageUpload(e.target.value);
+    }
 
     const handleGenerateImages = async () => {
-        console.log("desc = ",description);
-        const response = await axios.post('http://localhost:5000/image-gen', {
-            body: {prompt: description}
-        }, {
-            responseType: 'blob', // Important for receiving a Blob response
-          });
-          console.log("response", response);
-    
-          // Create a URL for the received Blob
-          const imageBlob = new Blob([response.data], { type: 'image/png' });
-          console.log("imageblob",imageBlob);
-          const imageObjectUrl = URL.createObjectURL(imageBlob);
-          
-          // Set the image URL to state
-          setImageUrl(imageObjectUrl);
-          setProfileImage(imageObjectUrl);
-          console.log("Image url ", imageObjectUrl);
+        // const generatedImages = await generateImages(description);
+        // setProfileImage(generatedImages);
+        // setSelectedImage(null);
     };
 
     const handleImageSelect = (index) => {
         setSelectedImage(index);
     };
+
+    useEffect(() => {
+        const uploadFile = async () => {
+            if (!selectedFile) return;
+
+            const authToken = await getAuthToken();
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await axios.post('https://api.thetaedgestore.com/api/v2/data', formData, {
+                    headers: {
+                        'x-theta-edgestore-auth': authToken,
+                    },
+                });
+
+                const fileKey = response.data.key;
+                const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+
+
+                return fileUrl;  // Return the complete URL
+                alert('File uploaded successfully!');
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                alert('Failed to upload file.');
+            }
+        };
+        uploadFile();
+    }, [newImage])
 
     return (
         <Flex
@@ -105,11 +141,17 @@ const ImageSelector = (props) => {
                         size="sm"
                         w="14em"
                     >Generate Images</Button>
-                    <Input
+                    {/* <Input
                         placeholder='Or provide the profile image link here'
                         value={profileImage}
                         onChange={(e) => setProfileImage(e.target.value)}
                         color="white"
+                    /> */}
+                    <Input
+                        type="file"
+                        accept="image/*"
+                        value={newImage}
+                        onChange={handleNewImageUpload}
                     />
                 </>
             ) : (

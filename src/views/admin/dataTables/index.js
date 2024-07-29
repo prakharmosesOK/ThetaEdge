@@ -20,27 +20,7 @@ import Organiser from "../../../contracts/Organiser.json";
 
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
-
-// const game = {
-//   gameId: 1,
-//   gameName: "Game 1",
-//   gameImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdr2OZSEgsmXE14s9auzTchMIOPCMtVIoymQ&s",
-//   gameStreamLink: "https://dfhfjfhdfgdgd",
-//   gamePrice: 200,
-//   gameAuthor: "0x0",
-//   nickName: "gjdos",
-//   totalParticipants: 52,
-//   maxParticipants: 100,
-//   totalPrizeMoney: 500,
-//   bIsInvite: false,
-//   privateCode: "lghdyhdfirtvrd",
-//   bIsMultiplayer: false,
-//   lobbyCode: "0",
-//   couponCode: "887195",
-//   organiserAddress: "0x0",
-//   date: new Date(),
-// };
+const contractAddress = '0x2d4779C47d83dBfE6CA41233A077018c3F4890cb';
 
 export default function GamePage() {
   const { eventId } = useParams();
@@ -52,7 +32,6 @@ export default function GamePage() {
     gameImage: "https://via.placeholder.com/150",
     gamePrice: 200,
     videoLink: "https://youtu.be/wjJU3lbiGTU?si=d6NC--IjqY6_xtev",
-    //streamLink: "/",
     gameDescription: "dfhfbd rtjhdkr kdrhvtir niurrvthd viur kv liuigoi livihrdli lvgrsmh mghls  vigs  mjgr mjgis mjgl",
     streamTicketPrice: 100,
     nickName: "gjdos",
@@ -81,23 +60,16 @@ export default function GamePage() {
       playerScore: 78,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar6.png',
       frameImage: 1,
-      streamLink: "/"
+      streamLink: "/fjfohjdf;o"
     }, {
       playerNickName: "Mohit",
       playerAddress: '0x66546513df1gdfgdf0df',
       playerScore: 67,
       profileImage: 'https://bootdey.com/img/Content/avatar/avatar2.png',
       frameImage: 2,
-      streamLink: "/"
+      streamLink: "/kdrtjorsj"
     }
   ])
-
-  async function retrieveJsonData(fileKey) {
-    const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
-    const response = await fetch(fileUrl);
-    const data = await response.json();
-    return data;
-  }
 
   async function getDataFromIpfs(requestId) {
     var myHeaders = new Headers();
@@ -119,8 +91,6 @@ export default function GamePage() {
     }
   }
 
-    
-
   useEffect(() => {
     const getGameData = async () => {
       console.log("sad", eventId);
@@ -135,7 +105,7 @@ export default function GamePage() {
           const LeaderBoardArray = [];
           for (const player of gamed.playersJoined) {
             const Playerdata = await _contract.GetProfileIpfs(player.playerAddress);
-            const playerProfileData = await retrieveJsonData(Playerdata);
+            const playerProfileData = await getDataFromIpfs(Playerdata);
             const leaderboardData = {
               playerNickName: playerProfileData.nickName,
               playerAddress: player.playerAddress,
@@ -155,9 +125,9 @@ export default function GamePage() {
         }
         //console.log(gamed.playersJoined);
         //console.log(gamed);
-        const res = await retrieveJsonData(gamed.Ipfs);
+        const res = await getDataFromIpfs(gamed.Ipfs);
         const profileIpfs = await _contract.GetProfileIpfs(gamed.organiserAddress);
-        const res2 = await retrieveJsonData(profileIpfs);
+        const res2 = await getDataFromIpfs(profileIpfs);
         const gameData = {
           gameId: eventId,
           gameName: res.gameName,
@@ -165,7 +135,6 @@ export default function GamePage() {
           gameDescription: res.description,
           gamePrice: gamed.gameTicketPrice.toNumber(),
           videoLink: res.videoLink,
-          streamLink: "https://live5.thetavideoapi.com/hls/live/2015862/stream_ur1s1rnyyyuxgjpbikug30y7h/1721935096573/master.m3u8",
           streamTicketPrice: gamed.streamTicketPrice.toNumber(),
           nickName: res2.nickName ? res2.nickName : "--",
           totalParticipants: gamed.playersJoined.length,
@@ -200,27 +169,27 @@ export default function GamePage() {
   }, []);
 
   useEffect(() => {
-    if (game.date >= new Date()) {
-      const intervalId = setInterval(() => {
-        setTimeToDisplay([0, Math.round((game.date - new Date()) / 1000)]);
-      }, 1000);
+    const updateDisplayTime = () => {
+      const now = new Date();
+      const eventTime = game.date;
+      const lobbyEndTime = new Date(eventTime.getTime() + game.lobbyTimeInMin * 60 * 1000);
+      const eventEndTime = new Date(eventTime.getTime() + game.noOfHour * 3600 * 1000);
 
-      return () => clearInterval(intervalId);
-    } else if (game.bIsMultiplayer && new Date(game.date.getTime() + parseInt(game.lobbyTimeInMin) * 60 * 1000) >= new Date()) {
-      const intervalId = setInterval(() => {
-        setTimeToDisplay([1, Math.round((new Date(game.date.getTime() + parseInt(game.lobbyTimeInMin)*60*1000) - new Date()) / 1000)]);
-      }, 1000);
-
-      return () => clearInterval(intervalId);
-    } else if (new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000) >= new Date()) {
-      const intervalId = setInterval(() => {
-        setTimeToDisplay([2, Math.round((new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000) - new Date()) / 1000)]);
-      }, 1000);
-
-      return () => clearInterval(intervalId);
-    } else {
-      setTimeToDisplay([3, "Event has ended!"]);
+      if (now < eventTime) {
+        setTimeToDisplay([0, Math.round((eventTime - now) / 1000)]);
+      } else if (game.bIsMultiplayer && now < lobbyEndTime) {
+        setTimeToDisplay([1, Math.round((lobbyEndTime - now) / 1000)]);
+      } else if (now < eventEndTime) {
+        setTimeToDisplay([2, Math.round((eventEndTime - now) / 1000)]);
+      } else {
+        setTimeToDisplay([3, "Event has ended!"]);
+      }
     }
+
+    const intervalId = setInterval(updateDisplayTime, 1000);
+    updateDisplayTime();
+
+    return () => clearInterval(intervalId);
   }, [game]);
 
   function secondsToHMS(secs) {
@@ -298,14 +267,14 @@ export default function GamePage() {
       </Flex>
       <Text
         fontSize="1em"
-        color="#1eb8fa"
+        color="yellow"
         float="right"
         position="relative"
         top="2em"
         right="1em"
         fontWeight="bold"
       >{timeToDisplay[0] === 0 ? `Starts in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 1 ? `Lobby time ends in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 2 ? `Event ends in ${secondsToHMS(timeToDisplay[1])}` : 'The event has been ended!'))}</Text>
-      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} setGameParticipants={setGameParticipants}/> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} setGameParticipants={setGameParticipants} eventId={game.gameId} />}
+      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} setGameParticipants={setGameParticipants} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} setGameParticipants={setGameParticipants} eventId={game.gameId} />}
     </Box>
   );
 };
