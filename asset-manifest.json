@@ -1,0 +1,41 @@
+{
+  "files": {
+    "main.css": "/ThetaEdge/static/css/main.25345678.css",
+    "main.js": "/ThetaEdge/static/js/main.ec5de4c0.js",
+    "static/media/frame9.png": "/ThetaEdge/static/media/frame9.b991c49a3a7be6158539.png",
+    "static/media/frame8.png": "/ThetaEdge/static/media/frame8.88c837de16abff3d552e.png",
+    "static/media/bgHome.jpg": "/ThetaEdge/static/media/bgHome.2940ae8d0b0cacebd21a.jpg",
+    "static/media/NftBanner1.png": "/ThetaEdge/static/media/NftBanner1.87062366f75bedd52bd2.png",
+    "static/media/frame1.png": "/ThetaEdge/static/media/frame1.8a2328608052318099bd.png",
+    "static/media/bgOrganisePage.jpg": "/ThetaEdge/static/media/bgOrganisePage.2d17bea35e34258c1daf.jpg",
+    "static/media/frame7.png": "/ThetaEdge/static/media/frame7.5e2faef91183ffbe25fb.png",
+    "static/media/frame10.png": "/ThetaEdge/static/media/frame10.85466588b43813001173.png",
+    "static/media/frame4.png": "/ThetaEdge/static/media/frame4.9848f759046ca998811b.png",
+    "static/media/Nft2.png": "/ThetaEdge/static/media/Nft2.7897c45d2601ee3adfb5.png",
+    "static/media/frame6.png": "/ThetaEdge/static/media/frame6.0f9bfa2555cdeb098419.png",
+    "static/media/avatar2.png": "/ThetaEdge/static/media/avatar2.5692c39db4f8c0ea999e.png",
+    "static/media/frame2.png": "/ThetaEdge/static/media/frame2.08b2c25e7b9d3ed7841c.png",
+    "static/media/avatar3.png": "/ThetaEdge/static/media/avatar3.9f646ac5920fa40adf00.png",
+    "static/media/avatar1.png": "/ThetaEdge/static/media/avatar1.eeef2af6dfcd3ff23cb8.png",
+    "static/media/bgAboutUs.jpg": "/ThetaEdge/static/media/bgAboutUs.5e2735d699d25882a545.jpg",
+    "static/media/Nft4.png": "/ThetaEdge/static/media/Nft4.5fc37877b25c9fb9a52d.png",
+    "static/media/Nft3.png": "/ThetaEdge/static/media/Nft3.3b3e6a4b3ada7618de6c.png",
+    "static/media/Nft6.png": "/ThetaEdge/static/media/Nft6.9ff5403226e81a6fd390.png",
+    "static/media/defaultFrame.png": "/ThetaEdge/static/media/defaultFrame.6ea16795f817bee59686.png",
+    "static/media/Navbar.png": "/ThetaEdge/static/media/Navbar.f96a9f58c491b9acda99.png",
+    "static/media/Nft1.png": "/ThetaEdge/static/media/Nft1.0fea34cca5aed6cad72b.png",
+    "static/media/avatar4.png": "/ThetaEdge/static/media/avatar4.54d5c1de851c273b2cd9.png",
+    "static/media/frame5.png": "/ThetaEdge/static/media/frame5.c6a618760df872745649.png",
+    "static/media/Nft5.png": "/ThetaEdge/static/media/Nft5.62dbaf7dd91b4180035c.png",
+    "static/media/frame3.png": "/ThetaEdge/static/media/frame3.8fff1d0ef5c551785e88.png",
+    "static/media/ETH.png": "/ThetaEdge/static/media/ETH.c930f99722b96ebd504b.png",
+    "static/media/THETA.png": "/ThetaEdge/static/media/THETA.12167972ff178f3862f6.png",
+    "index.html": "/ThetaEdge/index.html",
+    "main.25345678.css.map": "/ThetaEdge/static/css/main.25345678.css.map",
+    "main.ec5de4c0.js.map": "/ThetaEdge/static/js/main.ec5de4c0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.25345678.css",
+    "static/js/main.ec5de4c0.js"
+  ]
+}
