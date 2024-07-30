@@ -214,11 +214,14 @@ export default function Marketplace(props) {
       const allGamesList = [];
       for (const [index, game] of gamesList.entries()) {
         const res = await retrieveJsonData(game.Ipfs);
-        console.log("res",res);
-        
+        console.log("res", res);
+
         const profileIpfs = await _contract.GetProfileIpfs(game.organiserAddress);
-        console.log("iipfs",profileIpfs);
-        const res2 = await retrieveJsonData(profileIpfs);
+        console.log("iipfs", profileIpfs);
+        let res2;
+        if (profileIpfs) {
+          res2 = await retrieveJsonData(profileIpfs);
+        }
         console.log(res2);
         const gameData = {
           gameId: game.gameId.toNumber(),
@@ -228,7 +231,7 @@ export default function Marketplace(props) {
           gamePrice: game.gameTicketPrice.toNumber(),
           videoLink: res.videoLink,
           streamTicketPrice: game.streamTicketPrice.toNumber(),
-          nickName: res2.nickName ? res2.nickName : "--",
+          nickName: res2 ? res2.nickName : "--",
           totalParticipants: game.playersJoined.length,
           maxParticipants: res.maxParticipants,
           totalPrizeMoney: game.totalRevenue.toNumber(),
