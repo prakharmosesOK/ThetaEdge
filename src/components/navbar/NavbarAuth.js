@@ -479,7 +479,7 @@ export default function AuthNavbar(props) {
             />
           </Box>
           {linksAuth}
-          <Link href='https://www.horizon-ui.com/pro'>
+          <Link href='https://prakharmosesOK.github.io/ThetaEdge/admin/home'>
             <Button
               bg={bgButton}
               color={colorButton}

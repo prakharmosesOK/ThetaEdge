@@ -85,7 +85,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
   }
 
   const generateStreamDetails = async () => {
-    const response = await fetch('http://localhost:5000/get-stream-details', {
+    const response = await fetch('https://thetaedge.onrender.com/get-stream-details', {
       method: "POST",
       body: JSON.stringify({ "count": "1" }),
       headers: {
@@ -125,7 +125,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
   const handleStartGame = async () => {
     let flag = false;
     try {
-      const response = await fetch('http://localhost:5000/remove-streams', {
+      const response = await fetch('https://thetaedge.onrender.com/remove-streams', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
       console.error(error);
     }
     try {
-      const res = await fetch('http://127.0.0.1:5000/find-iframe', {
+      const res = await fetch('https://thetaedge.onrender.com/find-iframe', {
         method: 'POST',
         body: JSON.stringify({ "streamId": game.streamDetails.stream_id }),
         headers: {
@@ -201,7 +201,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
   const handleJudgeStart = async () => {
     let flag = false;
     try {
-      const response = await fetch('http://localhost:5000/remove-streams', {
+      const response = await fetch('https://thetaedge.onrender.com/remove-streams', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
       console.error(error);
     }
     try {
-      const res = await fetch('http://127.0.0.1:5000/find-iframe', {
+      const res = await fetch('https://thetaedge.onrender.com/find-iframe', {
         method: 'POST',
         body: JSON.stringify({ "streamId": game.streamDetails.stream_id }),
         headers: {
