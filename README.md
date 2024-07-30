@@ -1,47 +1,105 @@
-# MetaCoin Box
+![GamETHa Logo](/Logo.png)
 
-- [Requirements](#requirements)
-- [Setup](#setup)
-    - [Installation](#installation)
-    - [Deployment](#deployment)
-- [Usage](#usage)
-    - [Commands](#commands)
-    - [Testing](#testing)
-- [Support](#support)
+# GamETHa
 
-This is an example of a completed coin-like contract built using Truffle. Note that this is not [ERC-20](https://ethereum.org/en/developers/docs/standards/tokens/erc-20/) compatible, so it is not expected to interact with other coin/token contracts.
+Welcome to **GamETHa** – the ultimate Web 3.0 powered gaming platform! Earn while you play. Earn while you develop games.
 
-## Requirements
+## 🎮 About GamETHa
 
-The MetaCoin box has the following requirements:
+Do you want to earn while you play and you are not ready to trust a traditional centralized platform where some admin moderates your game and earnings. Worry not! Introducing GamETHa. GamETHa is a decentralized gaming platform where developers can upload both single-player and multiplayer games. Users can buy, play, and stream games, all while leveraging the power of blockchain and decentralized technologies. 
 
-- [Node.js](https://nodejs.org/) v12 or higher
-- [Truffle](https://trufflesuite.com/docs/truffle/getting-started/installation)
-- [Ganache](https://github.com/trufflesuite/ganache#getting-started)
+## 🚀 Features
 
-Helpful, but optional:
+### For Developers
+- **Upload Games**: Easily upload your games, whether single or multiplayer.
+- **Decentralized Video Hosting**: Provide a video of your game, hosted on the Theta Edge Cloud.
+- **Commentary**: Add AI-generated commentary to your games for an immersive user experience.
 
-- An [Infura](https://infura.io/) account and Project ID
-- A [MetaMask](https://metamask.io/) account
+### For Users
+- **Play Games**: Buy and play games directly on our platform.
+- **Decentralized Streaming**: Start streaming your gameplay using Theta Edge Cloud and OBS.
+- **View Streams**: Pay to view other users' streams.
+- **Win Frames**: Earn frames in games to showcase on your profile.
+- **Profile Pictures**: Generate unique game profile pictures using the Stability Diffusion model.
 
-## Setup
+## 🌐 Technology Stack
 
-### Installation
+- **Web 3.0**
+- **Theta Edge Cloud**: For decentralized video hosting and streaming.
+- **OBS**: For streaming gameplay.
+- **Stability Diffusion Model**: For generating game profile pictures.
 
-```bash
-$ truffle unbox metacoin
-```
-### Deployment
+## 📸 Screenshots
 
-To deploy locally, start a local instance of ganache by running `ganache`
-Then, simply call `truffle migrate`
+<img src="/Home.jpg" alt="Home Page">
+<h4>Home Page</h4>
+<img src="/events.jpg" alt="Home Page">
+<h4>Viewing Events</h4>
+<img src="/deploying game.jpg" alt="Home Page">
+<h4>Developer Deploying Game</h4>
+<img src="/viewing game video.jpg" alt="Home Page">
+<h4>Player viewing Game Video</h4>
+<<img src="/generate game server keys.jpg" alt="Home Page">
+<h4>Player generating game server keys for livestream.</h4>
+<img src="/playing game.jpg" alt="Home Page">
+<h4>Player playing a deployed game.</h4>
+<img src="/viewing leaderbord.jpg" alt="Home Page">
+<h4>Viewer watching Live Leaderboard and livestream.</h4>
+<img src="/WhatsApp Image 2024-07-30 at 22.50.10_157b753f.jpg" >
+<h4>User Dashboard</h4>
 
-### Testing
 
-This box has examples for testing your smart contracts in both Javascript and Solidity.
 
-To run the tests locally, call `truffle test`
 
-## Support
 
-Need help? Get in touch with the Truffle community by posting on [Github Discussions](https://github.com/orgs/trufflesuite/discussions)!
+## 🛠 Installation
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/GamETHa.git
+    ```
+
+2. Navigate to the project directory:
+    ```bash
+    cd GamETHa
+    ```
+
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
+
+4. Start the development server:
+    ```bash
+    npm start
+    ```
+    
+5. Start node backend
+   ```bash
+   cd backend
+   npm i
+   node server.js
+   ```
+   
+6. Start Python backend
+  ```bash
+    cd backend
+    pip install requirements.txt
+    python app3.py
+  ```
+## 📈 Next Up
+
+- [ ] Competition with AI.
+- [ ] Add support for VR games.
+
+
+## 📝 License
+
+This project is licensed under the MIT License. 
+
+## 📬 Authors
+1. [Adnan Abbas Rizvi](https://github.com/riz-adnan)
+2. [Anish Kumar]()
+3. [Prakhar Moses](https://github.com/prakharmosesOK)
+
+

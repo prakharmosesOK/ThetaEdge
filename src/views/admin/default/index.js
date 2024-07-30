@@ -59,10 +59,10 @@ import {
 // import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
 // import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
 import Organiser from "../../../contracts/Organiser.json";
-
+import axios from 'axios';
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
-const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
+const contractAddress = '0x8447a887e331766b6fcfc896eedb177d26887f5c';
 
 export default function UserReports() {
   const { account, framesArray } = useContext(GameListContext);
@@ -429,6 +429,40 @@ export default function UserReports() {
     fetchGameEventsOrganised();
     //fetchGameParticipated();
   }, [profileData]);
+
+  useEffect(async () => {
+    const fetchBalance = async () => {
+      if (window.ethereum) {
+        try {
+          // Request account access if needed
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+          // Create an ethers provider
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+          // Get the signer (current account)
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+
+          // Fetch the balance
+          const balance = await provider.getBalance(address);
+          //console.log(balance.toString());
+          console.log(ethers.utils.formatEther(balance));
+          setProfileData(prevProfileData => ({
+            ...prevProfileData,
+            currentBalance: ethers.utils.formatEther(balance)
+          }));
+          //setBalance(ethers.utils.formatEther(balance));
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        console.error('MetaMask is not installed');
+      }
+    };
+    fetchBalance();
+  }, []);
+
 
   useEffect(() => {
     const fetchBarChartGameRevenue = () => {

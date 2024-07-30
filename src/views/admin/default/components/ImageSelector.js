@@ -6,7 +6,7 @@ import { GameListContext } from 'contexts/GameListContext';
 // import Organiser from "../../../contracts/Organiser.json";
 // const { ethers } = require("ethers");
 // const contractABI = Organiser.abi;
-// const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
+// const contractAddress = '0x8447a887e331766b6fcfc896eedb177d26887f5c';
 
 const ImageSelector = (props) => {
     const { account } = useContext(GameListContext);
