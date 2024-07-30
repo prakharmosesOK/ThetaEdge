@@ -33,8 +33,22 @@ GamETHa is a decentralized gaming platform where developers can upload both sing
 
 ## 📸 Screenshots
 
-![Screenshot 1](/home.jpg)
-![Screenshot 2](https://your-screenshot-url.com/screenshot2.png)
+![Screenshot 1](/Home.jpg)
+<h5>Home Page</h5>
+![Screenshot 2](/events.jpg)
+<h5>Viewing Events</h5>
+![Screenshot 3](/deploying game.jpg)
+<h5>Developer Deploying Game</h5>
+![Screenshot 4](/viewing game video.jpg)
+<h5>Player viewing Game Video</h5>
+![Screenshot 5](/generate game server keys.jpg)
+<h5>Player generating game server keys for livestream.</h5>
+![Screenshot 6](/playing game.jpg)
+<h5>Player playing a deployed game.</h5>
+![Screenshot 7](/viewing leaderbord.jpg)
+<h5>Viewer watching Live Leaderboard and livestream.</h5>
+
+
 
 ## 📚 Documentation
 
