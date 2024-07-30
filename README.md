@@ -91,6 +91,9 @@ Do you want to earn while you play and you are not ready to trust a traditional 
 
 - [ ] Competition with AI.
 - [ ] Add support for VR games.
+- [ ] More stream servers from theta edge cloud
+- [ ] Request for more availability of ingestors.
+- [ ] Adding more credits for better AI model Deployment.
 
 
 ## 📝 License
