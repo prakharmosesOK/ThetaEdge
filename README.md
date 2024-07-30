@@ -33,7 +33,7 @@ GamETHa is a decentralized gaming platform where developers can upload both sing
 
 ## 📸 Screenshots
 
-![Screenshot 1](https://your-screenshot-url.com/screenshot1.png)
+![Screenshot 1](/home.jpg)
 ![Screenshot 2](https://your-screenshot-url.com/screenshot2.png)
 
 ## 📚 Documentation
