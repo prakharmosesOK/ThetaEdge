@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Box, Flex, Image, Text, Stack, Heading, IconButton, Input, Button, Icon, FormControl, FormLabel } from '@chakra-ui/react';
 import { MdCancel, MdSave } from 'react-icons/md';
 import { BiSolidMessageSquareEdit } from 'react-icons/bi';
+import { GameListContext } from 'contexts/GameListContext';
 
 import ImageSelector from 'views/admin/default/components/ImageSelector';
 import Organiser from "../../contracts/Organiser.json";
@@ -9,9 +10,10 @@ import Organiser from "../../contracts/Organiser.json";
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
 const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
-const Myaddress = '0x885df0da95b731d9ce9f4f56afe5762fd23e573c';
+// const Myaddress = '0x885df0da95b731d9ce9f4f56afe5762fd23e573c';
 
 export default function ProfileIcon({ profileData, setProfileData, framesArray }) {
+    const { account } = useContext(GameListContext);
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(profileData.nickName);
     const [newProfileImage, setNewProfileImage] = useState(profileData.profileImage);
@@ -27,10 +29,10 @@ export default function ProfileIcon({ profileData, setProfileData, framesArray }
       
         const sig = await window.ethereum.request({
           method: 'personal_sign',
-          params: [msg, Myaddress],
+          params: [msg, account],
         });
       
-        return `${timestamp}.${Myaddress}.${sig}`;
+        return `${timestamp}.${account}.${sig}`;
       }
 
     async function uploadJsonData(jsonData) {

@@ -10,7 +10,7 @@ import bgOrganise from 'assets/img/bgOrganisePage.jpg';
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
 const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
-const Myaddress = '0x00a14c01C2AB9A29c8AA5C73904B9210687D072f';
+// const Myaddress = '0x00a14c01C2AB9A29c8AA5C73904B9210687D072f';
 
 export default function UserReports() {
   const { account } = useContext(GameListContext);
