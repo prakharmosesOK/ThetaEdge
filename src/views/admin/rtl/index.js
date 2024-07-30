@@ -398,6 +398,7 @@ export default function UserReports() {
         console.log(`File Key: ${fileKey}`);
         await uploadGameTOContract(fileKey);
         alert("Game uploaded successfully!");
+        window.location.reload();
       } else {
         console.log("Failed to upload to Theta EdgeStore");
       }

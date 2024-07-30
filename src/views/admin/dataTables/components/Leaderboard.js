@@ -34,9 +34,9 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
         const response = await fetch(fileUrl);
         const data = await response.json();
         return data;
-      }
+    }
 
-      
+
     // async function getDataFromIpfs(requestId) {
     //     var myHeaders = new Headers();
     //     myHeaders.append("x-api-key", "QN_71b6031049974cf5a5a8260011c03b60");
@@ -93,12 +93,12 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const _contract = new ethers.Contract(contractAddress, contractABI, signer);
-        try{
+        try {
             const txResponse = await _contract.GetReward(eventId);
             await txResponse.wait();
             console.log('Reward Collected successful:');
         }
-        catch(error){
+        catch (error) {
             console.log(error);
         }
         console.log('Rewards')
@@ -174,17 +174,11 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                         </div>
                         <hr />
                         <div className="p-4 md:p-5 space-y-4">
-                            <LiveStreaming />
-                            {/* <iframe
-                                src={streamUrl}
-                                frameborder="0"
-                                className="w-[60em] h-[32em]"
-                            ></iframe> */}
+                            <LiveStreaming streamLink={streamUrl} />
                         </div>
                     </div>
                 </div>
             )}
-            
         </Box>
     );
 };
