@@ -245,7 +245,7 @@ export default function Marketplace(props) {
         };
         allGamesList.push(gameData);
       }
-      setTotalGamesList(allGamesList);
+      setTotalGamesList(allGamesList.reverse());
       setTopGamesList(allGamesList.slice(0, 3));
     } catch (error) {
       console.error(error);

@@ -164,7 +164,83 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
         await txResponse.wait();
         console.log("Player Stream link updated successfuil");
       }
-      catch(error){
+      catch (error) {
+        console.log(error);
+      }
+      ///////////////////////////////
+      setGameParticipants(prev => {
+        let pastDetails = [...prev];
+        for (let i = 0; i < pastDetails.length; i++) {
+          if (pastDetails[i].address === account) {
+            pastDetails[i].streamLink = iframe;
+            break;
+          }
+        }
+        return pastDetails;
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+    if (flag) {
+      alert('First enter the Stream key and Stream server in your OBS studio.');
+      return;
+    }
+    if (game.bIsInvite && inviteCode === null && inviteCode !== game.privateCode) {
+      alert('Please enter the correct invite code.');
+      return;
+    }
+    if (!game.hasPlay) {
+      alert('First purchase the game.')
+    } else {
+      setShowGameFrame(true);
+    }
+  }
+
+  const handleJudgeStart = async () => {
+    let flag = false;
+    try {
+      const response = await fetch('http://localhost:5000/remove-streams', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].stream_id === game.streamDetails.stream_id) {
+            flag = true;
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    try {
+      const res = await fetch('http://127.0.0.1:5000/find-iframe', {
+        method: 'POST',
+        body: JSON.stringify({ "streamId": game.streamDetails.stream_id }),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+
+      const iframe2 = await res.json();
+      const iframe = iframe2.message;
+      console.log("Iframe getting is: ", iframe);
+      /////////////////////////////////
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+      try {
+        const txResponse = await _contract.UpdatePlayerStreamLink(game.gameId, iframe);
+        await txResponse.wait();
+        console.log("Player Stream link updated successfuil");
+      }
+      catch (error) {
         console.log(error);
       }
       ///////////////////////////////
@@ -523,12 +599,15 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
         <Text>Stream Server: {game.streamDetails.stream_server}</Text>
         <Text>Stream key: {game.streamDetails.stream_key}</Text>
       </Flex>
-      <Button onClick={generateStreamDetails}>Generate Stream Details</Button></>}
+        <Button onClick={generateStreamDetails}>Generate Stream Details</Button></>}
 
       {game.hasPlay && ((game.bIsMultiplayer && timeToDisplay[0] === 1) || (!game.bIsMultiplayer && timeToDisplay[0] === 2)) ?
         (!showGameFrame ?
           <Button onClick={handleStartGame} m="2em">Go to Game</Button> :
           <Button onClick={() => setShowGameFrame(false)}>Hide</Button>
+        ) : null}
+      {((game.bIsMultiplayer && timeToDisplay[0] === 1) || (!game.bIsMultiplayer && timeToDisplay[0] === 2)) ?
+        (<Button onClick={handleJudgeStart} m="2em">Hackathon Judging Purpose</Button>
         ) : null}
       {showGameFrame && (
         <iframe allow="fullscreen;"
