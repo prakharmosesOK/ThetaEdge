@@ -1,4 +1,4 @@
-![GamETHa Logo](https://your-logo-url.com/logo.png)
+![GamETHa Logo](/logo.png)
 
 # GamETHa
 
@@ -33,20 +33,22 @@ GamETHa is a decentralized gaming platform where developers can upload both sing
 
 ## 📸 Screenshots
 
-![Screenshot 1](/Home.jpg)
-<h5>Home Page</h5>
-![Screenshot 2](/events.jpg)
-<h5>Viewing Events</h5>
-![Screenshot 3](/deploying game.jpg)
-<h5>Developer Deploying Game</h5>
-![Screenshot 4](/viewing game video.jpg)
-<h5>Player viewing Game Video</h5>
-![Screenshot 5](/generate game server keys.jpg)
-<h5>Player generating game server keys for livestream.</h5>
-![Screenshot 6](/playing game.jpg)
-<h5>Player playing a deployed game.</h5>
-![Screenshot 7](/viewing leaderbord.jpg)
-<h5>Viewer watching Live Leaderboard and livestream.</h5>
+<img src="/Home.jpg" alt="Home Page">
+<h4>Home Page</h4>
+<img src="/events.jpg" alt="Home Page">
+<h4>Viewing Events</h4>
+<img src="/deploying game.jpg" alt="Home Page">
+<h4>Developer Deploying Game</h4>
+<img src="/viewing game video.jpg" alt="Home Page">
+<h4>Player viewing Game Video</h4>
+<<img src="/generate game server keys.jpg" alt="Home Page">
+<h4>Player generating game server keys for livestream.</h4>
+<img src="/playing game.jpg" alt="Home Page">
+<h4>Player playing a deployed game.</h4>
+<img src="/viewing leaderbord.jpg" alt="Home Page">
+<h4>Viewer watching Live Leaderboard and livestream.</h4>
+<img src="/WhatsApp Image 2024-07-30 at 22.50.10_157b753f.jpg" >
+<h4>User Dashboard</h4>
 
 
 
