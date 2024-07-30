@@ -83,7 +83,7 @@ export default function UserReports() {
   });
   const [gameEventsOrganised, setGameEventsOrganised] = useState([]);
   const [gameParticipated, setGameParticipated] = useState([]);
-  const [currentCurrency, setCurrentCurrency] = useState('usa');
+  const [currentCurrency, setCurrentCurrency] = useState('theta');
   const [barChartGameRevenue, setBarChartGameRevenue] = useState([
     // {
     //   name: "Game Play",
@@ -320,7 +320,7 @@ export default function UserReports() {
             isCollected: game.isCollected,
             totalPrizeMoney: result.totalRevenue.toNumber(),
             startDate: new Date(ipfsData.date),
-            score: result.playersJoined[account] ? result.playersJoined[account].leaderboardScore : 0, 
+            score: result.playersJoined[account] ? result.playersJoined[account].leaderboardScore : 0,
           };
         })
       );
@@ -332,10 +332,10 @@ export default function UserReports() {
   }
 
   async function fetchGameEventsOrganised() {
-    console.log("gurantee",profileData);
+    console.log("gurantee", profileData);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const _contract = new ethers.Contract(contractAddress, contractABI, provider);
-    
+
     try {
       const gameEvents = await Promise.all(
         profileData.gamesUpload.map(async (game) => {
@@ -453,7 +453,7 @@ export default function UserReports() {
 
     // Call the function here
     fetchBarChartGameRevenue();
-  }, [profileData,gameEventsOrganised]);
+  }, [profileData, gameEventsOrganised]);
 
 
   useEffect(() => {
@@ -514,7 +514,7 @@ export default function UserReports() {
               />
             }
             name='Earnings'
-            value={`$${profileData.moneyGained}`}
+            value={`${profileData.moneyGained} TFUEL`}
           />
           <MiniStatistics
             startContent={
@@ -528,32 +528,9 @@ export default function UserReports() {
               />
             }
             name='Spends'
-            value={`$${profileData.moneySpent}`}
+            value={`${profileData.moneySpent} TFUEL`}
           />
-          <MiniStatistics growth='+23%' name='Sales' value='$574.34' />
-          <MiniStatistics
-            endContent={
-              <Flex me='-16px' mt='10px'>
-                <FormLabel htmlFor='balance'>
-                  <Avatar src={currentCurrency === 'theta' ? THETA : (currentCurrency === 'eth' ? ETH : Usa)} />
-                </FormLabel>
-                <Select
-                  id='balance'
-                  variant='filled'
-                  mt='5px'
-                  me='0px'
-                  value={currentCurrency}
-                  onChange={(e) => setCurrentCurrency(e.target.value)}
-                >
-                  <option value='usd'>USD</option>
-                  <option value='theta'>THETA</option>
-                  <option value='eth'>ETH</option>
-                </Select>
-              </Flex>
-            }
-            name='Current Balance'
-            value={currentCurrency === 'theta' ? (profileData.currentBalance / 3).toFixed(3) : (currentCurrency === 'eth' ? (profileData.currentBalance / 56677).toFixed(3) : `$${profileData.currentBalance.toFixed(2)}`)}
-          />
+          {/* <MiniStatistics growth='+23%' name='Sales' value='$574.34' /> */}
           <MiniStatistics
             startContent={
               <IconBox
@@ -579,6 +556,30 @@ export default function UserReports() {
             }
             name='Total Events Organised'
             value={profileData.gamesUpload.length}
+          />
+          <MiniStatistics
+            endContent={
+              <Flex me='-16px' mt='10px'>
+                <FormLabel htmlFor='balance'>
+                  <Avatar src={currentCurrency === 'theta' ? THETA : (currentCurrency === 'eth' ? ETH : Usa)} />
+                </FormLabel>
+                <Select
+                  id='balance'
+                  variant='filled'
+                  mt='5px'
+                  me='0px'
+                  value={currentCurrency}
+                  onChange={(e) => setCurrentCurrency(e.target.value)}
+                  aria-colspan={2}
+                >
+                  {/* <option value='usd'>USD</option> */}
+                  <option value='theta'>THETA</option>
+                  <option value='eth'>ETH</option>
+                </Select>
+              </Flex>
+            }
+            name='Current Balance'
+            value={currentCurrency === 'theta' ? (profileData.currentBalance / 3).toFixed(3) : (currentCurrency === 'eth' ? (profileData.currentBalance / 56677).toFixed(3) : `$${profileData.currentBalance.toFixed(2)}`)}
           />
         </SimpleGrid>
       </Flex>

@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { FormControl, FormLabel, Input, Select, Checkbox, Button, Box, Flex, Center, Textarea, Text, Image, useToast, VStack, Heading } from '@chakra-ui/react';
 // import DateTimePicker from 'react-datetime-picker';
 import DateTimePicker from './components/DateTimePicker';
 import axios from 'axios';
+import { GameListContext } from 'contexts/GameListContext';
 
 import Organiser from "../../../contracts/Organiser.json";
 import bgOrganise from 'assets/img/bgOrganisePage.jpg';
 const { ethers } = require("ethers");
 const contractABI = Organiser.abi;
 const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
-const Myaddress = '0x885df0da95b731d9ce9f4f56afe5762fd23e573c';
+// const Myaddress = '0x00a14c01C2AB9A29c8AA5C73904B9210687D072f';
 
 export default function UserReports() {
+  const { account } = useContext(GameListContext);
   const [selectedVideoFile, setselectedVideoFile] = useState(null);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
   const [videoDetails, setVideoDetails] = useState(null);
 
   const [gameName, setGameName] = useState("");
   const [gameLink, setGameLink] = useState("");
-  const [gameImage, setGameImage] = useState("");
+  const [gameImage, setGameImage] = useState(null);
   const [gameDescription, setGameDescription] = useState("");
   const [gameVideoLink, setGameVideoLink] = useState("");
   //const [gameVideo, setGameVideo] = useState(null);
@@ -38,7 +41,7 @@ export default function UserReports() {
 
   const handleGameNameChange = (e) => setGameName(e.target.value);
   const handleGameLinkChange = (e) => setGameLink(e.target.value);
-  const handleGameImageChange = (e) => setGameImage(e.target.value);
+  // const handleGameImageChange = (e) => setGameImage(e.target.value);
   const handleGameDescriptionChange = (e) => setGameDescription(e.target.value);
   
   const handlePlayTicketPriceChange = (e) => setPlayTicketPrice(e.target.value);
@@ -119,6 +122,22 @@ export default function UserReports() {
       throw error;
     }
   };
+  
+  async function getAuthToken() {
+    if (!window.ethereum) {
+      throw 'wallet not installed';
+    }
+
+    const timestamp = Date.now().toString();
+    const msg = 'Theta EdgeStore Call ' + timestamp;
+
+    const sig = await window.ethereum.request({
+      method: 'personal_sign',
+      params: [msg, account],
+    });
+
+    return `${timestamp}.${account}.${sig}`;
+  }
 
   const uploadVideo = async () => {
     if (!selectedVideoFile) {
@@ -162,6 +181,35 @@ export default function UserReports() {
       console.error('Error uploading video:', error);
     }
   };
+
+  const uploadImageFile = async () => {
+    console.log("Hi I am at the starting!")
+    if (!selectedImageFile) return;
+  
+    const authToken = await getAuthToken();
+  
+    const formData = new FormData();
+    formData.append('file', selectedImageFile);
+    console.log("The auth token is: ", authToken, " with the form data: ", formData);  
+    try {
+      const response = await axios.post('https://api.thetaedgestore.com/api/v2/data', formData, {
+        headers: {
+          'x-theta-edgestore-auth': authToken,
+        },
+      });
+      console.log("The respective response is: ", response);      
+      const fileKey = response.data.key;
+      const fileUrl = `https://data.thetaedgestore.com/api/v2/data/${fileKey}`;
+  
+      
+      alert('File uploaded successfully!');
+      setGameImage(fileUrl);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload file.');
+    }
+  };
+
   // const [selectedFile, setSelectedFile] = useState(null);
   // const [uploadedKey, setUploadedKey] = useState('');
   // const [retrievedImage, setRetrievedImage] = useState('');
@@ -216,24 +264,6 @@ export default function UserReports() {
   // const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   // const brandColor = useColorModeValue("brand.500", "white");
   // const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
-
-  
-
-  async function getAuthToken() {
-    if (!window.ethereum) {
-      throw 'wallet not installed';
-    }
-
-    const timestamp = Date.now().toString();
-    const msg = 'Theta EdgeStore Call ' + timestamp;
-
-    const sig = await window.ethereum.request({
-      method: 'personal_sign',
-      params: [msg, Myaddress],
-    });
-
-    return `${timestamp}.${Myaddress}.${sig}`;
-  }
 
   async function uploadJsonData(jsonData) {
     const authToken = await getAuthToken();
@@ -366,7 +396,8 @@ export default function UserReports() {
       const fileKey = await uploadJsonData(jsonObject);
       if (fileKey) {
         console.log(`File Key: ${fileKey}`);
-        uploadGameTOContract(fileKey);
+        await uploadGameTOContract(fileKey);
+        alert("Game uploaded successfully!");
       } else {
         console.log("Failed to upload to Theta EdgeStore");
       }
@@ -390,22 +421,29 @@ export default function UserReports() {
       <Box w="60em" mx="auto" p="3em" shadow="0 0 20px 3px #8cffb3" textColor="white">
         <FormControl mb="1.5em">
           <FormLabel textColor="yellow">Game Name</FormLabel>
-          <Input type="text" value={gameName} onChange={handleGameNameChange} />
+          <Input type="text" value={gameName} onChange={handleGameNameChange} textColor="white" />
         </FormControl>
 
         <FormControl mb="1.5em">
           <FormLabel textColor="yellow">Game Link</FormLabel>
-          <Input type="text" value={gameLink} onChange={handleGameLinkChange} />
+          <Input type="text" value={gameLink} onChange={handleGameLinkChange} textColor="white" />
         </FormControl>
 
         <FormControl mb="1.5em">
           <FormLabel textColor="yellow">Game Image</FormLabel>
-          <Input type="text" value={gameImage} onChange={handleGameImageChange} />
+          {/* <Input type="text" value={gameImage} onChange={handleGameImageChange} textColor="white" /> */}
+          <Input
+            type='file'
+            accept='image/*'
+            onChange={(e) => setSelectedImageFile(e.target.files[0])}
+            textColor="yellow.400"
+          />
+          <Button colorScheme="teal" onClick={uploadImageFile}>Upload Image</Button>
         </FormControl>
 
         <FormControl mb="1.5em">
           <FormLabel textColor="yellow">Game Description</FormLabel>
-          <Textarea type="text" value={gameDescription} onChange={handleGameDescriptionChange} h="8em">Enter the description of the event</Textarea>
+          <Textarea type="text" value={gameDescription} onChange={handleGameDescriptionChange} textColor="white" h="8em">Enter the description of the event</Textarea>
         </FormControl>
 
         {/* <Flex alignItems="center" flexDirection="row" w="40em" mx="auto" justifyContent="space-evenly">
@@ -420,11 +458,11 @@ export default function UserReports() {
           </FormControl>
         )} */}
 
-        <Center flexDirection="column" mt="5em">
+        {/* <Center flexDirection="column" mt="5em"> */}
           <Box>
-            <Heading as="h1" mb="1em">Upload Video</Heading>
+            <Heading mb="1em" textColor="yellow">Upload Video</Heading>
             <VStack spacing={4} align="start">
-              <Input type="file" onChange={handleVideoFileChange} />
+              <Input type="file" accept='video/*' onChange={handleVideoFileChange} textColor="yellow.400" />
               <Button colorScheme="teal" onClick={uploadVideo}>Upload Video</Button>
               <Text>{uploadStatus}</Text>
             </VStack>
@@ -435,7 +473,7 @@ export default function UserReports() {
               <pre>{JSON.stringify(videoDetails, null, 2)}</pre>
             </Box>
           )} */}
-        </Center>
+        {/* </Center> */}
 
         {/* {uploadType === 'upload' && (
           <FormControl mb="1.5em">
@@ -451,33 +489,33 @@ export default function UserReports() {
         )} */}
 
 
-        <Flex flexDirection="row" mb="1.5em" w="full" alignItems="center" gap="2em" mx="auto">
+        <Flex flexDirection="row" mb="1.5em" w="full" alignItems="center" gap="2em" mx="auto" textColor="white">
           <FormControl>
             <FormLabel textColor="yellow">Play Ticket Price</FormLabel>
-            <Input type="number" value={playTicketPrice} onChange={handlePlayTicketPriceChange} />
+            <Input type="number" value={playTicketPrice} onChange={handlePlayTicketPriceChange} textColor="white" />
           </FormControl>
 
           <FormControl>
             <FormLabel textColor="yellow">Stream Ticket Price</FormLabel>
-            <Input type="number" value={streamTicketPrice} onChange={handleStreamTicketPriceChange} />
+            <Input type="number" value={streamTicketPrice} onChange={handleStreamTicketPriceChange} textColor="white" />
           </FormControl>
         </Flex>
 
         <Flex flexDirection="row" gap="2em" alignItems="center">
           <FormControl>
             <FormLabel>Is Multiplayer</FormLabel>
-            <Checkbox isChecked={isMultiplayer} onChange={handleIsMultiplayerChange} />
+            <Checkbox isChecked={isMultiplayer} onChange={handleIsMultiplayerChange} textColor="white" />
           </FormControl>
 
           {isMultiplayer && <FormControl>
             <FormLabel>Lobby Time in min</FormLabel>
-            <Input type="text" value={lobbyTimeInMin} onChange={handlelobbyTimeInMin} />
+            <Input type="text" value={lobbyTimeInMin} onChange={handlelobbyTimeInMin} textColor="white" />
           </FormControl>}
         </Flex>
 
         <FormControl mb="1.5em">
           <FormLabel>Is Invite</FormLabel>
-          <Select value={isInvite} onChange={handleIsInviteChange}>
+          <Select value={isInvite} onChange={handleIsInviteChange} textColor="white">
             <option value="OpenToAll">Open To All</option>
             <option value="InviteOnly">Invite Only</option>
           </Select>
@@ -486,25 +524,25 @@ export default function UserReports() {
         {isInvite === "InviteOnly" && (
           <FormControl mb="1.5em">
             <FormLabel>Private Code</FormLabel>
-            <Input type="text" value={privateCode} onChange={handlePrivateCodeChange} />
+            <Input type="text" value={privateCode} onChange={handlePrivateCodeChange} textColor="white" />
           </FormControl>
         )}
 
         <Flex flexDirection="row" mb="1.5em" w="full" alignItems="center" gap="2em" mx="auto">
           <FormControl>
             <FormLabel textColor="yellow">Max Participants</FormLabel>
-            <Input type="text" value={maxParticipants} onChange={handleMaxParticipantsChange} />
+            <Input type="text" value={maxParticipants} onChange={handleMaxParticipantsChange} textColor="white" />
           </FormControl>
 
           <FormControl>
             <FormLabel textColor="yellow">Prize From Owner</FormLabel>
-            <Input type="text" value={PrizeFromOwner} onChange={handlePrizeFromOwnerChange} placeholder="Enter the price in USD" />
+            <Input type="text" value={PrizeFromOwner} onChange={handlePrizeFromOwnerChange} placeholder="Enter the price in TFUEL" textColor="white" />
           </FormControl>
         </Flex>
 
         <FormControl mb="1.5em">
           <FormLabel textColor="yellow">Number of Hours</FormLabel>
-          <Input type="text" value={noOfHour} onChange={handleNoOfHourChange} />
+          <Input type="text" value={noOfHour} onChange={handleNoOfHourChange} textColor="white" />
         </FormControl>
 
         <FormControl>
@@ -521,9 +559,9 @@ export default function UserReports() {
           <Button mt="2em" p="0.8em" colorScheme="teal" type="submit" onClick={handleSubmit} fontWeight="extrabold" w="15em" >
             Submit
           </Button>
-          <Button mt="2em" p="0.8em" colorScheme="teal" type="submit" onClick={handleAllVideos} fontWeight="extrabold" w="15em" >
+          {/* <Button mt="2em" p="0.8em" colorScheme="teal" type="submit" onClick={handleAllVideos} fontWeight="extrabold" w="15em" >
             Get all videos
-          </Button>
+          </Button> */}
         </Center>
 
         {/* <Center flexDirection="column" mt="5em">

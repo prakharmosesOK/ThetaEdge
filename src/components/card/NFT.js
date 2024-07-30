@@ -117,7 +117,7 @@ export default function NFT(props) {
               fontWeight='400'
               mb="10px"
               me='14px'>
-              Prize Pool: <strong>${gameEvent.totalPrizeMoney}</strong>
+              Prize Pool: <strong>{gameEvent.totalPrizeMoney} TFUEL</strong>
             </Text>
           </Flex>
           <Flex
