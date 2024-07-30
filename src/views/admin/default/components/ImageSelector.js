@@ -61,7 +61,7 @@ const ImageSelector = (props) => {
 
     const handleGenerateImages = async () => {
         console.log("desc = ", description);
-        const response = await axios.post('http://localhost:5000/image-gen', {
+        const response = await axios.post('https://thetaedge-1.onrender.com/image-gen', {
             body: { prompt: description }
         }, {
             responseType: 'blob', // Important for receiving a Blob response

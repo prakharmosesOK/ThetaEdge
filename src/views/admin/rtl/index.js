@@ -330,7 +330,7 @@ export default function UserReports() {
 
   const handleAllVideos = async () => {
     console.log("statrt");
-    const response = await fetch("http://localhost:5000/videos", {
+    const response = await fetch("https://thetaedge.onrender.com/videos", {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
