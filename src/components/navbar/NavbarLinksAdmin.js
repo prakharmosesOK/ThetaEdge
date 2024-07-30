@@ -132,7 +132,7 @@ export default function HeaderLinks(props) {
 		// window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
 		setAccount('0x0');
 		localStorage.removeItem('account');
-		history.push('/');
+		history.push('/admin/home');
 	}
 
 	return (

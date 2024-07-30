@@ -83,7 +83,7 @@ export default function UserReports() {
   });
   const [gameEventsOrganised, setGameEventsOrganised] = useState([]);
   const [gameParticipated, setGameParticipated] = useState([]);
-  const [currentCurrency, setCurrentCurrency] = useState('usa');
+  const [currentCurrency, setCurrentCurrency] = useState('theta');
   const [barChartGameRevenue, setBarChartGameRevenue] = useState([
     // {
     //   name: "Game Play",
@@ -514,7 +514,7 @@ export default function UserReports() {
               />
             }
             name='Earnings'
-            value={`$${profileData.moneyGained}`}
+            value={`${profileData.moneyGained} TFUEL`}
           />
           <MiniStatistics
             startContent={
@@ -528,9 +528,9 @@ export default function UserReports() {
               />
             }
             name='Spends'
-            value={`$${profileData.moneySpent}`}
+            value={`${profileData.moneySpent} TFUEL`}
           />
-          <MiniStatistics growth='+23%' name='Sales' value='$574.34' />
+          {/* <MiniStatistics growth='+23%' name='Sales' value='$574.34' /> */}
           <MiniStatistics
             endContent={
               <Flex me='-16px' mt='10px'>
@@ -544,8 +544,9 @@ export default function UserReports() {
                   me='0px'
                   value={currentCurrency}
                   onChange={(e) => setCurrentCurrency(e.target.value)}
+                  colSpan="2"
                 >
-                  <option value='usd'>USD</option>
+                  {/* <option value='usd'>USD</option> */}
                   <option value='theta'>THETA</option>
                   <option value='eth'>ETH</option>
                 </Select>
