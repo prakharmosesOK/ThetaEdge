@@ -1,4 +1,4 @@
-![GamETHa Logo](/logo.png)
+![GamETHa Logo](/Logo.png)
 
 # GamETHa
 
