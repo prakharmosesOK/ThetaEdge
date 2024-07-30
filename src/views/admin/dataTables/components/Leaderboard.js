@@ -67,13 +67,16 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                 const LeaderBoardArray = [];
                 for (const player of gamed.playersJoined) {
                     const Playerdata = await _contract.GetProfileIpfs(player.playerAddress);
-                    const playerProfileData = await retrieveJsonData(Playerdata);
+                    let playerProfileData;
+                    if(Playerdata){
+                        playerProfileData = await retrieveJsonData(Playerdata);
+                    }
                     const leaderboardData = {
-                        playerNickName: playerProfileData.nickName,
+                        playerNickName: playerProfileData ? playerProfileData.nickName : "default",
                         playerAddress: player.playerAddress,
                         playerScore: player.leaderboardScore.toNumber(),
-                        profileImage: playerProfileData.profileImage,
-                        frameImage: playerProfileData.frameImage ? playerProfileData.frameImage : 0,
+                        profileImage: playerProfileData ? playerProfileData.profileImage : "",
+                        frameImage: playerProfileData ? playerProfileData.frameImage : 0,
                         streamLink: player.streamLink ? player.streamLink : "/",
                     }
                     LeaderBoardArray.push(leaderboardData);

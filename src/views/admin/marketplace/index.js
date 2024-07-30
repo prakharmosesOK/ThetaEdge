@@ -346,7 +346,6 @@ export default function Marketplace(props) {
 
   useEffect(() => {
     // Call this function to fetch games List
-    console.log("called");
     fetchGamesList();
   }, []);
 
