@@ -169,7 +169,7 @@ app.post('/find-iframe', async (req, res) => {
   if (data.body.playback_uri === null) {
     res.status(500).json({ status: 'error', message: 'Playback URI not found' });
   } else {
-    res.json({ status: 'error', message: data.body.playback_uri })
+    res.json({ status: 'success', message: data.body.playback_uri })
   }
 })
 
