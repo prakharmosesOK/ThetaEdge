@@ -5,7 +5,7 @@ import requests
 import time
 from PIL import Image
 import io
-import genai
+import google.generativeai as genai
 app = Flask(__name__)
 
 # Define the API key
