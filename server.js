@@ -4,7 +4,7 @@ import cors from 'cors';
 import fetch from 'node-fetch';
 
 const app = express();
-const PORT = 3000;
+const PORT = 5000;
 
 
 app.use(bodyParser.json());
@@ -96,7 +96,7 @@ const deselectIngestor = async (ingestorId) => {
 
 app.post('/get-stream-details', async (req, res) => {
   const playerCount = req.body.count;
-
+  console.log("Playerount = ", playerCount);
 
   try {
     const streams = await getLivestreams();
@@ -104,7 +104,9 @@ app.post('/get-stream-details', async (req, res) => {
     console.log('Streams:', streams);
     console.log('Ingestors:', ingestors);
     const assignments = [];
+    console.log("Just above for loop");
     for (let i = 0; i < Math.min(ingestors.length, playerCount); i++) {
+      console.log("Coming inside the for loop!")
       const stream = streams[i];
       const ingestor = ingestors[i];
       console.log('Assigning ingestor:', ingestor.id, 'to stream:', stream.id);
@@ -127,6 +129,7 @@ app.post('/get-stream-details', async (req, res) => {
 });
 
 app.get('/remove-streams', async (req, res) => {
+  console.log("---------------------------------- Entering inside remove streams! -------------------------------------------------");
   const response = await fetch(`https://api.thetavideoapi.com/service_account/${serviceAccountId}/streams`, {
     method: 'GET',
     headers: {
@@ -134,21 +137,41 @@ app.get('/remove-streams', async (req, res) => {
       'x-tva-sa-secret': serviceAccountSecret
     }
   });
+  console.log("The response received is: ", response);
 
   if (!response.ok) {
     throw new Error('Failed to fetch livestreams');
   }
 
   const data = await response.json();
+  console.log("the data received is: ", data);
   const returnData = [];
   for(let i=0;i<data.body.streams.length;i++){
 
     if(data.body.streams[i].status == "off"){
-      returnData.push(data.body.streams[i]);
+      returnData.push(data.body.streams[i].id);
     }
-  } 
-  return returnData;
+  }
+  console.log("The return data is: ", returnData); 
+  res.status(200).json(returnData);
 });
+
+app.post('/find-iframe', async (req, res) => {
+  const streamId = req.body.streamId;
+  const response = await fetch(`https://api.thetavideoapi.com/stream/${streamId}`, {
+    method: 'GET',
+    headers: {
+      'x-tva-sa-id': serviceAccountId,
+      'x-tva-sa-secret': serviceAccountSecret
+    }
+  });
+  const data = await response.json();
+  if (data.body.playback_uri === null) {
+    res.status(500).json({ status: 'error', message: 'Playback URI not found' });
+  } else {
+    res.json({ status: 'success', message: data.body.playback_uri })
+  }
+})
 
 app.post('/game-over', async (req, res) => {
 
@@ -178,7 +201,7 @@ app.use(bodyParser.json());
 app.post('/upload-video', async (req, res) => {
     try {
         const { videoUrl } = req.body;
-
+        console.log("Video url = ",videoUrl);
         const presignedUrlResponse = await fetch('https://api.thetavideoapi.com/upload', {
             method: 'POST',
             headers: {
@@ -228,6 +251,7 @@ app.post('/upload-video', async (req, res) => {
 });
 
 app.get('/videos', async (req, res) => {
+  console.log("called");
     try {
         const videosResponse = await fetch(`https://api.thetavideoapi.com/video/${TVA_SA_ID}/list?page=1&number=100`, {
             method: 'GET',
@@ -235,15 +259,16 @@ app.get('/videos', async (req, res) => {
                 'x-tva-sa-id': TVA_SA_ID,
                 'x-tva-sa-secret': TVA_SA_SECRET,
             },
-        });
+        }); 
+        console.log("videoResponse =", videosResponse);
 
         const videosData = await videosResponse.json();
+        console.log("videoData = =",videosData);
         res.json(videosData);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
