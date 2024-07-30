@@ -376,7 +376,10 @@ export default function UserReports() {
         const result1 = await _contract.GetProfileIpfs(account);
 
         //console.log(result1);
-        const result = await retrieveJsonData(result1);
+        let result;
+        if(result1){
+          result = await retrieveJsonData(result1);
+        }
         //console.log(result);
         // setProfileData(prevProfileData => ({
         //   ...prevProfileData, // Keep the existing properties
@@ -403,9 +406,9 @@ export default function UserReports() {
         }));
         setProfileData(prevProfileData => ({
           ...prevProfileData,
-          nickName: result.nickName, // Hardcoded new nickname
-          profileImage: result.profileImage, // Hardcoded new moneyGained value
-          frameImage: result.frameImage ? result.frameImage : 0,
+          nickName: result ? result.nickName: "default", // Hardcoded new nickname
+          profileImage: result ? result.profileImage : "", // Hardcoded new moneyGained value
+          frameImage: result ? result.frameImage : 0,
           moneyGained: result2[2].toNumber(),
           moneySpent: result2[3].toNumber(),
           frameImageArray,
