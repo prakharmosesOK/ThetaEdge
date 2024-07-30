@@ -1,45 +1,52 @@
 import React, { useEffect } from 'react';
+import { Box, Center } from '@chakra-ui/react';
 import videojs from 'video.js';
+import 'video.js/dist/video-js.css'; // Ensure you have the Video.js CSS
 
-const LiveStreaming = () => {
+const LiveStreaming = ({ streamLink }) => {
   useEffect(() => {
-    const player = videojs('player');
-
-    player.ready(function () {
-      this.play();
+    const player = videojs('player', {
+      controls: true,
+      autoplay: true,
+      preload: 'none',
+      responsive: true,
+      fluid: true,
     });
 
-    // Cleanup on component unmount
+    // Set up player
+    player.ready(() => {
+      player.src({ src: streamLink, type: 'application/x-mpegURL' });
+      player.play().catch(error => {
+        console.error('Error playing video:', error);
+      });
+    });
+
+    // Cleanup on component unmount or streamLink change
     return () => {
       if (player) {
+        player.pause(); // Pause video before disposing
         player.dispose();
       }
     };
-  }, []);
+  }, [streamLink]); // Dependency array ensures player updates when streamLink changes
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <video
-        id="player"
-        className="video-js vjs-default-skin w-3/4 h-auto"
-        controls
-        autoPlay
-        preload="none"
-      >
-        <source
-          src="https://live5.thetavideoapi.com/hls/live/2015932/stream_ur1s1rnyyyuxgjpbikug30y7h/1722106632660/master.m3u8"
-          type="application/x-mpegURL"
-        />
-      </video>
-
-      {/* <style jsx>{`
-        .vjs-seek-to-live-control,
-        .vjs-fullscreen-control,
-        .vjs-picture-in-picture-control {
-          display: none;
-        }
-      `}</style> */}
-    </div>
+    <Center h="full">
+      <Box w="50em">
+        <video
+          id="player"
+          className="video-js vjs-default-skin"
+          controls
+          autoPlay
+          preload="none"
+        >
+          <source
+            src={streamLink}
+            type="application/x-mpegURL"
+          />
+        </video>
+      </Box>
+    </Center>
   );
 };
 

@@ -434,7 +434,7 @@ export default function Marketplace(props) {
               <Text color={textColor} fontSize='xl' fontWeight='600'>
                 History
               </Text>
-              <Button variant='action' onClick={() => history.push(`/admin/${account}`)}>See all</Button>
+              <Button variant='action' onClick={() => history.push(`/admin/profile/${account}`)}>See all</Button>
             </Flex>
 
             {purchaseHistory.map((purchase, index) => (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -43,6 +43,7 @@ const contractAddress = '0x480c4b8b26b2b62776658b36293cb3f83a3b8d90';
 // };
 
 export default function GamePage() {
+  const history = useHistory();
   const { eventId } = useParams();
   const { account } = useContext(GameListContext);
   const [selectedTab, setSelectedTab] = useState("details");
@@ -123,14 +124,13 @@ export default function GamePage() {
 
   useEffect(() => {
     const getGameData = async () => {
-      console.log("sad", eventId);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const _contract = new ethers.Contract(contractAddress, contractABI, provider);
       try {
         const gamed = await _contract.getGameById(eventId);
         let hasPlay = false;
         let hasStream = false;
-
+        
         if (gamed.playersJoined) {
           const LeaderBoardArray = [];
           for (const player of gamed.playersJoined) {
@@ -190,21 +190,35 @@ export default function GamePage() {
         setgame(gameData);
         console.log("Inside fetching the Game: ", gameData);
         // setTimeToDisplay((new Date(res.date).getTime() - parseInt(res.noOfHour) * 3600 * 1000) / 1000);
+        localStorage.setItem('lastGameData', JSON.stringify(gameData));
       }
       catch (error) {
         console.log(error);
       }
-
+      
     }
-    getGameData();
-  }, []);
 
+    if (eventId === ':eventId' || eventId === undefined) {
+      // console.log("Going inot this")
+      // if (localStorage.getItem('lastGameData') === null) {
+        alert("First select any Game to view the details of that game page");
+        history.push('/admin/explore');
+      // }
+      // else if (localStorage.getItem('lastGameData') !== null) {
+      //   const lastGameData = JSON.parse(localStorage.getItem('lastGameData'));
+      //   console.log("The last game data is: ", lastGameData);
+      //   console.log("The type of lastGameData is: ", typeof lastGameData);
+      //   setgame(lastGameData);
+      // }
+    } else getGameData();
+  }, []);
+  
   useEffect(() => {
     if (game.date >= new Date()) {
       const intervalId = setInterval(() => {
         setTimeToDisplay([0, Math.round((game.date - new Date()) / 1000)]);
       }, 1000);
-
+      
       return () => clearInterval(intervalId);
     } else if (game.bIsMultiplayer && new Date(game.date.getTime() + parseInt(game.lobbyTimeInMin) * 60 * 1000) >= new Date()) {
       const intervalId = setInterval(() => {
