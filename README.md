@@ -2,20 +2,18 @@
 
 # GamETHa
 
-![License](https://img.shields.io/github/license/your-username/GamETHa) ![Stars](https://img.shields.io/github/stars/your-username/GamETHa) ![Forks](https://img.shields.io/github/forks/your-username/GamETHa) ![Issues](https://img.shields.io/github/issues/your-username/GamETHa)
-
-Welcome to **GamETHa** – the ultimate Web 3.0 powered gaming platform! 
+Welcome to **GamETHa** – the ultimate Web 3.0 powered gaming platform! Earn while you play. Earn while you develop games.
 
 ## 🎮 About GamETHa
 
-GamETHa is a decentralized gaming platform where developers can upload both single-player and multiplayer games. Users can buy, play, and stream games, all while leveraging the power of blockchain and decentralized technologies. 
+Do you want to earn while you play and you are not ready to trust a traditional centralized platform where some admin moderates your game and earnings. Worry not! Introducing GamETHa. GamETHa is a decentralized gaming platform where developers can upload both single-player and multiplayer games. Users can buy, play, and stream games, all while leveraging the power of blockchain and decentralized technologies. 
 
 ## 🚀 Features
 
 ### For Developers
 - **Upload Games**: Easily upload your games, whether single or multiplayer.
 - **Decentralized Video Hosting**: Provide a video of your game, hosted on the Theta Edge Cloud.
-- **Commentary**: Add commentary to your games for an immersive user experience.
+- **Commentary**: Add AI-generated commentary to your games for an immersive user experience.
 
 ### For Users
 - **Play Games**: Buy and play games directly on our platform.
@@ -52,9 +50,7 @@ GamETHa is a decentralized gaming platform where developers can upload both sing
 
 
 
-## 📚 Documentation
 
-Check out our [Documentation](https://your-documentation-url.com) for detailed information on how to get started with GamETHa.
 
 ## 🛠 Installation
 
@@ -77,24 +73,33 @@ Check out our [Documentation](https://your-documentation-url.com) for detailed i
     ```bash
     npm start
     ```
+    
+5. Start node backend
+   ```bash
+   cd backend
+   npm i
+   node server.js
+   ```
+   
+6. Start Python backend
+  ```bash
+    cd backend
+    pip install requirements.txt
+    python app3.py
+  ```
+## 📈 Next Up
 
-## 📈 Roadmap
-
-- [ ] Implement more game categories.
+- [ ] Competition with AI.
 - [ ] Add support for VR games.
-- [ ] Integrate more payment options.
 
-## 🤝 Contributing
-
-We welcome contributions! Please read our [Contributing Guidelines](https://your-contributing-url.com) before getting started.
 
 ## 📝 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. 
 
-## 📬 Contact
+## 📬 Authors
+1. [Adnan Abbas Rizvi](https://github.com/riz-adnan)
+2. [Anish Kumar]()
+3. [Prakhar Moses](https://github.com/prakharmosesOK)
 
-If you have any questions, feel free to reach out:
 
-- **Email**: [youremail@example.com](mailto:youremail@example.com)
-- **Twitter**: [@yourtwitterhandle](https://twitter.com/yourtwitterhandle)
