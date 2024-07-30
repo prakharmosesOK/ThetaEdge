@@ -36,6 +36,11 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
         return data;
     }
 
+    useEffect(() => {
+        console.log("The iframe in starting is: ", streamUrl);
+        console.log("The participants fetching is: ", gameParticipants);
+    }, [streamUrl]);
+
 
     // async function getDataFromIpfs(requestId) {
     //     var myHeaders = new Headers();
@@ -68,7 +73,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                 for (const player of gamed.playersJoined) {
                     const Playerdata = await _contract.GetProfileIpfs(player.playerAddress);
                     let playerProfileData;
-                    if(Playerdata){
+                    if (Playerdata) {
                         playerProfileData = await retrieveJsonData(Playerdata);
                     }
                     const leaderboardData = {
@@ -152,7 +157,7 @@ const Leaderboard = ({ gameParticipants, startTime, hoursActive, hasStream, setG
                             <Td>{player.playerNickName}</Td>
                             <Td>{player.playerAddress}</Td>
                             <Td>{player.playerScore}</Td>
-                            <Td><Button color="yellow" onClick={() => setStreamUrl("https://live5.thetavideoapi.com/hls/live/2015895/stream_ur1s1rnyyyuxgjpbikug30y7h/1722105236551/master.m3u8")}>Go to stream</Button></Td>
+                            <Td><Button color="yellow" onClick={() => setStreamUrl(gameParticipants.streamLink)}>Go to stream</Button></Td>
                         </Tr>
                     ))}
                 </Tbody>

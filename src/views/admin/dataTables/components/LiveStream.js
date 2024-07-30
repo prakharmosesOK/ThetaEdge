@@ -30,6 +30,8 @@ const LiveStreaming = ({ streamLink }) => {
     };
   }, [streamLink]); // Dependency array ensures player updates when streamLink changes
 
+  useEffect(() => console.log(streamLink), [streamLink]);
+
   return (
     <Center h="full">
       <Box w="50em">

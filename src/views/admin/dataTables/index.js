@@ -322,7 +322,7 @@ export default function GamePage() {
         right="1em"
         fontWeight="bold"
       >{timeToDisplay[0] === 0 ? `Starts in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 1 ? `Lobby time ends in ${secondsToHMS(timeToDisplay[1])}` : (timeToDisplay[0] === 2 ? `Event ends in ${secondsToHMS(timeToDisplay[1])}` : 'The event has been ended!'))}</Text>
-      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} setGameParticipants={setGameParticipants}/> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} setGameParticipants={setGameParticipants} eventId={game.gameId} />}
+      {selectedTab === "details" ? <GameDetails game={game} setGame={setgame} timeToDisplay={timeToDisplay} setGameParticipants={setGameParticipants} gameParticipants={gameParticipants} /> : <Leaderboard gameParticipants={gameParticipants} startTime={game.date} hoursActive={game.noOfHour} hasStream={game.hasStream} setGameParticipants={setGameParticipants} eventId={game.gameId} />}
     </Box>
   );
 };
