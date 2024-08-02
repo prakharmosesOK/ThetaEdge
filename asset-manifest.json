@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ThetaEdge/static/css/main.25345678.css",
-    "main.js": "/ThetaEdge/static/js/main.3b78421a.js",
+    "main.js": "/ThetaEdge/static/js/main.3f7a9e7c.js",
     "static/media/frame9.png": "/ThetaEdge/static/media/frame9.b991c49a3a7be6158539.png",
     "static/media/frame8.png": "/ThetaEdge/static/media/frame8.88c837de16abff3d552e.png",
     "static/media/bgHome.jpg": "/ThetaEdge/static/media/bgHome.2940ae8d0b0cacebd21a.jpg",
@@ -32,10 +32,10 @@
     "static/media/THETA.png": "/ThetaEdge/static/media/THETA.12167972ff178f3862f6.png",
     "index.html": "/ThetaEdge/index.html",
     "main.25345678.css.map": "/ThetaEdge/static/css/main.25345678.css.map",
-    "main.3b78421a.js.map": "/ThetaEdge/static/js/main.3b78421a.js.map"
+    "main.3f7a9e7c.js.map": "/ThetaEdge/static/js/main.3f7a9e7c.js.map"
   },
   "entrypoints": [
     "static/css/main.25345678.css",
-    "static/js/main.3b78421a.js"
+    "static/js/main.3f7a9e7c.js"
   ]
 }
