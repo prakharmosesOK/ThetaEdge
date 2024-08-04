@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, Redirect, HashRouter, BrowserRouter } from 'react-router-dom';
 import AuthLayout from 'layouts/auth';
 import AdminLayout from 'layouts/admin';
 import RtlLayout from 'layouts/rtl';
@@ -25,7 +25,7 @@ export default function App() {
       <React.StrictMode>
         <ThemeEditorProvider>
           <GameListProvider>
-            <BrowserRouter>
+            <HashRouter>
               <Switch>
                 <Route path={`/aboutUs`} component={AuthLayout} />
                 <Route
@@ -36,13 +36,16 @@ export default function App() {
                   path={`/rtl`}
                   render={(props) => <RtlLayout {...props} />}
                 />
-                <Route path={`/contact`} component={Contact} />
+                <Route
+                  path={`/contact`}
+                  render={(props) => <Contact {...props} />}
+                />
                 <Route path={`/license`} component={License} />
                 <Route path={`/terms-of-use`} component={TermsOfUse} />
                 <Route path={`/privacy-policy`} component={PrivacyPolicy} />
                 <Redirect from='/' to='/admin' />
               </Switch>
-            </BrowserRouter>
+            </HashRouter>
           </GameListProvider>
         </ThemeEditorProvider>
       </React.StrictMode>

@@ -35,6 +35,7 @@ import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import ProfileIcon from "components/card/ProfileIcon";
 import React, { useState, useEffect, useContext } from "react";
+import { useParams } from 'react-router-dom';
 
 // Importing Context
 import { GameListContext } from "contexts/GameListContext";
@@ -66,8 +67,10 @@ const contractAddress = '0x8447a887e331766b6fcfc896eedb177d26887f5c';
 
 export default function UserReports() {
   const { account, framesArray } = useContext(GameListContext);
+  const { userId } = useParams();
+  const favourableAccount = userId === ':userId' ? account : userId;
   const [profileData, setProfileData] = useState({
-    address: account,
+    address: favourableAccount,
     nickName: "John Doe",
     profileImage: "https://bootdey.com/img/Content/avatar/avatar1.png",
     frameImage: 0,
@@ -373,7 +376,7 @@ export default function UserReports() {
       //const signer = provider.getSigner();
       const _contract = new ethers.Contract(contractAddress, contractABI, provider);
       try {
-        const result1 = await _contract.GetProfileIpfs(account);
+        const result1 = await _contract.GetProfileIpfs(favourableAccount);
 
         //console.log(result1);
         let result;
@@ -389,7 +392,7 @@ export default function UserReports() {
         // }));
         //console.log("profile done");
         //console.log(account);
-        const result2 = await _contract.getGamesStatus(account);
+        const result2 = await _contract.getGamesStatus(favourableAccount);
         console.log(result2);
         const gamesJoined = result2[0].map(num => num.toNumber());
         const gamesOrganized = result2[1].map(num => num.toNumber());

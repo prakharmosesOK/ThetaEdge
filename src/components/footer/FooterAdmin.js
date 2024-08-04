@@ -58,7 +58,7 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={textColor}
-            href='/privacy-policy'
+            href='/ThetaEdge/#/privacy-policy'
           >
             Privacy Policy
           </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={textColor}
-            href='/license'
+            href='/ThetaEdge/#/license'
           >
             License
           </Link>
@@ -84,7 +84,7 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={textColor}
-            href='/terms-of-use'
+            href='/ThetaEdge/#/terms-of-use'
           >
             Terms of Use
           </Link>
@@ -93,7 +93,7 @@ export default function Footer() {
           <Link
             fontWeight='500'
             color={textColor}
-            href='/contact'
+            href='/ThetaEdge/#/contact'
           >
             Contact
           </Link>

@@ -11,7 +11,9 @@ import {
   HStack,
   List,
   ListItem,
+  Spinner,
   ListIcon,
+  Center,
 } from "@chakra-ui/react";
 import { GiDuration, GiTargetPrize } from "react-icons/gi";
 import { FaPeopleGroup } from "react-icons/fa6";
@@ -29,6 +31,7 @@ const contractAddress = '0x8447a887e331766b6fcfc896eedb177d26887f5c';
 
 const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gameParticipants }) => {
   const { account } = useContext(GameListContext);
+  const [loading, setLoading] = useState(false);
   const [inviteCode, setInviteCode] = useState(null);
   const [lobbyCalled, setlobbyCalled] = useState(false);
   // const [lobbyCode, setLobbyCode] = useState(null);
@@ -40,6 +43,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
   const [showGameFrame, setShowGameFrame] = useState(false);
 
   const handlePaymentClicked = async () => {
+    setLoading(true);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const _contract = new ethers.Contract(contractAddress, contractABI, signer);
@@ -61,6 +65,8 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
       alert('Now you can join the game.');
     } catch (error) {
       console.error('Transaction error:', error);
+    } finally {
+      setLoading(false);
     }
 
     // const response = await fetch('http://localhost:5000/get-stream-details', {
@@ -85,46 +91,59 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
   }
 
   const generateStreamDetails = async () => {
-    const response = await fetch('https://thetaedge.onrender.com/get-stream-details', {
-      method: "POST",
-      body: JSON.stringify({ "count": "1" }),
-      headers: {
-        'Content-Type': 'application/json',
+    try {
+      setLoading(true);
+      const response = await fetch('https://thetaedge.onrender.com/get-stream-details', {
+        method: "POST",
+        body: JSON.stringify({ "count": "1" }),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const output = await response.json();
+      // console.log("THe output derived is: ", output);
+
+      // const res = await fetch('http://127.0.0.1:5000/find-iframe', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ "streamId": output.assignments[0].stream_id }),
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   }
+      // })
+
+      // const iframe = await res.json();
+      // Ensure the response is in JSON format
+      if (output.assignments.length === 0) {
+        alert('No stream available due to lack injectors.');
+        setLoading(false);
+        return;
       }
-    });
 
-    const output = await response.json();
-    // console.log("THe output derived is: ", output);
-
-    // const res = await fetch('http://127.0.0.1:5000/find-iframe', {
-    //   method: 'POST',
-    //   body: JSON.stringify({ "streamId": output.assignments[0].stream_id }),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   }
-    // })
-
-    // const iframe = await res.json();
-    // Ensure the response is in JSON format
-    if (output.assignments.length === 0) {
-      alert('No stream available');
-      return;
+      setGame({
+        ...game,
+        // streamLink: ifram,
+        streamDetails: {
+          stream_id: output.assignments[0].stream_id,
+          stream_key: output.assignments[0].stream_key,
+          stream_server: output.assignments[0].stream_server
+        }
+      });
+    } catch (error) {
+      alert('No stream available. ', error.message);
+    } finally {
+      setLoading(false);
     }
-
-    setGame({
-      ...game,
-      // streamLink: ifram,
-      streamDetails: {
-        stream_id: output.assignments[0].stream_id,
-        stream_key: output.assignments[0].stream_key,
-        stream_server: output.assignments[0].stream_server
-      }
-    });
   }
 
   const handleStartGame = async () => {
+    if (game.streamDetails.stream_id === null || game.streamDetails.stream_id === undefined || game.streamDetails.stream_id === '') {
+      alert('First generate the stream details.');
+      return;
+    }
     let flag = false;
     try {
+      setLoading(true);
       const response = await fetch('https://thetaedge.onrender.com/remove-streams', {
         method: 'GET',
         headers: {
@@ -181,6 +200,8 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
     }
     catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
 
     if (flag) {
@@ -199,79 +220,86 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
   }
 
   const handleJudgeStart = async () => {
-    let flag = false;
-    try {
-      const response = await fetch('https://thetaedge.onrender.com/remove-streams', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].stream_id === game.streamDetails.stream_id) {
-            flag = true;
-            break;
-          }
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    try {
-      const res = await fetch('https://thetaedge.onrender.com/find-iframe', {
-        method: 'POST',
-        body: JSON.stringify({ "streamId": game.streamDetails.stream_id }),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
+    // if (game.streamDetails.stream_id === null || game.streamDetails.stream_id === undefined || game.streamDetails.stream_id === '') {
+    //   alert('First generate the stream details.');
+    //   return;
+    // }
+    // let flag = false;
+    // try {
+    //   setLoading(true);
+    //   const response = await fetch('https://thetaedge.onrender.com/remove-streams', {
+    //     method: 'GET',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     }
+    //   });
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     for (let i = 0; i < data.length; i++) {
+    //       if (data[i].stream_id === game.streamDetails.stream_id) {
+    //         flag = true;
+    //         break;
+    //       }
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    // try {
+    //   const res = await fetch('https://thetaedge.onrender.com/find-iframe', {
+    //     method: 'POST',
+    //     body: JSON.stringify({ "streamId": game.streamDetails.stream_id }),
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     }
+    //   })
 
-      const iframe2 = await res.json();
-      const iframe = iframe2.message;
-      console.log("Iframe getting is: ", iframe);
-      /////////////////////////////////
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const _contract = new ethers.Contract(contractAddress, contractABI, signer);
-      try {
-        const txResponse = await _contract.UpdatePlayerStreamLink(game.gameId, iframe);
-        await txResponse.wait();
-        console.log("Player Stream link updated successfuil");
-      }
-      catch (error) {
-        console.log(error);
-      }
-      ///////////////////////////////
-      setGameParticipants(prev => {
-        let pastDetails = [...prev];
-        for (let i = 0; i < pastDetails.length; i++) {
-          if (pastDetails[i].address === account) {
-            pastDetails[i].streamLink = iframe;
-            break;
-          }
-        }
-        return pastDetails;
-      });
-    }
-    catch (error) {
-      console.log(error);
-    }
+    //   const iframe2 = await res.json();
+    //   const iframe = iframe2.message;
+    //   console.log("Iframe getting is: ", iframe);
+    //   /////////////////////////////////
+    //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+    //   const signer = provider.getSigner();
+    //   const _contract = new ethers.Contract(contractAddress, contractABI, signer);
+    //   try {
+    //     const txResponse = await _contract.UpdatePlayerStreamLink(game.gameId, iframe);
+    //     await txResponse.wait();
+    //     console.log("Player Stream link updated successfuil");
+    //   }
+    //   catch (error) {
+    //     console.log(error);
+    //   }
+    //   ///////////////////////////////
+    //   setGameParticipants(prev => {
+    //     let pastDetails = [...prev];
+    //     for (let i = 0; i < pastDetails.length; i++) {
+    //       if (pastDetails[i].address === account) {
+    //         pastDetails[i].streamLink = iframe;
+    //         break;
+    //       }
+    //     }
+    //     return pastDetails;
+    //   });
+    // }
+    // catch (error) {
+    //   console.log(error);
+    // } finally {
+    //   setLoading(false);
+    // }
 
-    if (flag) {
-      alert('First enter the Stream key and Stream server in your OBS studio.');
-      return;
-    }
-    if (game.bIsInvite && inviteCode === null && inviteCode !== game.privateCode) {
-      alert('Please enter the correct invite code.');
-      return;
-    }
-    if (!game.hasPlay) {
-      alert('First purchase the game.')
-    } else {
-      setShowGameFrame(true);
-    }
+    // if (flag) {
+    //   alert('First enter the Stream key and Stream server in your OBS studio.');
+    //   return;
+    // }
+    // if (game.bIsInvite && inviteCode === null && inviteCode !== game.privateCode) {
+    //   alert('Please enter the correct invite code.');
+    //   return;
+    // }
+    // if (!game.hasPlay) {
+    //   alert('First purchase the game.')
+    // } else {
+    setShowGameFrame(true);
+    // }
   }
 
   useEffect(() => {
@@ -398,7 +426,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           >
             <HStack spacing={3}>
               <ListIcon as={FaCircle} color="blue.500" />
-              <Text><strong>Game Organiser:</strong> {game.nickName}</Text>
+              <Text textColor="white"><strong>Game Organiser:</strong> {game.nickName}</Text>
             </HStack>
           </MotionListItem>
           <MotionListItem
@@ -408,7 +436,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           >
             <HStack spacing={3}>
               <ListIcon as={FaCircle} color="blue.500" />
-              <Text><strong>Organiser Address:</strong> {game.organiserAddress}</Text>
+              <Text textColor="white"><strong>Organiser Address:</strong> {game.organiserAddress}</Text>
             </HStack>
           </MotionListItem>
           <MotionListItem
@@ -418,7 +446,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           >
             <HStack spacing={3}>
               <ListIcon as={FaCircle} color="blue.500" />
-              <Text><strong>Game Start at:</strong> {game.date.toString()}</Text>
+              <Text textColor="white"><strong>Game Start at:</strong> {game.date.toString()}</Text>
             </HStack>
           </MotionListItem>
           <MotionListItem
@@ -428,7 +456,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           >
             <HStack spacing={3}>
               <ListIcon as={FaCircle} color="blue.500" />
-              <Text><strong>Is Game Multiplayer:</strong> {game.bIsMultiplayer ? "Yes" : "No"}</Text>
+              <Text textColor="white"><strong>Is Game Multiplayer:</strong> {game.bIsMultiplayer ? "Yes" : "No"}</Text>
             </HStack>
           </MotionListItem>
           <MotionListItem
@@ -438,7 +466,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           >
             <HStack spacing={3}>
               <ListIcon as={FaCircle} color="blue.500" />
-              <Text><strong>Game Status:</strong> {game.bIsInvite ? "Invite Only" : "Open for all"}</Text>
+              <Text textColor="white"><strong>Game Status:</strong> {game.bIsInvite ? "Invite Only" : "Open for all"}</Text>
             </HStack>
           </MotionListItem>
         </List>
@@ -571,7 +599,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           new Date() < new Date(game.date.getTime() + parseInt(game.noOfHour) * 3600 * 1000) ? (
             <Flex w="60em" alignItems="center" justifyContent="space-evenly">
               <Flex gap="2em">
-                <label>Buy Stream: </label>
+                <label className="text-gray-300">Buy Stream: </label>
                 <input
                   type="checkbox"
                   className="w-6"
@@ -580,7 +608,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
                 />
               </Flex>
               <Flex gap="2em">
-                <label>Buy Play: </label>
+                <label className="text-gray-300">Buy Play: </label>
                 <input
                   type="checkbox"
                   className="w-6"
@@ -596,8 +624,8 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
         )}
       </Flex>
       {timeToDisplay[0] !== 3 && <><Flex flexDirection="column">
-        <Text>Stream Server: {game.streamDetails.stream_server}</Text>
-        <Text>Stream key: {game.streamDetails.stream_key}</Text>
+        <Text textColor="gray.300">Stream Server: {game.streamDetails.stream_server}</Text>
+        <Text textColor="gray.300">Stream key: {game.streamDetails.stream_key}</Text>
       </Flex>
         <Button onClick={generateStreamDetails}>Generate Stream Details</Button></>}
 
@@ -607,7 +635,7 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           <Button onClick={() => setShowGameFrame(false)}>Hide</Button>
         ) : null}
       {((game.bIsMultiplayer && timeToDisplay[0] === 1) || (!game.bIsMultiplayer && timeToDisplay[0] === 2)) ?
-        (<Button onClick={handleJudgeStart} m="2em">Hackathon Judging Purpose</Button>
+        (<Button onClick={() => setShowGameFrame(true)} m="2em">Hackathon Judging Purpose (ByPass Everything)</Button>
         ) : null}
       {showGameFrame && (
         <iframe allow="fullscreen;"
@@ -616,6 +644,32 @@ const GameDetails = ({ game, setGame, timeToDisplay, setGameParticipants, gamePa
           frameborder="0"
           className="w-full h-[40em]"
         ></iframe>
+      )}
+      {loading && (
+        <Flex
+          position="fixed"
+          zIndex="500"
+          top="0vh"
+          right="0vw"
+          w="full"
+          h="full"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          bg="rgba(0,0,0,0.7)"
+          gap="0.8rem"
+        >
+          <Text textColor="yellow.400" fontSize="2em" fontWeight="bold" w="40vw" textAlign="center">Please wait while your request being processed...</Text>
+          <Spinner
+            w="4em"
+            h="4em"
+            thickness="0.5em"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="red.500"
+            size="xl"
+          />
+        </Flex>
       )}
     </Box >
   );

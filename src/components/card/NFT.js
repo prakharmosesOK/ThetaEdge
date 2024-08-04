@@ -80,7 +80,7 @@ export default function NFT(props) {
                 fontWeight='400'
                 mb="10px"
                 me='14px'>
-                Organiser: <strong>{gameEvent.nickName}</strong>
+                Organiser: <Link href={`/ThetaEdge/#/admin/profile/${gameEvent.organiserAddress}`}><strong>{gameEvent.nickName}</strong></Link>
               </Text>
             </Flex>
             {/* <AvatarGroup
@@ -137,7 +137,7 @@ export default function NFT(props) {
               Duration: {gameEvent.noOfHour} hours
             </Text>
             <Link
-              href={`/admin/gameEvent/${gameEvent.gameId}`}
+              href={`/ThetaEdge/#/admin/gameEvent/${gameEvent.gameId}`}
               my={{
                 base: "0px",
                 md: "10px",
