@@ -98,8 +98,8 @@ Do you want to earn while you play and you are not ready to trust a traditional 
 This project is licensed under the MIT License. 
 
 ## 📬 Authors
-1. [Adnan Abbas Rizvi](https://github.com/riz-adnan)
-2. [Anish Kumar]()
-3. [Prakhar Moses](https://github.com/prakharmosesOK)
+1. [Prakhar Moses](https://github.com/prakharmosesOK)
+2. [Adnan Abbas Rizvi](https://github.com/riz-adnan)
+3. [Anish Kumar](https://github.com/Anish2915)
 
 
